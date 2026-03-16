@@ -1,203 +1,194 @@
+'use client'
+
 import { client, urlFor } from '@/lib/sanity'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
-async function getProducts() {
-  return await client.fetch(`*[_type == "product"] | order(orderIndex asc){
-    _id,
-    "productCode": product_code,
-    "name": name_en,
-    "nameAr": name_ar,
-    "price": price_usd,
-    "image": image,
-    "category": category_main_en,
-    "categoryAr": category_main_ar,
-    "color": color_en,
-    "colorAr": color_ar,
-    "sizes": sizes,
-    "description": description_en,
-    "descriptionAr": description_ar,
-    "packSize": pcs_per_packet,
-    "isNew": is_new,
-    "isBestseller": is_bestseller,
-    "viewsCount": views_count,
-    "slug": slug,
-    "slugAr": slug_ar,
-    "outOfStock": Out_of_stock,
-    "altText": Alt_Text_En,
-    "altTextAr": Alt_Text_Ar
-  }`)
+// دالة تحديد لون الخلفية
+function getColorCode(colorName: string) {
+  const colors: {[key: string]: string} = {
+    'Black': '#000000', 'White': '#FFFFFF', 'Navy': '#000080', 'Gray': '#808080',
+    'Burgundy': '#800020', 'Red': '#FF0000', 'Green': '#008000', 'Blue': '#0000FF',
+    'Brown': '#8B4513', 'Beige': '#F5F5DC', 'Olive': '#808000', 'Purple': '#800080',
+    'Pink': '#FFC0CB', 'Orange': '#FFA500', 'Light Grey': '#D3D3D3',
+  };
+  return colors[colorName] || '#CCCCCC';
 }
 
-export default async function Home() {
-  const products = await getProducts()
-  
-  console.log('Total products:', products.length)
+export default function Home() {
+  const [products, setProducts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // دالة مساعدة للحصول على slug بشكل آمن
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const data = await client.fetch(`*[_type == "product"] | order(orderIndex asc){
+          _id,
+          "productCode": product_code,
+          "name": name_en,
+          "nameAr": name_ar,
+          "price": price_usd,
+          "image": image,
+          "category": category_main_en,
+          "categoryAr": category_main_ar,
+          "color": color_en,
+          "colorAr": color_ar,
+          "sizes": sizes,
+          "packSize": pcs_per_packet,
+          "isNew": is_new,
+          "isBestseller": is_bestseller,
+          "slug": slug,
+          "slugAr": slug_ar,
+          "outOfStock": Out_of_stock,
+          "altText": Alt_Text_En,
+          "altTextAr": Alt_Text_Ar,
+          "plusSizes": plus_sizes,
+          "rssMessage": rss_not_rss_message_en
+        }`)
+
+        setProducts(data)
+        console.log('✅ Total products:', data.length)
+      } catch (error) {
+        console.error('❌ Error:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadProducts()
+  }, [])
+
   const getProductSlug = (product: any) => {
     if (!product.slug) return 'product'
     if (typeof product.slug === 'string') return product.slug
-    if (product.slug.current) return product.slug.current
+    if (product.slug?.current) return product.slug.current
     return 'product'
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <i className="fas fa-spinner fa-spin text-4xl text-orange-500 mb-4"></i>
+          <p className="text-gray-600">Loading products...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Hijab Fashion Mall
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Premium Modest Fashion | Turkish Craftsmanship | Wholesale Prices
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900">Hijab Fashion Mall</h1>
+          <p className="text-gray-600 mt-2">Premium Modest Fashion | Turkish Craftsmanship | Wholesale Prices</p>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Categories Section */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Shop by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['Abayas', 'Hijabs', 'Jilbabs', 'Dresses', 'Sets', 
-              'Kaftans', 'Sportswear', 'Prayer Clothes', 'Coats', 'Evening Wear'].map((cat) => (
-              <Link 
-                key={cat} 
-                href={`/category/${cat.toLowerCase().replace(' ', '-')}`}
-                className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition text-center"
-              >
-                <span className="text-gray-800 font-medium">{cat}</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Products Grid */}
         <section>
           <h2 className="text-2xl font-semibold mb-6">Featured Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product: any) => (
-              <Link 
-                key={product._id} 
-                href={`/product/${getProductSlug(product)}`}
-                className="group"
-              >
-                <div className="bg-white rounded-lg shadow-sm hover:shadow-xl transition overflow-hidden">
-                  {/* Product Image */}
-                  <div className="relative aspect-square overflow-hidden bg-gray-100">
-                    {product.image ? (
-                      <img
-                        src={urlFor(product.image).url()}
-                        alt={product.altText || product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x400?text=No+Image'
+            {products.map((product: any) => {
+              const productSlug = getProductSlug(product)
+              const productCode = product.productCode || ''
+              const productPrice = product.price || 0
+              const isRSS = product.rssMessage && product.rssMessage.includes('✅')
+              const productPieces = product.packSize || 1
+              
+              const badges = []
+              if (product.isNew === 'Yes') badges.push('New')
+              if (product.isBestseller === 'Yes') badges.push('Bestseller')
+              if (product.plusSizes === 'Yes') badges.push('Plus')
+
+              return (
+                <Link key={product._id} href={`/product/${productSlug}`} className="group">
+                  <div className="bg-white rounded-lg shadow-sm hover:shadow-xl transition overflow-hidden">
+                    <div className="relative aspect-square overflow-hidden bg-gray-100">
+                      {product.image ? (
+                        <img
+                          src={product.image?.asset?._ref 
+                          ? `https://cdn.sanity.io/images/ruyb1c3n/production/${product.image.asset._ref.replace('image-', '').replace('-jpg', '.jpg').replace('-webp', '.webp')}`
+                          : 'https://placehold.co/400x400/ff5a00/white?text=No+Image'}
+                          alt={product.altText || product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://placehold.co/400x400/ff5a00/white?text=No+Image'
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          No Image
+                        </div>
+                      )}
+                      {badges.length > 0 && (
+                        <div className="absolute top-2 left-2 flex flex-col gap-2">
+                          {badges.map((badge, idx) => (
+                            <span
+                              key={idx}
+                              className={`text-white text-xs px-2 py-1 rounded ${
+                                badge === 'New' ? 'bg-blue-500' :
+                                badge === 'Bestseller' ? 'bg-yellow-500' :
+                                badge === 'Plus' ? 'bg-blue-600' : 'bg-gray-500'
+                              }`}
+                            >
+                              {badge}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-4">
+                      <div className="text-sm text-orange-500 font-semibold mb-1">{product.category}</div>
+                      <h3 className="font-semibold text-gray-900 mb-1">{product.name}</h3>
+                      <div className="text-xs text-gray-500 mb-2">SKU: {productCode}</div>
+
+                      {product.color && (
+                        <div className="flex items-center gap-2 mb-3">
+                          <div
+                            className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                            style={{ backgroundColor: getColorCode(product.color) }}
+                            title={product.color}
+                          />
+                          <span className="text-sm text-gray-700">{product.color}</span>
+                        </div>
+                      )}
+
+                      <div className={`text-xs p-2 rounded mb-3 flex items-center gap-2 ${
+                        isRSS ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-orange-50 text-orange-700 border border-orange-200'
+                      }`}>
+                        <i className={`fas ${isRSS ? 'fa-check-circle' : 'fa-box'}`}></i>
+                        <span>{product.rssMessage || `📦 Sold in packs of ${productPieces} pieces`}</span>
+                      </div>
+
+                      <div className="text-xl font-bold text-orange-500 mb-3">
+                        ${typeof productPrice === 'number' ? productPrice.toFixed(2) : productPrice}
+                      </div>
+
+                      <button
+                        className={`w-full py-2 px-4 rounded-full font-semibold text-sm transition flex items-center justify-center gap-2 ${
+                          product.outOfStock === 'Yes' 
+                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                            : 'bg-orange-500 text-white hover:bg-orange-600'
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          if (product.outOfStock !== 'Yes') {
+                            alert('Added to cart')
+                          }
                         }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        No Image
-                      </div>
-                    )}
-                    
-                    {/* Badges */}
-                    <div className="absolute top-2 left-2 flex flex-col gap-2">
-                      {product.isNew === 'Yes' && (
-                        <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">
-                          NEW
-                        </span>
-                      )}
-                      {product.isBestseller === 'Yes' && (
-                        <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded">
-                          BESTSELLER
-                        </span>
-                      )}
+                      >
+                        <i className="fas fa-shopping-cart"></i>
+                        {product.outOfStock === 'Yes' ? 'Out of Stock' : 'Add to Inquiry'}
+                      </button>
                     </div>
-
-                    {/* Pack Size Badge */}
-                    {product.packSize && (
-                      <div className="absolute top-2 right-2">
-                        <span className="bg-black text-white text-xs px-2 py-1 rounded">
-                          Pack of {product.packSize}
-                        </span>
-                      </div>
-                    )}
                   </div>
-
-                  {/* Product Info */}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg text-gray-900 mb-1">
-                      {product.name}
-                    </h3>
-                    
-                    {/* Category */}
-                    <p className="text-sm text-gray-500 mb-2">
-                      {product.category}
-                    </p>
-
-                    {/* Color */}
-                    {product.color && (
-                      <p className="text-sm text-gray-600 mb-1">
-                        Color: <span className="font-medium">{product.color}</span>
-                      </p>
-                    )}
-
-                    {/* Price */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-green-600">
-                        ${typeof product.price === 'number' 
-                          ? product.price.toFixed(2) 
-                          : product.price}
-                      </span>
-                    </div>
-
-                    {/* Sizes */}
-                    {product.sizes && (
-                      <p className="text-xs text-gray-400 mt-2">
-                        Sizes: {product.sizes}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="mt-16 bg-white rounded-lg shadow-sm p-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-green-600">{products.length}+</div>
-              <div className="text-gray-600 mt-2">Products</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600">50+</div>
-              <div className="text-gray-600 mt-2">Colors</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600">10</div>
-              <div className="text-gray-600 mt-2">Categories</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600">100%</div>
-              <div className="text-gray-600 mt-2">Turkish Quality</div>
-            </div>
+                </Link>
+              )
+            })}
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t mt-16">
-        <div className="container mx-auto px-4 py-8">
-          <p className="text-center text-gray-600">
-            © 2024 Hijab Fashion Mall. All rights reserved. | 
-            Premium Turkish Modest Fashion Wholesale
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }
