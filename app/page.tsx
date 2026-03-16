@@ -31,27 +31,7 @@ async function getProducts() {
 export default async function Home() {
   const products = await getProducts()
   
-  // للتأكد من عدد المنتجات (شوف Console في المتصفح)
   console.log('Total products:', products.length)
-
-  // تجميع المنتجات حسب الكود لعرض الألوان المتعددة
-  const groupedProducts = products.reduce((acc: any, product: any) => {
-    if (!acc[product.productCode]) {
-      acc[product.productCode] = {
-        ...product,
-        colors: []
-      }
-    }
-    acc[product.productCode].colors.push({
-      color: product.color,
-      colorAr: product.colorAr,
-      imageUrl: product.imageUrl,
-      altText: product.altText
-    })
-    return acc
-  }, {})
-
-  const uniqueProducts = Object.values(groupedProducts)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -90,7 +70,7 @@ export default async function Home() {
         <section>
           <h2 className="text-2xl font-semibold mb-6">Featured Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {uniqueProducts.map((product: any) => (
+            {products.map((product: any) => (
               <Link 
                 key={product._id} 
                 href={`/product/${product.slug}`}
@@ -99,10 +79,10 @@ export default async function Home() {
                 <div className="bg-white rounded-lg shadow-sm hover:shadow-xl transition overflow-hidden">
                   {/* Product Image */}
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
-                    {product.colors[0]?.imageUrl && (
+                    {product.imageUrl && (
                       <img
-                        src={`https://cdn.sanity.io/images/ruyb1c3n/production/${product.colors[0].imageUrl}.jpg`}
-                        alt={product.colors[0]?.altText || product.name}
+                        src={`https://cdn.sanity.io/images/ruyb1c3n/production/${product.imageUrl}.jpg`}
+                        alt={product.altText || product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                       />
                     )}
@@ -142,6 +122,13 @@ export default async function Home() {
                       {product.category}
                     </p>
 
+                    {/* Color */}
+                    {product.color && (
+                      <p className="text-sm text-gray-600 mb-1">
+                        Color: <span className="font-medium">{product.color}</span>
+                      </p>
+                    )}
+
                     {/* Price */}
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-green-600">
@@ -151,57 +138,10 @@ export default async function Home() {
                       </span>
                     </div>
 
-                    {/* Available Colors - قسم محسن */}
-                    {product.colors.length > 1 && (
-                      <div className="mt-3">
-                        <p className="text-sm text-gray-600">
-                          <span className="font-semibold">{product.colors.length} colors</span> available
-                        </p>
-                        {/* دوائر الألوان المصغرة */}
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {product.colors.slice(0, 5).map((color: any, idx: number) => {
-                            // تحديد لون الخلفية بناءً على اسم اللون
-                            let bgColor = '#e5e7eb'; // رمادي افتراضي
-                            const colorName = color.color?.toLowerCase() || '';
-                            
-                            if (colorName.includes('black')) bgColor = '#000';
-                            else if (colorName.includes('navy')) bgColor = '#000080';
-                            else if (colorName.includes('burgundy') || colorName.includes('برغندي')) bgColor = '#800020';
-                            else if (colorName.includes('beige') || colorName.includes('بيج')) bgColor = '#f5f5dc';
-                            else if (colorName.includes('olive') || colorName.includes('زيتي')) bgColor = '#808000';
-                            else if (colorName.includes('green') || colorName.includes('أخضر')) bgColor = '#008000';
-                            else if (colorName.includes('blue') || colorName.includes('أزرق') || colorName.includes('كحلي')) bgColor = '#0000ff';
-                            else if (colorName.includes('red') || colorName.includes('أحمر')) bgColor = '#ff0000';
-                            else if (colorName.includes('brown') || colorName.includes('بني')) bgColor = '#8b4513';
-                            else if (colorName.includes('gray') || colorName.includes('رمادي')) bgColor = '#808080';
-                            else if (colorName.includes('white') || colorName.includes('أبيض')) bgColor = '#ffffff';
-                            else if (colorName.includes('purple') || colorName.includes('بنفسجي')) bgColor = '#800080';
-                            else if (colorName.includes('pink') || colorName.includes('زهري')) bgColor = '#ff69b4';
-                            else if (colorName.includes('yellow') || colorName.includes('أصفر')) bgColor = '#ffd700';
-                            
-                            return (
-                              <div
-                                key={idx}
-                                className="w-5 h-5 rounded-full border border-gray-300 shadow-sm"
-                                style={{ backgroundColor: bgColor }}
-                                title={color.color}
-                              />
-                            );
-                          })}
-                          {product.colors.length > 5 && (
-                            <span className="text-xs text-gray-500 ml-1">
-                              +{product.colors.length - 5}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Sizes Preview */}
+                    {/* Sizes */}
                     {product.sizes && (
                       <p className="text-xs text-gray-400 mt-2">
-                        Sizes: {product.sizes.split(' ').slice(0, 4).join(' ')}
-                        {product.sizes.split(' ').length > 4 && '...'}
+                        Sizes: {product.sizes}
                       </p>
                     )}
                   </div>
