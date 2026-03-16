@@ -30,6 +30,9 @@ async function getProducts() {
 
 export default async function Home() {
   const products = await getProducts()
+  
+  // للتأكد من عدد المنتجات (شوف Console في المتصفح)
+  console.log('Total products:', products.length)
 
   // تجميع المنتجات حسب الكود لعرض الألوان المتعددة
   const groupedProducts = products.reduce((acc: any, product: any) => {
@@ -148,30 +151,46 @@ export default async function Home() {
                       </span>
                     </div>
 
-                    {/* Available Colors */}
+                    {/* Available Colors - قسم محسن */}
                     {product.colors.length > 1 && (
-                      <div className="mt-3 flex items-center gap-2">
-                        <span className="text-sm text-gray-500">
-                          {product.colors.length} colors:
-                        </span>
-                        <div className="flex -space-x-2">
-                          {product.colors.slice(0, 3).map((color: any, idx: number) => (
-                            <div
-                              key={idx}
-                              className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
-                              style={{ 
-                                backgroundColor: color.color?.toLowerCase() === 'black' ? '#000' :
-                                                color.color?.toLowerCase() === 'navy' ? '#000080' :
-                                                color.color?.toLowerCase() === 'burgundy' ? '#800020' :
-                                                color.color?.toLowerCase() === 'beige' ? '#f5f5dc' :
-                                                color.color?.toLowerCase() === 'olive' ? '#808000' :
-                                                '#e5e7eb'
-                              }}
-                            />
-                          ))}
-                          {product.colors.length > 3 && (
+                      <div className="mt-3">
+                        <p className="text-sm text-gray-600">
+                          <span className="font-semibold">{product.colors.length} colors</span> available
+                        </p>
+                        {/* دوائر الألوان المصغرة */}
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {product.colors.slice(0, 5).map((color: any, idx: number) => {
+                            // تحديد لون الخلفية بناءً على اسم اللون
+                            let bgColor = '#e5e7eb'; // رمادي افتراضي
+                            const colorName = color.color?.toLowerCase() || '';
+                            
+                            if (colorName.includes('black')) bgColor = '#000';
+                            else if (colorName.includes('navy')) bgColor = '#000080';
+                            else if (colorName.includes('burgundy') || colorName.includes('برغندي')) bgColor = '#800020';
+                            else if (colorName.includes('beige') || colorName.includes('بيج')) bgColor = '#f5f5dc';
+                            else if (colorName.includes('olive') || colorName.includes('زيتي')) bgColor = '#808000';
+                            else if (colorName.includes('green') || colorName.includes('أخضر')) bgColor = '#008000';
+                            else if (colorName.includes('blue') || colorName.includes('أزرق') || colorName.includes('كحلي')) bgColor = '#0000ff';
+                            else if (colorName.includes('red') || colorName.includes('أحمر')) bgColor = '#ff0000';
+                            else if (colorName.includes('brown') || colorName.includes('بني')) bgColor = '#8b4513';
+                            else if (colorName.includes('gray') || colorName.includes('رمادي')) bgColor = '#808080';
+                            else if (colorName.includes('white') || colorName.includes('أبيض')) bgColor = '#ffffff';
+                            else if (colorName.includes('purple') || colorName.includes('بنفسجي')) bgColor = '#800080';
+                            else if (colorName.includes('pink') || colorName.includes('زهري')) bgColor = '#ff69b4';
+                            else if (colorName.includes('yellow') || colorName.includes('أصفر')) bgColor = '#ffd700';
+                            
+                            return (
+                              <div
+                                key={idx}
+                                className="w-5 h-5 rounded-full border border-gray-300 shadow-sm"
+                                style={{ backgroundColor: bgColor }}
+                                title={color.color}
+                              />
+                            );
+                          })}
+                          {product.colors.length > 5 && (
                             <span className="text-xs text-gray-500 ml-1">
-                              +{product.colors.length - 3}
+                              +{product.colors.length - 5}
                             </span>
                           )}
                         </div>
@@ -196,7 +215,7 @@ export default async function Home() {
         <section className="mt-16 bg-white rounded-lg shadow-sm p-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-green-600">286+</div>
+              <div className="text-4xl font-bold text-green-600">{products.length}+</div>
               <div className="text-gray-600 mt-2">Products</div>
             </div>
             <div>
