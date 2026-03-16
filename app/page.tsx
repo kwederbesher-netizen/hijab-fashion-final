@@ -1,32 +1,5 @@
-import { client } from '@/lib/sanity'
+import { client, urlFor, getProducts } from '@/lib/sanity'
 import Link from 'next/link'
-
-async function getProducts() {
-  return await client.fetch(`*[_type == "product"] | order(orderIndex asc){
-    _id,
-    "productCode": product_code,
-    "name": name_en,
-    "nameAr": name_ar,
-    "price": price_usd,
-    "imageUrl": main_image,
-    "category": category_main_en,
-    "categoryAr": category_main_ar,
-    "color": color_en,
-    "colorAr": color_ar,
-    "sizes": sizes,
-    "description": description_en,
-    "descriptionAr": description_ar,
-    "packSize": pcs_per_packet,
-    "isNew": is_new,
-    "isBestseller": is_bestseller,
-    "viewsCount": views_count,
-    "slug": slug_en,
-    "slugAr": slug_ar,
-    "outOfStock": Out_of_stock,
-    "altText": Alt_Text_En,
-    "altTextAr": Alt_Text_Ar
-  }`)
-}
 
 export default async function Home() {
   const products = await getProducts()
@@ -79,12 +52,19 @@ export default async function Home() {
                 <div className="bg-white rounded-lg shadow-sm hover:shadow-xl transition overflow-hidden">
                   {/* Product Image */}
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
-                    {product.imageUrl && (
+                    {product.image ? (
                       <img
-                        src={`https://cdn.sanity.io/images/ruyb1c3n/production/${product.imageUrl}.jpg`}
+                        src={urlFor(product.image).url()}
                         alt={product.altText || product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://via.placeholder.com/400x400?text=No+Image'
+                        }}
                       />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        No Image
+                      </div>
                     )}
                     
                     {/* Badges */}
