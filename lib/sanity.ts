@@ -33,10 +33,12 @@ export async function getProducts() {
     "isNew": is_new,
     "isBestseller": is_bestseller,
     "viewsCount": views_count,
-    "slug": slug_en,
+    "slug": slug,
     "slugAr": slug_ar,
     "outOfStock": Out_of_stock,
     "altText": Alt_Text_En,
-    "altTextAr": Alt_Text_Ar
+    "altTextAr": Alt_Text_Ar,
+    "plusSizes": plus_sizes,
+    "rssMessage": rss_not_rss_message_en
   }`)
 }
