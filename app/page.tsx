@@ -27,7 +27,7 @@ export default function Home() {
           "name": name_en,
           "nameAr": name_ar,
           "price": price_usd,
-          "image": image.asset->url,
+          "imageRef": image.asset->_ref,
           "category": category_main_en,
           "categoryAr": category_main_ar,
           "color": color_en,
@@ -52,6 +52,14 @@ export default function Home() {
     }
     loadProducts()
   }, [])
+
+  // دالة لبناء رابط الصورة من imageRef
+  const getImageUrl = (imageRef: string) => {
+    if (!imageRef) return null
+    // إزالة "image-" من البداية و "-{dimensions}" من النهاية
+    const baseId = imageRef.replace('image-', '').replace(/-[^-]*$/, '')
+    return `https://cdn.sanity.io/images/ruyb1c3n/production/${baseId}.webp`
+  }
 
   const getProductSlug = (product: any) => {
     if (!product.slug) return 'product'
@@ -90,6 +98,7 @@ export default function Home() {
               const productPrice = product.price || 0
               const isRSS = product.rssMessage && product.rssMessage.includes('✅')
               const productPieces = product.packSize || 1
+              const imageUrl = getImageUrl(product.imageRef)
               
               const badges = []
               if (product.isNew === 'Yes') badges.push('New')
@@ -99,9 +108,9 @@ export default function Home() {
               return (
                 <div key={product._id} className="bg-white rounded-lg shadow-sm hover:shadow-xl transition overflow-hidden">
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
-                    {product.image ? (
+                    {imageUrl ? (
                       <img
-                        src={product.image}
+                        src={imageUrl}
                         alt={product.altText || product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         onError={(e) => {
