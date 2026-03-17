@@ -5,8 +5,9 @@ export const client = createClient({
   projectId: 'ruyb1c3n',
   dataset: 'production',
   apiVersion: '2024-01-01',
-  useCdn: false, // مهم: نستخدم false لتجنب مشاكل CDN
-  apiHost: 'https://api.sanity.io', // مهم: نستخدم API الرئيسي بدلاً من CDN
+  useCdn: true, // استخدام CDN للحصول على أداء أفضل
+  withCredentials: false, // تعطيل إرسال بيانات الاعتماد لتجنب مشاكل CORS
+  token: '', // لا نحتاج توكن للقراءة فقط
 })
 
 const builder = imageUrlBuilder(client)
