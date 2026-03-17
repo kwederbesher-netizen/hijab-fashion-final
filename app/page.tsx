@@ -8,7 +8,7 @@ type Product = {
   _id: string
   name: string
   price: number
-  image: any
+  main_image: string
   color: string
   category: string
 }
@@ -20,16 +20,18 @@ export default function Home() {
   useEffect(() => {
     async function loadProducts() {
       try {
+        // جلب المنتجات مع main_image (الرقم)
         const data = await client.fetch(`*[_type == "product"] | order(orderIndex asc){
           _id,
           "name": name_en,
           "price": price_usd,
-          "image": image,
+          "main_image": main_image,
           "color": color_en,
           "category": category_main_en
         }`)
         setProducts(data)
         console.log('✅ Products:', data.length)
+        console.log('✅ First product image number:', data[0]?.main_image)
       } catch (error) {
         console.error('❌ Error:', error)
       } finally {
@@ -38,21 +40,6 @@ export default function Home() {
     }
     loadProducts()
   }, [])
-
-  // دالة لاستخراج رابط الصورة من كائن image
-  const getImageUrl = (image: any) => {
-    if (!image) return null
-    // استخراج رقم الصورة من _ref
-    if (image.asset && image.asset._ref) {
-      const ref = image.asset._ref
-      // الصيغة: image-123abc-500x500-webp
-      const parts = ref.split('-')
-      if (parts.length >= 2) {
-        return `https://cdn.sanity.io/images/ruyb1c3n/production/${parts[1]}.webp`
-      }
-    }
-    return null
-  }
 
   if (loading) return <div>Loading products...</div>
 
@@ -67,8 +54,11 @@ export default function Home() {
         gap: '20px' 
       }}>
         {products.map((product: Product) => {
-          const imageUrl = getImageUrl(product.image)
-          
+          // بناء رابط الصورة مباشرة من main_image
+          const imageUrl = product.main_image 
+            ? `https://cdn.sanity.io/images/ruyb1c3n/production/${product.main_image}.webp`
+            : null
+
           return (
             <div key={product._id} style={{ 
               border: '1px solid #ddd', 
@@ -87,6 +77,7 @@ export default function Home() {
                     borderRadius: '4px'
                   }}
                   onError={(e) => {
+                    console.log('Image failed:', product.main_image)
                     e.currentTarget.src = 'https://placehold.co/400x400/ff5a00/white?text=No+Image'
                   }}
                 />
