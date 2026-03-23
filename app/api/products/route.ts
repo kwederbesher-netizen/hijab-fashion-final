@@ -1,14 +1,148 @@
 import { NextResponse } from 'next/server'
+import { createClient } from 'next-sanity'
 
-export async function GET() {
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'ruyb1c3n',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  apiVersion: '2024-01-01',
+  useCdn: process.env.NODE_ENV === 'production',
+})
+
+// تعريف مجموعات التصنيفات
+const categoryGroups: { [key: string]: string[] } = {
+  'Modest Pants Sets': ['Modest Pants Sets', 'Modest Sets', 'Modest Set'],
+  'Prayer Clothes': ['Prayer Clothes', 'Prayer Outfits', 'Pray Clothes', 'Pray clothes', 'pray clothes', 'Jilbab', 'Islamic Prayer Wear', 'Prayer Dress']
+}
+
+export async function GET(request: Request) {
   try {
-    // جلب كل الحقول المهمة للكتالوج
-    const apiUrl = 'https://ruyb1c3n.api.sanity.io/v2026-03-17/data/query/production?query=*%5B_type+%3D%3D+%22product%22%5D+%7C+order%28orderIndex+asc%29%7B%0A++_id%2C%0A++name_en%2C%0A++name_ar%2C%0A++price_usd%2C%0A++%22imageUrl%22%3A+image.asset-%3Eurl%2C%0A++color_en%2C%0A++color_ar%2C%0A++category_main_en%2C%0A++category_main_ar%2C%0A++%22product_code%22%3A+product_code%2C%0A++%22plus+sizes%22%3A+plus_sizes%2C%0A++%22rss%2Fnot+rss+message_en%22%3A+rss_not_rss_message_en%2C%0A++sizes%2C%0A++description_en%2C%0A++description_ar%2C%0A++pcs_per_packet%2C%0A++is_new%2C%0A++is_bestseller%2C%0A++views_count%2C%0A++slug_en%2C%0A++slug_ar%2C%0A++%22Out+of+stock%22%3A+Out_of_stock%2C%0A++Alt_Text_En%2C%0A++Alt_Text_Ar%0A%7D&perspective=drafts'
+    const { searchParams } = new URL(request.url)
     
-    const response = await fetch(apiUrl)
-    const data = await response.json()
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '60')
+    const category = searchParams.get('category')
+    const search = searchParams.get('search')
+    const slug = searchParams.get('slug')
+    const id = searchParams.get('id')
+    const rss = searchParams.get('rss')
+    const plusSizes = searchParams.get('plusSizes')
+    const sort = searchParams.get('sort') || 'default'
+    const minPrice = parseFloat(searchParams.get('minPrice') || '0')
+    const maxPrice = parseFloat(searchParams.get('maxPrice') || '10000')
     
-    return NextResponse.json(data)
+    const skip = (page - 1) * limit
+    
+    // بناء شروط الاستعلام
+    let conditions: string[] = []
+    let params: any = {}
+    
+    conditions.push(`price_usd >= $minPrice && price_usd <= $maxPrice`)
+    params.minPrice = minPrice
+    params.maxPrice = maxPrice
+    
+    // معالجة التصنيف مع دعم المجموعات
+    if (category && category !== 'all') {
+      if (categoryGroups[category]) {
+        const orConditions = categoryGroups[category].map(term => `category_main_en == "${term}"`).join(' || ')
+        conditions.push(`(${orConditions})`)
+      } else {
+        conditions.push(`category_main_en == $category`)
+        params.category = category
+      }
+    }
+    
+    // ✅ فلتر RSS - يبحث في الرسائل التي تحتوي على "single piece" أو "قطعة واحدة" (وليس "✅")
+    if (rss === 'true') {
+      conditions.push(`(rss_not_rss_message_en match "*single piece*" || rss_not_rss_message_ar match "*قطعة واحدة*")`)
+    }
+    
+    // ✅ فلتر Plus Sizes
+    if (plusSizes === 'true') {
+      conditions.push(`(plus_sizes == "Yes" || plus_sizes == "YES" || plus_sizes == "yes" || has_plus_sizes == true)`)
+    }
+    
+    if (id && id.trim()) {
+      conditions.push(`_id == $id`)
+      params.id = id
+    }
+    
+    if (slug && slug.trim()) {
+      conditions.push(`(slug_ar.current == $slug || slug_en.current == $slug || _id == $slug || product_code == $slug)`)
+      params.slug = slug
+    }
+    
+    if (search && search.trim()) {
+      conditions.push(`(name_en match $search || name_ar match $search || product_code match $search)`)
+      params.search = `*${search}*`
+    }
+    
+    let query = '*[_type == "product"'
+    if (conditions.length > 0) {
+      query += ` && ${conditions.join(' && ')}`
+    }
+    query += ']'
+    
+    const countQuery = query + `{ _id }`
+    const totalCount = await client.fetch(countQuery, params)
+    
+    let orderBy = ''
+    switch (sort) {
+      case 'price-asc':
+        orderBy = ' | order(price_usd asc)'
+        break
+      case 'price-desc':
+        orderBy = ' | order(price_usd desc)'
+        break
+      case 'name-asc':
+        orderBy = ' | order(name_en asc)'
+        break
+      case 'name-desc':
+        orderBy = ' | order(name_en desc)'
+        break
+      case 'newest':
+        orderBy = ' | order(_createdAt desc)'
+        break
+      default:
+        orderBy = ''
+    }
+    
+    query += orderBy + `[${skip}...${skip + limit}]`
+    
+    query += ` {
+      _id,
+      name_ar,
+      name_en,
+      "slug_ar": slug_ar.current,
+      "slug_en": slug_en.current,
+      price_usd,
+      description_ar,
+      description_en,
+      "imageUrl": image.asset->url,
+      "mainImage": image.asset->url,
+      category_main_en,
+      product_code,
+      "rss/not rss message_en": rss_not_rss_message_en,
+      "rss/not rss message_ar": rss_not_rss_message_ar,
+      pcs_per_packet,
+      "plus sizes": plus_sizes,
+      is_rss,
+      has_plus_sizes,
+      is_new,
+      is_bestseller,
+      colors,
+      sizes
+    }`
+    
+    const products = await client.fetch(query, params)
+    
+    return NextResponse.json({
+      result: products,
+      total: totalCount.length,
+      page,
+      limit,
+      totalPages: Math.ceil(totalCount.length / limit)
+    })
+    
   } catch (error) {
     console.error('Error fetching products:', error)
     return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 })

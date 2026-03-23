@@ -1,4 +1,4 @@
-# dependencies
+﻿# dependencies
 /node_modules
 /.pnp
 .pnp.js
@@ -33,3 +33,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ===== إضافات جديدة =====
+
+# الملفات المؤقتة
+products.json
+files.txt
+folders.txt
+project-structure.txt
+
+# مجلد scripts (جميع الملفات المؤقتة)
+/scripts/
+/temp/
+
+# ملفات Sanity المؤقتة
+studio/node_modules/
+studio/.sanity/
+studio/dist/
+
+# ملفات البيئة (إن وجدت)
+.env.local
+.env.production.local

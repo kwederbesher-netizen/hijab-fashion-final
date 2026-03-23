@@ -23,11 +23,25 @@ export default function ProductPage() {
         if (data.result) {
           setAllProducts(data.result)
           
-          // Find product by slug
-          const found = data.result.find((p: any) => p.slug_en === slug)
+          // Find product by slug - البحث بعدة طرق
+          let found = data.result.find((p: any) => p.slug_en === slug)
+          
+          // إذا لم يتم العثور بالـ slug، حاول بالـ _id
+          if (!found) {
+            found = data.result.find((p: any) => p._id === slug)
+          }
+          
+          // إذا لم يتم العثور، حاول بالـ product_code
+          if (!found) {
+            found = data.result.find((p: any) => p.product_code === slug)
+          }
+          
           if (found) {
             setProduct(found)
             setSelectedImage(found.imageUrl || '/images/default.webp')
+            console.log('✅ Product found:', found.name_en)
+          } else {
+            console.log('❌ Product not found with slug:', slug)
           }
         }
       } catch (error) {
@@ -39,10 +53,44 @@ export default function ProductPage() {
     loadProducts()
   }, [slug])
 
+  // Add to cart function
+  const addToCart = (product: any, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    // Get existing cart
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+    
+    // Add product (multiple times based on quantity)
+    for (let i = 0; i < quantity; i++) {
+      cart.push(product)
+    }
+    
+    // Save back to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart))
+    
+    // Update cart count in header
+    const cartCountElement = document.getElementById('cartCount')
+    if (cartCountElement) {
+      cartCountElement.textContent = cart.length.toString()
+    }
+    
+    // Dispatch event for cart sidebar
+    const event = new CustomEvent('openCart')
+    window.dispatchEvent(event)
+  }
+
   // Parse sizes
   const parseSizes = (sizes: string) => {
     if (!sizes) return []
     return sizes.split(' ').filter(s => s.trim())
+  }
+
+  // Format price safely
+  const formatPrice = (price: any) => {
+    if (price === undefined || price === null) return '0.00'
+    const num = Number(price)
+    return isNaN(num) ? '0.00' : num.toFixed(2)
   }
 
   // Get related products
@@ -104,7 +152,7 @@ export default function ProductPage() {
 
   return (
     <>
-      {/* Breadcrumb - مصحح */}
+      {/* Breadcrumb */}
       <div style={{
         padding: '20px 0',
         background: '#f5f5f5',
@@ -199,7 +247,7 @@ export default function ProductPage() {
                   fontWeight: '700',
                   color: '#ff5a00'
                 }}>
-                  ${productPrice.toFixed(2)}
+                  ${formatPrice(productPrice)}
                 </div>
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                   {product.product_code?.toLowerCase().includes('rss') && (
@@ -376,27 +424,30 @@ export default function ProductPage() {
                 marginBottom: '30px',
                 flexWrap: 'wrap'
               }}>
-                <button style={{
-                  flex: '2',
-                  background: '#ff5a00',
-                  color: 'white',
-                  border: 'none',
-                  padding: '16px 30px',
-                  borderRadius: '50px',
-                  fontWeight: '600',
-                  fontSize: '16px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  minWidth: '200px'
-                }}>
+                <button 
+                  style={{
+                    flex: '2',
+                    background: '#ff5a00',
+                    color: 'white',
+                    border: 'none',
+                    padding: '16px 30px',
+                    borderRadius: '50px',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    minWidth: '200px'
+                  }}
+                  onClick={(e) => addToCart(product, e)}
+                >
                   <i className="fas fa-shopping-cart"></i> Add to Inquiry
                 </button>
                 <a 
                   href={`https://wa.me/905519522448?text=${encodeURIComponent(
-                    `Hello, I'm interested in ordering:\n\n*${productName}*\nPrice: $${productPrice.toFixed(2)}\nCode: ${product.product_code || 'N/A'}\nQuantity: ${quantity}\n\nPlease provide more information.`
+                    `Hello, I'm interested in ordering:\n\n*${productName}*\nPrice: $${formatPrice(productPrice)}\nCode: ${product.product_code || 'N/A'}\nQuantity: ${quantity}\n\nPlease provide more information.`
                   )}`}
                   style={{
                     flex: '1',
@@ -504,53 +555,60 @@ export default function ProductPage() {
             gap: '25px',
             marginTop: '40px'
           }}>
-            {getRelatedProducts().map((p: any) => (
-              <Link href={`/product/${p.slug_en || p._id}`} key={p._id} style={{
-                background: 'white',
-                borderRadius: '15px',
-                overflow: 'hidden',
-                boxShadow: '0 5px 20px rgba(0,0,0,0.03)',
-                transition: 'all 0.3s',
-                textDecoration: 'none',
-                color: 'inherit'
-              }}>
-                <div style={{
-                  width: '100%',
-                  height: '200px',
+            {getRelatedProducts().map((p: any) => {
+              // Create product link with fallback
+              const productLink = p.slug_en ? `/product/${p.slug_en}` : 
+                                 p._id ? `/product/${p._id}` : 
+                                 '#'
+              
+              return (
+                <Link href={productLink} key={p._id} style={{
+                  background: 'white',
+                  borderRadius: '15px',
                   overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: '#f5f5f5'
+                  boxShadow: '0 5px 20px rgba(0,0,0,0.03)',
+                  transition: 'all 0.3s',
+                  textDecoration: 'none',
+                  color: 'inherit'
                 }}>
-                  <img 
-                    src={p.imageUrl || '/images/default.webp'} 
-                    alt={p.name_en || ''}
-                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/default.webp'
-                    }}
-                  />
-                </div>
-                <div style={{ padding: '15px', textAlign: 'center' }}>
-                  <h4 style={{
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#000',
-                    marginBottom: '5px'
-                  }}>
-                    {p.name_en || ''}
-                  </h4>
                   <div style={{
-                    color: '#ff5a00',
-                    fontWeight: '700',
-                    fontSize: '16px'
+                    width: '100%',
+                    height: '200px',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: '#f5f5f5'
                   }}>
-                    ${(p.price_usd || 0).toFixed(2)}
+                    <img 
+                      src={p.imageUrl || '/images/default.webp'} 
+                      alt={p.name_en || ''}
+                      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/images/default.webp'
+                      }}
+                    />
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <div style={{ padding: '15px', textAlign: 'center' }}>
+                    <h4 style={{
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#000',
+                      marginBottom: '5px'
+                    }}>
+                      {p.name_en || ''}
+                    </h4>
+                    <div style={{
+                      color: '#ff5a00',
+                      fontWeight: '700',
+                      fontSize: '16px'
+                    }}>
+                      ${formatPrice(p.price_usd)}
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </div>
