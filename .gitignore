@@ -54,3 +54,4 @@ studio/dist/
 # ملفات البيئة (إن وجدت)
 .env.local
 .env.production.local
+/studio/
