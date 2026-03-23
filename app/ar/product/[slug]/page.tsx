@@ -159,7 +159,7 @@ export default function ProductPageAr() {
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
     // ✅ حساب العدد الإجمالي للقطع
-    const totalItems = currentCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
     const cartCountElement = document.getElementById('cartCount')
     if (cartCountElement) {

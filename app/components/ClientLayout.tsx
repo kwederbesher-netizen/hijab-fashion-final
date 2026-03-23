@@ -33,7 +33,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       try {
         const parsedCart = JSON.parse(savedCart)
         setCart(parsedCart)
-        const totalItems = parsedCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+        const totalItems = parsedCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
         setCartCount(totalItems)
       } catch (e) {
         console.error('Error parsing cart:', e)
@@ -58,7 +58,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         try {
           const parsedCart = JSON.parse(savedCart)
           setCart(parsedCart)
-          const totalItems = parsedCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+          const totalItems = parsedCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
           setCartCount(totalItems)
         } catch (e) {
           console.error('Error parsing cart:', e)
@@ -645,7 +645,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <select 
                 id="currencySelect"
                 value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
+                onChange={(e) => setCurrency(e.target.value as any)}
                 disabled={currencyLoading}
                 style={{
                   border: 'none',

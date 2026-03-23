@@ -16,6 +16,7 @@ export default function ProductPageEn() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [quantity, setQuantity] = useState(1)
+  const sliderInterval = useRef<NodeJS.Timeout | null>(null)
   const [selectedImage, setSelectedImage] = useState('')
   const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
@@ -134,8 +135,7 @@ export default function ProductPageEn() {
     
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
-    // حساب العدد الإجمالي للقطع
-    const totalItems = currentCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
     const cartCountElement = document.getElementById('cartCount')
     if (cartCountElement) {

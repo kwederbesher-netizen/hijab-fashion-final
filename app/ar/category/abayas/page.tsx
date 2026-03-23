@@ -71,11 +71,9 @@ export default function AbayasCategoryPage() {
       params.append('limit', productsPerPage.toString())
       params.append('category', 'Abayas')
       
-      // ✅ إضافة الترتيب بشكل صحيح
       const sortValue = getSortValue(currentSort)
       if (sortValue) {
         params.append('sort', sortValue)
-        console.log('🔍 Sorting by:', sortValue)
       }
       
       const res = await fetch(`/api/products?${params.toString()}`)
@@ -87,7 +85,7 @@ export default function AbayasCategoryPage() {
         setTotalProducts(data.total)
         // عرض الأسعار للتحقق
         if (data.result.length > 0) {
-          console.log('📊 First 3 prices:', data.result.slice(0, 3).map(p => p.price_usd))
+          console.log('📊 First 3 prices:', data.result.slice(0, 3).map((p: any) => p.price_usd))
         }
       }
     } catch (error) {
@@ -117,7 +115,7 @@ export default function AbayasCategoryPage() {
   // حفظ السلة في localStorage وتحديث العداد
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart))
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalItems = cart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     const event = new CustomEvent('cartUpdated', { detail: totalItems })
     window.dispatchEvent(event)
     
@@ -165,7 +163,7 @@ export default function AbayasCategoryPage() {
     
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
-    const totalItems = currentCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
     const cartCountElement = document.getElementById('cartCount')
     if (cartCountElement) {
@@ -276,7 +274,7 @@ export default function AbayasCategoryPage() {
 
         .stats-container {
             display: flex;
-            justify-content: space-between;
+            justifyContent: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 20px;
@@ -624,6 +622,16 @@ export default function AbayasCategoryPage() {
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-image {
+                height: 250px;
+            }
+        }
       `}</style>
 
       {/* رأس الصفحة */}
@@ -789,7 +797,7 @@ export default function AbayasCategoryPage() {
           
           <h3>لماذا تختارين عباياتنا التركية؟</h3>
           <ul>
-            {PAGE_CONFIG.seoContent.features.map((feature, index) => (
+            {PAGE_CONFIG.seoContent.features.map((feature: string, index: number) => (
               <li key={index}>
                 <i className="fas fa-check-circle"></i> {feature}
               </li>

@@ -16,7 +16,7 @@ export default function HomePageAr() {
   
   // مؤشرات لتحسين الأداء
   const isMounted = useRef(true)
-  const sliderInterval = useRef<NodeJS.Timeout>()
+  const sliderInterval = useRef<NodeJS.Timeout | null>(null)
 
   // ✅ Load products from API الجديد مع Pagination
   useEffect(() => {
@@ -124,7 +124,7 @@ export default function HomePageAr() {
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
     // حساب العدد الإجمالي للقطع
-    const totalItems = currentCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
     // تحديث عداد السلة في الهيدر
     const cartCountElement = document.getElementById('cartCount')

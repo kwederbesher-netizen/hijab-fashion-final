@@ -48,7 +48,7 @@ export default function CatalogPageAr() {
   })
 
   // Search input ref for debounce
-  const searchTimeout = useRef<NodeJS.Timeout>()
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   // تعيين قيمة البحث في حقل الإدخال إذا كانت موجودة في URL
@@ -372,7 +372,7 @@ export default function CatalogPageAr() {
     
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
-    const totalItems = currentCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
     const cartCountElement = document.getElementById('cartCount')
     if (cartCountElement) {

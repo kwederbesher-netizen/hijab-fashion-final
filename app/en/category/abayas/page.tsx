@@ -159,7 +159,7 @@ export default function AbayasCategoryPage() {
     
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
-    const totalItems = currentCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
     const cartCountElement = document.getElementById('cartCount')
     if (cartCountElement) {

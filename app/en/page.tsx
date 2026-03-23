@@ -14,9 +14,9 @@ export default function HomePageEn() {
   const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
   
-  // مؤشرات لتحسين الأداء
+  // ✅ أضف null كقيمة أولية
   const isMounted = useRef(true)
-  const sliderInterval = useRef<NodeJS.Timeout>()
+  const sliderInterval = useRef<NodeJS.Timeout | null>(null)
 
   // Load products from API with Pagination
   useEffect(() => {
@@ -25,7 +25,6 @@ export default function HomePageEn() {
     
     async function loadProducts() {
       try {
-        // Get latest 8 products
         const res = await fetch('/api/products?limit=8&sort=newest', {
           signal: abortController.signal
         })
@@ -75,26 +74,22 @@ export default function HomePageEn() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Scroll to top function
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Add to cart function - supports packets and single pieces
+  // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     
-    // Get current cart
     const currentCart = JSON.parse(localStorage.getItem('cart') || '[]')
     
-    // Determine product type
     const isRSS = product['rss/not rss message_en']?.includes('single piece') || 
                   product['rss/not rss message_ar']?.includes('قطعة واحدة')
     const packetSize = product.pcs_per_packet ? parseInt(product.pcs_per_packet) : 1
-    const requestedQuantity = 1 // Default quantity on homepage
+    const requestedQuantity = 1
     
-    // Create product object with quantity
     const productToAdd = {
       _id: product._id,
       name_ar: product.name_ar,
@@ -111,7 +106,6 @@ export default function HomePageEn() {
       unitPrice: product.price_usd
     }
     
-    // Check if product already exists in cart
     const existingIndex = currentCart.findIndex((item: any) => item._id === product._id)
     
     if (existingIndex !== -1) {
@@ -120,26 +114,20 @@ export default function HomePageEn() {
       currentCart.push(productToAdd)
     }
     
-    // Save cart
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
-    // Calculate total pieces
-    const totalItems = currentCart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    // ✅ أضف الأنواع
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
-    // Update cart count in header
     const cartCountElement = document.getElementById('cartCount')
     if (cartCountElement) {
       cartCountElement.textContent = totalItems.toString()
     }
     
-    // Dispatch cart update event
-    const cartUpdateEvent = new CustomEvent('cartUpdated', { detail: totalItems })
-    window.dispatchEvent(cartUpdateEvent)
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: totalItems }))
     
-    // Open cart
     setTimeout(() => {
-      const openCartEvent = new CustomEvent('openCart')
-      window.dispatchEvent(openCartEvent)
+      window.dispatchEvent(new CustomEvent('openCart'))
     }, 50)
   }, [])
 
@@ -328,7 +316,6 @@ export default function HomePageEn() {
             background: var(--primary-dark);
           }
 
-          /* Hero Slider */
           .hero-slider {
             position: relative;
             height: 650px;
@@ -417,7 +404,6 @@ export default function HomePageEn() {
             transform: scale(1.2);
           }
 
-          /* Ranked Section */
           .ranked-section {
             padding: 60px 0 40px;
             background: var(--light-gray);
@@ -499,7 +485,6 @@ export default function HomePageEn() {
             color: var(--white);
           }
 
-          /* Channels Section */
           .channels-section {
             padding: 40px 0 60px;
             background: var(--light-gray);
@@ -612,7 +597,6 @@ export default function HomePageEn() {
             background: var(--telegram-dark);
           }
 
-          /* Features Section */
           .features-section {
             padding: 70px 0;
             background: var(--white);
@@ -683,7 +667,6 @@ export default function HomePageEn() {
             line-height: 1.7;
           }
 
-          /* Private Label Section */
           .privatelabel-section {
             padding: 80px 0;
             background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
@@ -793,7 +776,6 @@ export default function HomePageEn() {
             box-shadow: 0 10px 25px rgba(255, 90, 0, 0.3);
           }
 
-          /* Categories Section */
           .categories-section {
             padding: 70px 0;
             background: var(--light-gray);
@@ -856,7 +838,6 @@ export default function HomePageEn() {
             margin: 0;
           }
 
-          /* Products Section */
           .products-section {
             padding: 70px 0;
             background: var(--white);
@@ -951,7 +932,6 @@ export default function HomePageEn() {
             margin-top: 30px;
           }
 
-          /* FAQ Section */
           .faq-section {
             padding: 70px 0;
             background: var(--light-gray);
@@ -1013,7 +993,6 @@ export default function HomePageEn() {
             margin: 0;
           }
 
-          /* Testimonials Section */
           .testimonials-section {
             padding: 70px 0;
             background: var(--white);
@@ -1076,7 +1055,6 @@ export default function HomePageEn() {
             font-style: italic;
           }
 
-          /* Blogs Section */
           .blogs-section {
             padding: 70px 0;
             background: var(--light-gray);
@@ -1165,7 +1143,6 @@ export default function HomePageEn() {
             gap: 8px;
           }
 
-          /* Animations */
           @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1182,7 +1159,6 @@ export default function HomePageEn() {
             }
           }
 
-          /* Responsive */
           @media (max-width: 992px) {
             .features-grid,
             .products-grid,
