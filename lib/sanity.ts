@@ -1,6 +1,6 @@
 // lib/sanity.ts
 import { createClient } from 'next-sanity'
-import imageUrlBuilder from '@sanity/image-url'
+import { createImageUrlBuilder } from '@sanity/image-url'  // ✅ تغيير هنا
 
 export const client = createClient({
   projectId: 'ruyb1c3n',
@@ -11,7 +11,7 @@ export const client = createClient({
   token: '', // لا نحتاج توكن للقراءة فقط
 })
 
-const builder = imageUrlBuilder(client)
+const builder = createImageUrlBuilder(client)  // ✅ تغيير هنا
 
 export function urlFor(source: any) {
   return builder.image(source)

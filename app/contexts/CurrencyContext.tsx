@@ -1,4 +1,3 @@
-// app/contexts/CurrencyContext.tsx
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
@@ -11,6 +10,7 @@ interface CurrencyContextType {
   currency: Currency
   setCurrency: (currency: Currency) => void
   formatPrice: (price: number) => string
+  convertPrice: (priceUSD: number) => number
   rates: Record<Currency, number>
   loading: boolean
   error: string | null
@@ -24,6 +24,16 @@ const DEFAULT_RATES: Record<Currency, number> = {
   TRY: 34.5,
   SAR: 3.75,
   AED: 3.67
+}
+
+// رموز العملات للتنسيق اليدوي (احتياطي)
+const CURRENCY_SYMBOLS: Record<Currency, string> = {
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  TRY: '₺',
+  SAR: '﷼',
+  AED: 'د.إ'
 }
 
 // إنشاء السياق
@@ -48,11 +58,6 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
           setCurrency(savedCurrency)
         }
         
-        // يمكن إضافة API لجلب أسعار الصرف الحقيقية هنا
-        // مثال: const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD')
-        // const data = await response.json()
-        // setRates(data.rates)
-        
         // استخدام الأسعار الافتراضية
         setRates(DEFAULT_RATES)
         setError(null)
@@ -73,6 +78,14 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('currency', newCurrency)
   }
 
+  // تحويل السعر من USD إلى العملة المختارة
+  const convertPrice = (priceUSD: number): number => {
+    if (typeof priceUSD !== 'number' || isNaN(priceUSD)) {
+      return 0
+    }
+    return priceUSD * rates[currency]
+  }
+
   // تنسيق السعر حسب العملة المختارة
   const formatPrice = (price: number): string => {
     if (typeof price !== 'number' || isNaN(price)) {
@@ -81,13 +94,23 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     
     const converted = price * rates[currency]
     
-    // تنسيق حسب العملة
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(converted)
+    // تنسيق خاص للعملات العربية
+    if (currency === 'SAR' || currency === 'AED') {
+      return `${converted.toFixed(2)} ${CURRENCY_SYMBOLS[currency]}`
+    }
+    
+    // استخدام Intl.NumberFormat للعملات الأخرى
+    try {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(converted)
+    } catch {
+      // fallback في حالة الخطأ
+      return `${CURRENCY_SYMBOLS[currency]}${converted.toFixed(2)}`
+    }
   }
 
   return (
@@ -96,6 +119,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         currency,
         setCurrency: handleSetCurrency,
         formatPrice,
+        convertPrice,
         rates,
         loading,
         error
