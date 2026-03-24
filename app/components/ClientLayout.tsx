@@ -200,6 +200,149 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <>
+      {/* Global CSS to fix mobile white space */}
+      <style>{`
+        /* إصلاح الفراغ الأبيض على اليمين في الجوال */
+        html, body {
+          overflow-x: hidden !important;
+          width: 100% !important;
+          position: relative !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
+        body {
+          overflow-x: hidden !important;
+        }
+        
+        * {
+          max-width: 100vw !important;
+          box-sizing: border-box !important;
+        }
+        
+        /* منع أي عنصر من التسبب في overflow */
+        .container,
+        [class*="container"],
+        [style*="max-width"] {
+          overflow-x: hidden !important;
+        }
+        
+        img, video, iframe, svg {
+          max-width: 100% !important;
+          height: auto !important;
+        }
+        
+        /* إصلاح الـ grid والهوامش في الجوال */
+        @media (max-width: 768px) {
+          [style*="grid-template-columns"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          
+          [style*="margin-left"],
+          [style*="margin-right"] {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+          
+          [style*="padding-left"],
+          [style*="padding-right"] {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+          
+          .container {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+        }
+        
+        .dropdown:hover .dropdown-content {
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        
+        .dropdown-content {
+          transition: all 0.3s ease;
+        }
+        
+        .dropdown-content a:hover {
+          background: rgba(255, 90, 0, 0.1);
+          color: #ff5a00;
+        }
+        
+        @media (max-width: 992px) {
+          .desktop-nav {
+            gap: 20px !important;
+          }
+          .desktop-nav a {
+            font-size: 14px !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .main-header .container {
+            flex-wrap: wrap;
+            justify-content: center !important;
+          }
+          .main-header .logo {
+            order: 1;
+            width: auto;
+          }
+          .main-header .search-bar {
+            order: 3;
+            max-width: 100%;
+            margin: 10px 0 !important;
+            width: 100%;
+          }
+          .main-header .top-actions {
+            order: 2;
+          }
+          .mobile-menu-btn {
+            display: block !important;
+          }
+          .desktop-nav {
+            display: none !important;
+          }
+        }
+        
+        #backToTop.show {
+          opacity: 1;
+          visibility: visible;
+        }
+        
+        .simple-channel:hover {
+          transform: translateY(-3px);
+        }
+        
+        .footer-social a {
+          color: white;
+          background: rgba(255,255,255,0.1);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s;
+          text-decoration: none;
+        }
+        
+        .footer-social a:hover {
+          background: #ff5a00;
+          transform: translateY(-3px);
+        }
+        
+        .country-list a:hover {
+          background: #ff5a00 !important;
+          color: white !important;
+          transform: translateY(-2px);
+        }
+        
+        .footer-policies a:hover {
+          color: #ff5a00 !important;
+        }
+      `}</style>
+
       {/* Overlay for cart */}
       <div 
         className={`overlay ${isCartOpen ? 'active' : ''}`} 
@@ -528,7 +671,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                margin: 0
+                margin: 0,
+                flexWrap: 'wrap'
               }}>
                 <span style={{ fontSize: '28px', color: '#000', fontWeight: 800 }}>Hijab Fashion Mall</span>
                 <span style={{ 
@@ -1087,94 +1231,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       >
         <i className="fas fa-arrow-up"></i>
       </button>
-
-      <style>{`
-        .dropdown:hover .dropdown-content {
-          opacity: 1 !important;
-          visibility: visible !important;
-        }
-        
-        .dropdown-content {
-          transition: all 0.3s ease;
-        }
-        
-        .dropdown-content a:hover {
-          background: rgba(255, 90, 0, 0.1);
-          color: #ff5a00;
-        }
-        
-        @media (max-width: 992px) {
-          .desktop-nav {
-            gap: 20px !important;
-          }
-          .desktop-nav a {
-            font-size: 14px !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .main-header .container {
-            flex-wrap: wrap;
-            justify-content: center !important;
-          }
-          .main-header .logo {
-            order: 1;
-            width: auto;
-          }
-          .main-header .search-bar {
-            order: 3;
-            max-width: 100%;
-            margin: 10px 0 !important;
-            width: 100%;
-          }
-          .main-header .top-actions {
-            order: 2;
-          }
-          .mobile-menu-btn {
-            display: block !important;
-          }
-          .desktop-nav {
-            display: none !important;
-          }
-        }
-        
-        #backToTop.show {
-          opacity: 1;
-          visibility: visible;
-        }
-        
-        .simple-channel:hover {
-          transform: translateY(-3px);
-        }
-        
-        .footer-social a {
-          color: white;
-          background: rgba(255,255,255,0.1);
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s;
-          text-decoration: none;
-        }
-        
-        .footer-social a:hover {
-          background: #ff5a00;
-          transform: translateY(-3px);
-        }
-        
-        .country-list a:hover {
-          background: #ff5a00 !important;
-          color: white !important;
-          transform: translateY(-2px);
-        }
-        
-        .footer-policies a:hover {
-          color: #ff5a00 !important;
-        }
-      `}</style>
     </>
   )
 }

@@ -194,7 +194,62 @@ export default function HomePageAr() {
       </Head>
 
       <div dir="rtl">
+        {/* Global CSS to fix mobile white space */}
         <style>{`
+          /* إصلاح الفراغ الأبيض على اليمين في الجوال */
+          html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            position: relative !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          
+          body {
+            overflow-x: hidden !important;
+          }
+          
+          * {
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+          }
+          
+          /* منع أي عنصر من التسبب في overflow */
+          .container,
+          [class*="container"],
+          [style*="max-width"] {
+            overflow-x: hidden !important;
+          }
+          
+          img, video, iframe, svg {
+            max-width: 100% !important;
+            height: auto !important;
+          }
+          
+          /* إصلاح الـ grid والهوامش في الجوال */
+          @media (max-width: 768px) {
+            [style*="grid-template-columns"] {
+              grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            [style*="margin-left"],
+            [style*="margin-right"] {
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+            }
+            
+            [style*="padding-left"],
+            [style*="padding-right"] {
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+            }
+            
+            .container {
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+            }
+          }
+          
           @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
           
           :root {
@@ -1207,19 +1262,19 @@ export default function HomePageAr() {
             .blogs-grid,
             .channels-grid,
             .faq-grid-cards {
-              grid-template-columns: repeat(2, 1fr);
+              grid-template-columns: repeat(2, 1fr) !important;
             }
             
             .categories-grid {
-              grid-template-columns: repeat(2, 1fr);
+              grid-template-columns: repeat(2, 1fr) !important;
             }
             
             .privatelabel-wrapper {
-              grid-template-columns: 1fr;
+              grid-template-columns: 1fr !important;
             }
             
             .privatelabel-content {
-              padding: 40px;
+              padding: 40px !important;
             }
           }
 
@@ -1251,7 +1306,7 @@ export default function HomePageAr() {
             .channels-grid,
             .faq-grid-cards,
             .categories-grid {
-              grid-template-columns: 1fr;
+              grid-template-columns: 1fr !important;
             }
             
             .ranked-horizontal {
@@ -1269,7 +1324,7 @@ export default function HomePageAr() {
             }
             
             .products-grid {
-              grid-template-columns: repeat(2, 1fr);
+              grid-template-columns: repeat(2, 1fr) !important;
               gap: 15px;
             }
             
@@ -1280,7 +1335,7 @@ export default function HomePageAr() {
           
           @media (max-width: 576px) {
             .products-grid {
-              grid-template-columns: 1fr;
+              grid-template-columns: 1fr !important;
             }
             
             .product-image {

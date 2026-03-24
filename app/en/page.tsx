@@ -182,7 +182,62 @@ export default function HomePageEn() {
       </Head>
 
       <div>
+        {/* Global CSS to fix mobile white space */}
         <style>{`
+          /* Fix white space on right in mobile */
+          html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            position: relative !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          
+          body {
+            overflow-x: hidden !important;
+          }
+          
+          * {
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+          }
+          
+          /* Prevent any element from causing overflow */
+          .container,
+          [class*="container"],
+          [style*="max-width"] {
+            overflow-x: hidden !important;
+          }
+          
+          img, video, iframe, svg {
+            max-width: 100% !important;
+            height: auto !important;
+          }
+          
+          /* Fix grid and margins on mobile */
+          @media (max-width: 768px) {
+            [style*="grid-template-columns"] {
+              grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            [style*="margin-left"],
+            [style*="margin-right"] {
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+            }
+            
+            [style*="padding-left"],
+            [style*="padding-right"] {
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+            }
+            
+            .container {
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+            }
+          }
+          
           @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
           
           :root {
@@ -1166,19 +1221,19 @@ export default function HomePageEn() {
             .blogs-grid,
             .channels-grid,
             .faq-grid-cards {
-              grid-template-columns: repeat(2, 1fr);
+              grid-template-columns: repeat(2, 1fr) !important;
             }
             
             .categories-grid {
-              grid-template-columns: repeat(2, 1fr);
+              grid-template-columns: repeat(2, 1fr) !important;
             }
             
             .privatelabel-wrapper {
-              grid-template-columns: 1fr;
+              grid-template-columns: 1fr !important;
             }
             
             .privatelabel-content {
-              padding: 40px;
+              padding: 40px !important;
             }
           }
 
@@ -1210,7 +1265,7 @@ export default function HomePageEn() {
             .channels-grid,
             .faq-grid-cards,
             .categories-grid {
-              grid-template-columns: 1fr;
+              grid-template-columns: 1fr !important;
             }
             
             .ranked-horizontal {
@@ -1228,7 +1283,7 @@ export default function HomePageEn() {
             }
             
             .products-grid {
-              grid-template-columns: repeat(2, 1fr);
+              grid-template-columns: repeat(2, 1fr) !important;
               gap: 15px;
             }
             
@@ -1239,7 +1294,7 @@ export default function HomePageEn() {
           
           @media (max-width: 576px) {
             .products-grid {
-              grid-template-columns: 1fr;
+              grid-template-columns: 1fr !important;
             }
             
             .product-image {

@@ -1,4 +1,3 @@
-// app/ar/catalog/page.tsx
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -477,6 +476,99 @@ export default function CatalogPageAr() {
 
   return (
     <>
+      {/* Global CSS to fix mobile white space */}
+      <style>{`
+        /* إصلاح الفراغ الأبيض على اليمين في الجوال */
+        html, body {
+          overflow-x: hidden !important;
+          width: 100% !important;
+          position: relative !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
+        body {
+          overflow-x: hidden !important;
+        }
+        
+        * {
+          max-width: 100vw !important;
+          box-sizing: border-box !important;
+        }
+        
+        /* منع أي عنصر من التسبب في overflow */
+        .container,
+        [class*="container"],
+        [style*="max-width"] {
+          overflow-x: hidden !important;
+        }
+        
+        img, video, iframe, svg {
+          max-width: 100% !important;
+          height: auto !important;
+        }
+        
+        /* إصلاح الـ grid والهوامش في الجوال */
+        @media (max-width: 768px) {
+          [style*="grid-template-columns"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          
+          [style*="margin-left"],
+          [style*="margin-right"] {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+          
+          [style*="padding-left"],
+          [style*="padding-right"] {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+          
+          .container {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+        }
+        
+        @media (max-width: 992px) {
+          div[style*="grid-template-columns: 300px 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+          
+          aside {
+            position: static !important;
+            margin-bottom: 20px;
+          }
+          
+          div[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
+          
+          ul[style*="grid-template-columns: repeat(2, 1fr)"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          div[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        
+        @media (max-width: 576px) {
+          div[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
       <Head>
         <title>الكتالوج - أكثر من {totalProducts}+ منتج من ملابس المحجبات التركية | حجاب فاشون مول</title>
         <meta name="description" content={`تصفح أكبر كتالوج لملابس المحجبات التركية بالجملة. عبايات، فساتين محجبات، حجاب، أطقم، ملابس صلاة، بوركيني. أكثر من ${totalProducts}+ منتج بأسعار الجملة مع شحن عالمي سريع.`} />
@@ -1343,44 +1435,6 @@ export default function CatalogPageAr() {
           </div>
         </div>
       </section>
-
-      <style>{`
-        @media (max-width: 992px) {
-          div[style*="grid-template-columns: 300px 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-          
-          aside {
-            position: static !important;
-            margin-bottom: 20px;
-          }
-          
-          div[style*="grid-template-columns: repeat(4, 1fr)"] {
-            grid-template-columns: repeat(3, 1fr) !important;
-          }
-          
-          ul[style*="grid-template-columns: repeat(2, 1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: repeat(4, 1fr)"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        
-        @media (max-width: 576px) {
-          div[style*="grid-template-columns: repeat(4, 1fr)"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </>
   )
 }
