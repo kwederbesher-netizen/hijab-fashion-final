@@ -14,7 +14,6 @@ export default function HomePageEn() {
   const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
   
-  // ✅ أضف null كقيمة أولية
   const isMounted = useRef(true)
   const sliderInterval = useRef<NodeJS.Timeout | null>(null)
 
@@ -116,7 +115,6 @@ export default function HomePageEn() {
     
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
-    // ✅ أضف الأنواع
     const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
     const cartCountElement = document.getElementById('cartCount')
@@ -212,30 +210,6 @@ export default function HomePageEn() {
           img, video, iframe, svg {
             max-width: 100% !important;
             height: auto !important;
-          }
-          
-          /* Fix grid and margins on mobile */
-          @media (max-width: 768px) {
-            [style*="grid-template-columns"] {
-              grid-template-columns: repeat(2, 1fr) !important;
-            }
-            
-            [style*="margin-left"],
-            [style*="margin-right"] {
-              margin-left: 0 !important;
-              margin-right: 0 !important;
-            }
-            
-            [style*="padding-left"],
-            [style*="padding-right"] {
-              padding-left: 16px !important;
-              padding-right: 16px !important;
-            }
-            
-            .container {
-              padding-left: 16px !important;
-              padding-right: 16px !important;
-            }
           }
           
           @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
@@ -540,23 +514,24 @@ export default function HomePageEn() {
             color: var(--white);
           }
 
+          /* ===== Channels Section - عرض ثابت للبطاقات ===== */
           .channels-section {
-            padding: 40px 0 60px;
-            background: var(--light-gray);
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
           }
 
           .channels-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 320px);
             gap: 30px;
-            max-width: 900px;
+            justify-content: center;
             margin: 0 auto;
           }
 
           .channel-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 30px 25px;
             text-align: center;
             transition: transform 0.3s;
             border: 1px solid rgba(0,0,0,0.05);
@@ -569,14 +544,14 @@ export default function HomePageEn() {
           }
 
           .channel-icon {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            font-size: 45px;
+            font-size: 40px;
           }
 
           .whatsapp-card .channel-icon {
@@ -590,8 +565,8 @@ export default function HomePageEn() {
           }
 
           .channel-card h3 {
-            font-size: 26px;
-            margin-bottom: 15px;
+            font-size: 24px;
+            margin-bottom: 12px;
             color: var(--black);
             font-weight: 700;
           }
@@ -599,7 +574,8 @@ export default function HomePageEn() {
           .channel-card p {
             color: var(--medium-gray);
             margin-bottom: 20px;
-            font-size: 16px;
+            font-size: 15px;
+            line-height: 1.6;
           }
 
           .channel-stats {
@@ -610,7 +586,7 @@ export default function HomePageEn() {
           }
 
           .channel-stats span {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--medium-gray);
           }
 
@@ -624,14 +600,14 @@ export default function HomePageEn() {
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 14px 35px;
+            padding: 12px 25px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 17px;
+            font-size: 15px;
             transition: all 0.3s;
             width: 100%;
-            max-width: 280px;
+            max-width: 250px;
             margin: 0 auto;
             color: var(--white);
           }
@@ -898,6 +874,7 @@ export default function HomePageEn() {
             background: var(--white);
           }
 
+          /* ✅ Products Grid - 4 products per row on desktop */
           .products-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1214,16 +1191,12 @@ export default function HomePageEn() {
             }
           }
 
+          /* Responsive */
           @media (max-width: 992px) {
             .features-grid,
-            .products-grid,
             .testimonials-grid,
             .blogs-grid,
-            .channels-grid,
-            .faq-grid-cards {
-              grid-template-columns: repeat(2, 1fr) !important;
-            }
-            
+            .faq-grid-cards,
             .categories-grid {
               grid-template-columns: repeat(2, 1fr) !important;
             }
@@ -1259,13 +1232,21 @@ export default function HomePageEn() {
             }
             
             .features-grid,
-            .products-grid,
             .testimonials-grid,
             .blogs-grid,
-            .channels-grid,
             .faq-grid-cards,
             .categories-grid {
               grid-template-columns: 1fr !important;
+            }
+            
+            /* ✅ Products Grid - 2 products per row on mobile */
+            .products-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 15px;
+            }
+            
+            .product-image {
+              height: 250px;
             }
             
             .ranked-horizontal {
@@ -1277,28 +1258,41 @@ export default function HomePageEn() {
               width: 100%;
               justify-content: center;
             }
-
-            .product-image {
-              height: 300px;
+            
+            /* ✅ Channels Section - 1 column on mobile */
+            .channels-grid {
+              grid-template-columns: 1fr;
+              gap: 20px;
             }
             
-            .products-grid {
-              grid-template-columns: repeat(2, 1fr) !important;
-              gap: 15px;
-            }
-            
-            .product-image {
-              height: 250px;
+            .channel-card {
+              max-width: 320px;
+              margin: 0 auto;
+              width: 100%;
             }
           }
           
           @media (max-width: 576px) {
             .products-grid {
-              grid-template-columns: 1fr !important;
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 12px;
             }
             
             .product-image {
-              height: 350px;
+              height: 220px;
+            }
+            
+            .product-info h3 {
+              font-size: 14px;
+            }
+            
+            .product-price {
+              font-size: 16px;
+            }
+            
+            .add-to-cart {
+              font-size: 13px;
+              padding: 8px 12px;
             }
           }
         `}</style>
@@ -1318,7 +1312,7 @@ export default function HomePageEn() {
             {/* Slide 1 */}
             <div 
               className={`slide ${currentSlide === 0 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-1.webp)' }}
+              style={{ backgroundImage: 'url(/images/imageshero-slider-1.webp)' }}
             >
               <div className="slide-content">
                 <h1>Turkish Modest Fashion</h1>
@@ -1329,7 +1323,7 @@ export default function HomePageEn() {
             {/* Slide 2 */}
             <div 
               className={`slide ${currentSlide === 1 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-2.webp)' }}
+              style={{ backgroundImage: 'url(/images/imageshero-slider-2.webp)' }}
             >
               <div className="slide-content">
                 <h2>Wholesale Prices</h2>
@@ -1340,7 +1334,7 @@ export default function HomePageEn() {
             {/* Slide 3 */}
             <div 
               className={`slide ${currentSlide === 2 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-3.webp)' }}
+              style={{ backgroundImage: 'url(/images/imageshero-slider-3.webp)' }}
             >
               <div className="slide-content">
                 <h2>Fast Worldwide Shipping</h2>
@@ -1404,7 +1398,7 @@ export default function HomePageEn() {
                   <span><i className="fas fa-users"></i> 1,500+ members</span>
                   <span><i className="fas fa-image"></i> Daily updates</span>
                 </div>
-                <a href="https://whatsapp.com/channel/0029VaKJqF6A3kLkHxKJmKJ" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">Join WhatsApp Channel</a>
+                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">Join WhatsApp Channel</a>
               </div>
               <div className="channel-card telegram-card">
                 <div className="channel-icon">
@@ -1503,7 +1497,6 @@ export default function HomePageEn() {
             <h2 className="section-title">Explore Our Collections</h2>
             <p className="section-subtitle">Find the perfect style for every occasion</p>
             <div className="categories-grid">
-              {/* Abayas */}
               <Link href="/en/category/abayas" className="category-card">
                 <Image src="/images/category-abayas.webp" alt="Wholesale Turkish Abayas" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1511,8 +1504,6 @@ export default function HomePageEn() {
                   <p>Medina silk, crepe & more</p>
                 </div>
               </Link>
-              
-              {/* Modest Dresses */}
               <Link href="/en/category/modest-dresses" className="category-card">
                 <Image src="/images/category-dresses.webp" alt="Wholesale Modest Dresses" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1520,8 +1511,6 @@ export default function HomePageEn() {
                   <p>Casual & formal</p>
                 </div>
               </Link>
-              
-              {/* Modest Skirt Sets */}
               <Link href="/en/category/modest-skirt-sets" className="category-card">
                 <Image src="/images/category-skirt-sets.webp" alt="Wholesale Skirt Sets" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1529,8 +1518,6 @@ export default function HomePageEn() {
                   <p>2-piece sets with skirt</p>
                 </div>
               </Link>
-              
-              {/* Modest Evening Dresses */}
               <Link href="/en/category/modest-evening-dresses" className="category-card">
                 <Image src="/images/category-evening-dresses.webp" alt="Wholesale Evening Dresses" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1538,8 +1525,6 @@ export default function HomePageEn() {
                   <p>For special occasions</p>
                 </div>
               </Link>
-              
-              {/* Modest Pants Sets */}
               <Link href="/en/category/modest-pants-sets" className="category-card">
                 <Image src="/images/178.webp" alt="Wholesale Pants Sets" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1547,8 +1532,6 @@ export default function HomePageEn() {
                   <p>2-piece sets with pants</p>
                 </div>
               </Link>
-              
-              {/* Hijabs */}
               <Link href="/en/category/hijabs" className="category-card">
                 <Image src="/images/category-hijabs.webp" alt="Wholesale Turkish Hijabs" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1556,8 +1539,6 @@ export default function HomePageEn() {
                   <p>Silk, chiffon, cotton</p>
                 </div>
               </Link>
-              
-              {/* Prayer Clothes */}
               <Link href="/en/category/prayer-clothes" className="category-card">
                 <Image src="/images/53.webp" alt="Wholesale Prayer Outfits" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1565,8 +1546,6 @@ export default function HomePageEn() {
                   <p>Sets & dresses for prayer</p>
                 </div>
               </Link>
-              
-              {/* Modest Sportswear */}
               <Link href="/en/category/modest-sportswear" className="category-card">
                 <Image src="/images/category-sportswear.webp" alt="Wholesale Modest Sportswear" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1574,8 +1553,6 @@ export default function HomePageEn() {
                   <p>For activities & sports</p>
                 </div>
               </Link>
-              
-              {/* Burkini & Modest Swimwear */}
               <Link href="/en/category/burkini" className="category-card">
                 <Image src="/images/category-swimwear.webp" alt="Wholesale Burkini & Swimwear" width={600} height={800} loading="lazy" />
                 <div className="category-info">

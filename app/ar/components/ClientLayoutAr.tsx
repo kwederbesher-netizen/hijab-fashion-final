@@ -10,7 +10,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [cart, setCart] = useState<any[]>([])
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -90,6 +89,13 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Calculate total pieces
+  const getTotalPieces = () => {
+    return cart.reduce((total, item) => {
+      return total + (item.quantity || 1)
+    }, 0)
+  }
+
   // Remove from cart
   const removeFromCart = (index: number) => {
     const newCart = [...cart]
@@ -104,7 +110,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     window.dispatchEvent(event)
   }
 
-  // Send to WhatsApp
+  // Send to WhatsApp - بدون أسعار
   const sendToWhatsApp = () => {
     if (cart.length === 0) {
       alert('⚠️ السلة فارغة - أضف منتجات أولاً')
@@ -115,29 +121,24 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     cart.forEach((item, index) => {
       const name = item.name_ar || item.name_en || item.name || 'منتج'
       const code = item.product_code || 'غير متوفر'
-      const price = item.price_usd || 0
       const quantity = item.quantity || 1
-      const totalPrice = price * quantity
       
       message += `${index + 1}. ${name}\n`
       message += `   الكود: ${code}\n`
-      message += `   الكمية: ${quantity} قطعة\n`
-      message += `   السعر: $${price.toFixed(2)} × ${quantity} = $${totalPrice.toFixed(2)}\n\n`
+      message += `   الكمية: ${quantity} قطعة\n\n`
     })
     
-    const grandTotal = cart.reduce((sum, item) => sum + ((item.price_usd || 0) * (item.quantity || 1)), 0)
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalPieces = getTotalPieces()
     
     message += `━━━━━━━━━━━━━━━━━━━━\n`
-    message += `📦 إجمالي القطع: ${totalItems}\n`
-    message += `💰 الإجمالي: $${grandTotal.toFixed(2)}\n`
-    message += `━━━━━━━━━━━━━━━━━━━━\n\n`
-    message += `يرجى تأكيد الطلب أو تزويدي بمزيد من المعلومات.`
+    message += `📦 إجمالي القطع: ${totalPieces}\n`
+    
+    message += `\nيرجى تأكيد الطلب أو تزويدي بمزيد من المعلومات.`
     
     window.open(`https://wa.me/905519522448?text=${encodeURIComponent(message)}`, '_blank')
   }
 
-  // Download PDF
+  // Download PDF - بدون أسعار
   const downloadPDF = () => {
     if (cart.length === 0) {
       alert('⚠️ السلة فارغة - أضف منتجات أولاً')
@@ -150,24 +151,19 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     cart.forEach((item, index) => {
       const name = item.name_ar || item.name_en || item.name || 'منتج'
       const code = item.product_code || 'غير متوفر'
-      const price = item.price_usd || 0
       const quantity = item.quantity || 1
-      const totalPrice = price * quantity
       
       content += `${index + 1}. ${name}\n`
       content += `   الكود: ${code}\n`
-      content += `   الكمية: ${quantity} قطعة\n`
-      content += `   السعر: $${price.toFixed(2)} × ${quantity} = $${totalPrice.toFixed(2)}\n\n`
+      content += `   الكمية: ${quantity} قطعة\n\n`
     })
     
-    const grandTotal = cart.reduce((sum, item) => sum + ((item.price_usd || 0) * (item.quantity || 1)), 0)
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    const totalPieces = getTotalPieces()
     
     content += "-".repeat(50) + "\n"
-    content += `📦 إجمالي القطع: ${totalItems}\n`
-    content += `💰 الإجمالي: $${grandTotal.toFixed(2)}\n`
-    content += "-".repeat(50) + "\n\n"
-    content += "شكراً لاهتمامك! 😊"
+    content += `📦 إجمالي القطع: ${totalPieces}\n`
+    
+    content += "\nشكراً لاهتمامك! 😊"
     
     const blob = new Blob([content], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
@@ -211,7 +207,18 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           height: auto !important;
         }
         
-        /* إصلاح الـ grid والهوامش في الجوال */
+        /* إخفاء أشرطة التمرير في القائمة الرئيسية */
+        .desktop-nav {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+          overflow-x: auto !important;
+        }
+        
+        .desktop-nav::-webkit-scrollbar {
+          display: none !important;
+        }
+        
+        /* إصلاح الـ grid والهوامش في الجوال - إظهار شريط البحث */
         @media (max-width: 768px) {
           [style*="grid-template-columns"] {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -233,28 +240,21 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             padding-left: 16px !important;
             padding-right: 16px !important;
           }
-        }
-        
-        .dropdown:hover .dropdown-content {
-          opacity: 1 !important;
-          visibility: visible !important;
-        }
-        
-        .dropdown-content {
-          transition: all 0.3s ease;
-        }
-        
-        .dropdown-content a:hover {
-          background: rgba(255, 90, 0, 0.05);
-          color: #ff5a00;
+          
+          /* ضمان ظهور شريط البحث في الجوال */
+          .main-header .search-bar {
+            display: block !important;
+            width: 100% !important;
+            margin: 10px 0 !important;
+          }
         }
         
         @media (max-width: 992px) {
           .desktop-nav {
-            gap: 20px !important;
+            gap: 15px !important;
           }
           .desktop-nav a {
-            font-size: 14px !important;
+            font-size: 13px !important;
           }
         }
         
@@ -267,14 +267,16 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             order: 1;
             width: auto;
           }
+          .main-header .top-actions {
+            order: 2;
+          }
+          /* شريط البحث يظهر في الصف الثالث */
           .main-header .search-bar {
             order: 3;
             max-width: 100%;
             margin: 10px 0 !important;
             width: 100%;
-          }
-          .main-header .top-actions {
-            order: 2;
+            display: block !important;
           }
           .mobile-menu-btn {
             display: block !important;
@@ -383,7 +385,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               const itemQuantity = item.quantity || 1
               const packetSize = item.packetSize || 1
               const isRSS = item.isRSS || false
-              const itemTotal = (item.price_usd || 0) * itemQuantity
               const productCode = item.product_code || 'غير متوفر'
               
               return (
@@ -420,9 +421,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                     <div className="cart-item-code" style={{ fontSize: '12px', color: '#888', marginBottom: '5px' }}>
                       الكود: {productCode}
                     </div>
-                    <div className="cart-item-price" style={{ color: '#ff5a00', fontWeight: 600 }}>
-                      ${item.price_usd?.toFixed(2) || '0.00'}
-                    </div>
                     <div style={{ fontSize: '12px', color: '#666', marginBottom: '5px' }}>
                       {!isRSS && packetSize > 1 && (
                         <span>حزمة {packetSize} قطع | </span>
@@ -453,7 +451,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             fontWeight: 600
           }}>
             <span>إجمالي القطع:</span>
-            <span>{cartCount}</span>
+            <span>{getTotalPieces()}</span>
           </div>
           <div className="cart-actions" style={{ display: 'flex', gap: '10px' }}>
             <button 
@@ -579,9 +577,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             ملابس صلاة
           </Link>
           
-          <Link href="/ar/blogs" style={{ color: '#000', textDecoration: 'none', fontSize: '16px', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #eee' }}>
-            المدونة
-          </Link>
           <Link href="/ar/about-us" style={{ color: '#000', textDecoration: 'none', fontSize: '16px', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #eee' }}>
             من نحن
           </Link>
@@ -650,8 +645,8 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             </Link>
           </div>
           
-          {/* ✅ Search Bar - عريض في المنتصف */}
-          <div style={{
+          {/* Search Bar */}
+          <div className="search-bar" style={{
             flex: 1,
             maxWidth: '500px',
             margin: '0 20px'
@@ -705,7 +700,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             </form>
           </div>
           
-          {/* Top Actions - العملات واللغة والسلة */}
+          {/* Top Actions - اللغة والعملات بالعربية */}
           <div className="top-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center', flexShrink: 0 }}>
             <div className="lang-currency" style={{
               display: 'flex',
@@ -714,6 +709,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               padding: '6px 10px',
               borderRadius: '40px'
             }}>
+              {/* قائمة اللغات بالعربية - تمت إضافة الإيطالية والإسبانية */}
               <select 
                 id="languageSelect"
                 defaultValue="ar"
@@ -726,7 +722,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                   cursor: 'pointer',
                   outline: 'none',
                   color: '#222',
-                  width: '65px'
+                  width: '100px'
                 }}
                 onChange={(e) => {
                   const lang = e.target.value
@@ -741,15 +737,23 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                     window.location.href = `/de${pathWithoutLang}`
                   } else if (lang === 'tr') {
                     window.location.href = `/tr${pathWithoutLang}`
+                  } else if (lang === 'it') {
+                    window.location.href = `/it${pathWithoutLang}`
+                  } else if (lang === 'es') {
+                    window.location.href = `/es${pathWithoutLang}`
                   }
                 }}
               >
-                <option value="ar">🇸🇦 Ar</option>
-                <option value="en">🇬🇧 En</option>
-                <option value="fr">🇫🇷 Fr</option>
-                <option value="de">🇩🇪 De</option>
-                <option value="tr">🇹🇷 Tr</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="en">🇬🇧 الإنجليزية</option>
+                <option value="fr">🇫🇷 الفرنسية</option>
+                <option value="de">🇩🇪 الألمانية</option>
+                <option value="tr">🇹🇷 التركية</option>
+                <option value="it">🇮🇹 الإيطالية</option>
+                <option value="es">🇪🇸 الإسبانية</option>
               </select>
+              
+              {/* قائمة العملات بالعربية */}
               <select 
                 id="currencySelect"
                 value={currency}
@@ -764,16 +768,23 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                   cursor: currencyLoading ? 'wait' : 'pointer',
                   outline: 'none',
                   color: '#222',
-                  width: '65px',
+                  width: '90px',
                   opacity: currencyLoading ? 0.7 : 1
                 }}
               >
-                <option value="USD">🇺🇸 USD</option>
-                <option value="EUR">🇪🇺 EUR</option>
-                <option value="TRY">🇹🇷 TRY</option>
-                <option value="GBP">🇬🇧 GBP</option>
-                <option value="SAR">🇸🇦 SAR</option>
-                <option value="AED">🇦🇪 AED</option>
+                <option value="USD">🇺🇸 دولار أمريكي</option>
+                <option value="EUR">🇪🇺 يورو</option>
+                <option value="TRY">🇹🇷 ليرة تركية</option>
+                <option value="GBP">🇬🇧 جنيه إسترليني</option>
+                <option value="SAR">🇸🇦 ريال سعودي</option>
+                <option value="AED">🇦🇪 درهم إماراتي</option>
+                <option value="CAD">🇨🇦 دولار كندي</option>
+                <option value="AUD">🇦🇺 دولار أسترالي</option>
+                <option value="OMR">🇴🇲 ريال عماني</option>
+                <option value="BHD">🇧🇭 دينار بحريني</option>
+                <option value="KWD">🇰🇼 دينار كويتي</option>
+                <option value="LYD">🇱🇾 دينار ليبي</option>
+                <option value="DZD">🇩🇿 دينار جزائري</option>
               </select>
             </div>
             <div 
@@ -805,7 +816,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           </div>
         </div>
         
-        {/* ✅ الصف السفلي - القائمة الرئيسية (واسعة) */}
+        {/* الصف السفلي - القائمة الرئيسية */}
         <div style={{
           background: '#f8f8f8',
           borderTop: '1px solid #eee',
@@ -820,82 +831,57 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               display: 'flex', 
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '35px',
+              gap: '25px',
               padding: '12px 0',
-              flexWrap: 'wrap'
+              flexWrap: 'nowrap',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
             }}>
-              <Link href="/ar" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/ar" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 الرئيسية
               </Link>
-              <Link href="/ar/catalog" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/ar/catalog" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 الكتالوج
               </Link>
-              
-              <div 
-                className="dropdown" 
-                style={{ position: 'relative', display: 'inline-block' }}
-                onMouseEnter={() => setIsCategoryDropdownOpen(true)}
-                onMouseLeave={() => setIsCategoryDropdownOpen(false)}
-              >
-                <button className="dropdown-btn" style={{
-                  color: '#333',
-                  background: 'none',
-                  border: 'none',
-                  fontWeight: 500,
-                  fontSize: '15px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: 0
-                }}>
-                  التصنيفات <i className="fas fa-chevron-down" style={{ fontSize: '10px' }}></i>
-                </button>
-                <div 
-                  className="dropdown-content" 
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    right: '50%',
-                    transform: 'translateX(50%)',
-                    minWidth: '200px',
-                    background: 'white',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                    borderRadius: '10px',
-                    padding: '10px 0',
-                    opacity: isCategoryDropdownOpen ? 1 : 0,
-                    visibility: isCategoryDropdownOpen ? 'visible' : 'hidden',
-                    transition: 'all 0.3s ease',
-                    zIndex: 1000,
-                    marginTop: '10px'
-                  }}
-                >
-                  <Link href="/ar/category/abayas" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>عبايات</Link>
-                  <Link href="/ar/category/hijabs" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>حجاب</Link>
-                  <Link href="/ar/category/modest-skirt-sets" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>طقم تنورة محجبات</Link>
-                  <Link href="/ar/category/modest-dresses" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>فساتين محجبات</Link>
-                  <Link href="/ar/category/burkini" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>بوركيني ملابس سباحة محجبات</Link>
-                  <Link href="/ar/category/modest-sportswear" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>ملابس رياضية محجبات</Link>
-                  <Link href="/ar/category/modest-evening-dresses" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>فساتين سهرة محجبات</Link>
-                  <Link href="/ar/category/modest-pants-sets" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>طقم بنطلون محجبات</Link>
-                  <Link href="/ar/category/prayer-clothes" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>ملابس صلاة</Link>
-                </div>
-              </div>
-              
-              <Link href="/ar/blogs" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
-                المدونة
+              <Link href="/ar/category/abayas" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                عبايات
               </Link>
-              <Link href="/ar/about-us" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/ar/category/hijabs" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                حجاب
+              </Link>
+              <Link href="/ar/category/modest-skirt-sets" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                طقم تنورة
+              </Link>
+              <Link href="/ar/category/modest-dresses" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                فساتين
+              </Link>
+              <Link href="/ar/category/burkini" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                بوركيني
+              </Link>
+              <Link href="/ar/category/modest-sportswear" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                ملابس رياضية
+              </Link>
+              <Link href="/ar/category/modest-evening-dresses" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                فساتين سهرة
+              </Link>
+              <Link href="/ar/category/modest-pants-sets" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                طقم بنطلون
+              </Link>
+              <Link href="/ar/category/prayer-clothes" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                ملابس صلاة
+              </Link>
+              <Link href="/ar/about-us" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 من نحن
               </Link>
-              <Link href="/ar/contact" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/ar/contact" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 اتصل بنا
               </Link>
             </nav>
           </div>
         </div>
         
-        {/* Mobile Menu Button - يظهر فقط على الشاشات الصغيرة */}
+        {/* Mobile Menu Button */}
         <button 
           className="mobile-menu-btn" 
           onClick={() => setIsMobileNavOpen(true)}
@@ -1073,7 +1059,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           <div className="footer-channels-simple" style={{ margin: '30px 0 20px', padding: '20px 0', borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
               <div className="simple-channels" style={{ display: 'flex', justifyContent: 'center', gap: '30px', flexWrap: 'wrap' }}>
-                <a href="https://whatsapp.com/channel/0029VaKJqF6A3kLkHxKJmKJ" className="simple-channel whatsapp-simple" target="_blank" rel="noopener noreferrer" style={{
+                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="simple-channel whatsapp-simple" target="_blank" rel="noopener noreferrer" style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '15px',

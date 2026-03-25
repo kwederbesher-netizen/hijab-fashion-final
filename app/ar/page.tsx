@@ -226,30 +226,6 @@ export default function HomePageAr() {
             height: auto !important;
           }
           
-          /* إصلاح الـ grid والهوامش في الجوال */
-          @media (max-width: 768px) {
-            [style*="grid-template-columns"] {
-              grid-template-columns: repeat(2, 1fr) !important;
-            }
-            
-            [style*="margin-left"],
-            [style*="margin-right"] {
-              margin-left: 0 !important;
-              margin-right: 0 !important;
-            }
-            
-            [style*="padding-left"],
-            [style*="padding-right"] {
-              padding-left: 16px !important;
-              padding-right: 16px !important;
-            }
-            
-            .container {
-              padding-left: 16px !important;
-              padding-right: 16px !important;
-            }
-          }
-          
           @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
           
           :root {
@@ -563,24 +539,24 @@ export default function HomePageAr() {
             color: var(--white);
           }
 
-          /* ===== Channels Section ===== */
+          /* ===== Channels Section - تصميم جميل من الصفحة القديمة ===== */
           .channels-section {
-            padding: 40px 0 60px;
-            background: var(--light-gray);
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
           }
 
           .channels-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 420px);  /* ← عرض ثابت لكل عمود */
             gap: 30px;
-            max-width: 900px;
+            justify-content: center;
             margin: 0 auto;
           }
 
           .channel-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 30px 25px;
             text-align: center;
             transition: transform 0.3s;
             border: 1px solid rgba(0,0,0,0.05);
@@ -593,14 +569,14 @@ export default function HomePageAr() {
           }
 
           .channel-icon {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            font-size: 45px;
+            font-size: 40px;
           }
 
           .whatsapp-card .channel-icon {
@@ -614,7 +590,7 @@ export default function HomePageAr() {
           }
 
           .channel-card h3 {
-            font-size: 26px;
+            font-size: 24px;
             margin-bottom: 15px;
             color: var(--black);
             font-weight: 700;
@@ -623,7 +599,8 @@ export default function HomePageAr() {
           .channel-card p {
             color: var(--medium-gray);
             margin-bottom: 20px;
-            font-size: 16px;
+            font-size: 15px;
+            line-height: 1.6;
           }
 
           .channel-stats {
@@ -634,7 +611,7 @@ export default function HomePageAr() {
           }
 
           .channel-stats span {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--medium-gray);
           }
 
@@ -648,11 +625,11 @@ export default function HomePageAr() {
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 14px 35px;
+            padding: 12px 30px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 17px;
+            font-size: 15px;
             transition: all 0.3s;
             width: 100%;
             max-width: 280px;
@@ -1257,14 +1234,9 @@ export default function HomePageAr() {
           /* Responsive */
           @media (max-width: 992px) {
             .features-grid,
-            .products-grid,
             .testimonials-grid,
             .blogs-grid,
-            .channels-grid,
-            .faq-grid-cards {
-              grid-template-columns: repeat(2, 1fr) !important;
-            }
-            
+            .faq-grid-cards,
             .categories-grid {
               grid-template-columns: repeat(2, 1fr) !important;
             }
@@ -1300,13 +1272,21 @@ export default function HomePageAr() {
             }
             
             .features-grid,
-            .products-grid,
             .testimonials-grid,
             .blogs-grid,
-            .channels-grid,
             .faq-grid-cards,
             .categories-grid {
               grid-template-columns: 1fr !important;
+            }
+            
+            /* ✅ المنتجات: صفين في الجوال (منتجين في الصف) */
+            .products-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 15px;
+            }
+            
+            .product-image {
+              height: 250px;
             }
             
             .ranked-horizontal {
@@ -1318,28 +1298,34 @@ export default function HomePageAr() {
               width: 100%;
               justify-content: center;
             }
-
-            .product-image {
-              height: 300px;
-            }
             
-            .products-grid {
-              grid-template-columns: repeat(2, 1fr) !important;
-              gap: 15px;
-            }
-            
-            .product-image {
-              height: 250px;
+            /* ✅ قنوات التواصل - تصميم الجوال (صف واحد) */
+            .channels-grid {
+              grid-template-columns: 1fr;
             }
           }
           
           @media (max-width: 576px) {
             .products-grid {
-              grid-template-columns: 1fr !important;
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 12px;
             }
             
             .product-image {
-              height: 350px;
+              height: 220px;
+            }
+            
+            .product-info h3 {
+              font-size: 14px;
+            }
+            
+            .product-price {
+              font-size: 16px;
+            }
+            
+            .add-to-cart {
+              font-size: 13px;
+              padding: 8px 12px;
             }
           }
         `}</style>
@@ -1359,7 +1345,7 @@ export default function HomePageAr() {
             {/* Slide 1 */}
             <div 
               className={`slide ${currentSlide === 0 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-1.webp)' }}
+              style={{ backgroundImage: 'url(/images/imageshero-slider-1.webp)' }}
             >
               <div className="slide-content">
                 <h1>ملابس محجبات تركية</h1>
@@ -1370,7 +1356,7 @@ export default function HomePageAr() {
             {/* Slide 2 */}
             <div 
               className={`slide ${currentSlide === 1 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-2.webp)' }}
+              style={{ backgroundImage: 'url(/images/imageshero-slider-2.webp)' }}
             >
               <div className="slide-content">
                 <h2>أسعار الجملة</h2>
@@ -1381,7 +1367,7 @@ export default function HomePageAr() {
             {/* Slide 3 */}
             <div 
               className={`slide ${currentSlide === 2 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-3.webp)' }}
+              style={{ backgroundImage: 'url(/images/imageshero-slider-3.webp)' }}
             >
               <div className="slide-content">
                 <h2>شحن سريع عالمي</h2>
@@ -1429,7 +1415,7 @@ export default function HomePageAr() {
           </div>
         </section>
 
-        {/* Channels Section */}
+        {/* Channels Section - تصميم جميل من الصفحة القديمة */}
         <section className="channels-section">
           <div className="container">
             <h2 className="section-title">انضم إلى قنواتنا</h2>
@@ -1445,7 +1431,7 @@ export default function HomePageAr() {
                   <span><i className="fas fa-users"></i> 1,500+ عضو</span>
                   <span><i className="fas fa-image"></i> تحديثات يومية</span>
                 </div>
-                <a href="https://whatsapp.com/channel/0029VaKJqF6A3kLkHxKJmKJ" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">انضم لقناة واتساب</a>
+                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">انضم لقناة واتساب</a>
               </div>
               <div className="channel-card telegram-card">
                 <div className="channel-icon">
@@ -1544,7 +1530,6 @@ export default function HomePageAr() {
             <h2 className="section-title">استعرض مجموعاتنا</h2>
             <p className="section-subtitle">ابحث عن النمط المثالي لكل مناسبة</p>
             <div className="categories-grid">
-              {/* Abayas */}
               <Link href="/ar/category/abayas" className="category-card">
                 <Image src="/images/category-abayas.webp" alt="عبايات تركي جملة" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1552,8 +1537,6 @@ export default function HomePageAr() {
                   <p>حرير المدينة، كريب والمزيد</p>
                 </div>
               </Link>
-              
-              {/* Modest Dresses */}
               <Link href="/ar/category/modest-dresses" className="category-card">
                 <Image src="/images/category-dresses.webp" alt="فساتين محجبات جملة" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1561,8 +1544,6 @@ export default function HomePageAr() {
                   <p>كاجوال ورسمي</p>
                 </div>
               </Link>
-              
-              {/* Modest Skirt Sets */}
               <Link href="/ar/category/modest-skirt-sets" className="category-card">
                 <Image src="/images/category-skirt-sets.webp" alt="أطقم تنانير محجبات" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1570,8 +1551,6 @@ export default function HomePageAr() {
                   <p>أطقم قطعتين مع تنورة</p>
                 </div>
               </Link>
-              
-              {/* Modest Evening Dresses */}
               <Link href="/ar/category/modest-evening-dresses" className="category-card">
                 <Image src="/images/category-evening-dresses.webp" alt="فساتين سهرة محجبات" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1579,8 +1558,6 @@ export default function HomePageAr() {
                   <p>للمناسبات الخاصة</p>
                 </div>
               </Link>
-              
-              {/* Modest Pants Sets */}
               <Link href="/ar/category/modest-pants-sets" className="category-card">
                 <Image src="/images/178.webp" alt="أطقم بناطيل محجبات" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1588,8 +1565,6 @@ export default function HomePageAr() {
                   <p>أطقم قطعتين مع بنطلون</p>
                 </div>
               </Link>
-              
-              {/* Hijabs */}
               <Link href="/ar/category/hijabs" className="category-card">
                 <Image src="/images/category-hijabs.webp" alt="حجاب تركي جملة" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1597,8 +1572,6 @@ export default function HomePageAr() {
                   <p>حرير، شيفون، قطن</p>
                 </div>
               </Link>
-              
-              {/* Prayer Clothes */}
               <Link href="/ar/category/prayer-clothes" className="category-card">
                 <Image src="/images/53.webp" alt="ملابس صلاة" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1606,8 +1579,6 @@ export default function HomePageAr() {
                   <p>أطقم وفساتين صلاة</p>
                 </div>
               </Link>
-              
-              {/* Modest Sportswear */}
               <Link href="/ar/category/modest-sportswear" className="category-card">
                 <Image src="/images/category-sportswear.webp" alt="ملابس رياضية محجبات" width={600} height={800} loading="lazy" />
                 <div className="category-info">
@@ -1615,8 +1586,6 @@ export default function HomePageAr() {
                   <p>للنشاطات والرياضة</p>
                 </div>
               </Link>
-              
-              {/* Burkini & Modest Swimwear */}
               <Link href="/ar/category/burkini" className="category-card">
                 <Image src="/images/category-swimwear.webp" alt="بوركيني وملابس سباحة محتشمة" width={600} height={800} loading="lazy" />
                 <div className="category-info">

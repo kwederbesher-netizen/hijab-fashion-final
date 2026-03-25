@@ -10,7 +10,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [cart, setCart] = useState<any[]>([])
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -97,15 +96,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }, 0)
   }
 
-  // Calculate total price
-  const getTotalPrice = () => {
-    return cart.reduce((total, item) => {
-      const price = item.price_usd || item.unitPrice || 0
-      const quantity = item.quantity || 1
-      return total + (price * quantity)
-    }, 0)
-  }
-
   // Remove from cart
   const removeFromCart = (index: number) => {
     const newCart = [...cart]
@@ -120,7 +110,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     window.dispatchEvent(event)
   }
 
-  // Send to WhatsApp
+  // Send to WhatsApp - بدون أسعار
   const sendToWhatsApp = () => {
     if (cart.length === 0) {
       alert('⚠️ Cart is empty - Add products first')
@@ -135,27 +125,24 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       const name = item.name_en || item.name || 'Product'
       const code = item.product_code || item._id?.slice(-8) || 'N/A'
       const quantity = item.quantity || 1
-      const price = item.price_usd || item.unitPrice || 0
-      const totalPrice = price * quantity
       
       message += `*${index + 1}. ${name}*\n`
       message += `📦 Code: \`${code}\`\n`
-      message += `🔢 Quantity: ${quantity} ${quantity > 1 ? 'pieces' : 'piece'}\n`
-      message += `💰 Unit Price: $${price.toFixed(2)}\n`
-      message += `💵 Total: $${totalPrice.toFixed(2)}\n\n`
+      message += `🔢 Quantity: ${quantity} ${quantity > 1 ? 'pieces' : 'piece'}\n\n`
     })
+    
+    const totalPieces = getTotalPieces()
     
     message += "━━━━━━━━━━━━━━━━━━━━\n"
     message += `*📊 Summary:*\n`
     message += `• Total Items: ${cart.length}\n`
-    message += `• Total Pieces: ${getTotalPieces()}\n`
-    message += `• Total Amount: $${getTotalPrice().toFixed(2)}\n\n`
-    message += `Thank you for your interest! Please confirm availability and shipping cost.`
+    message += `• Total Pieces: ${totalPieces}\n\n`
+    message += `Thank you for your interest! Please confirm availability.`
     
     window.open(`https://wa.me/905519522448?text=${encodeURIComponent(message)}`, '_blank')
   }
 
-  // Download PDF
+  // Download PDF - بدون أسعار
   const downloadPDF = () => {
     if (cart.length === 0) {
       alert('⚠️ Cart is empty - Add products first')
@@ -171,21 +158,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       const name = item.name_en || item.name || 'Product'
       const code = item.product_code || item._id?.slice(-8) || 'N/A'
       const quantity = item.quantity || 1
-      const price = item.price_usd || item.unitPrice || 0
-      const totalPrice = price * quantity
       
       content += `${index + 1}. ${name}\n`
       content += `   Code: ${code}\n`
-      content += `   Quantity: ${quantity} ${quantity > 1 ? 'pieces' : 'piece'}\n`
-      content += `   Unit Price: $${price.toFixed(2)}\n`
-      content += `   Total: $${totalPrice.toFixed(2)}\n\n`
+      content += `   Quantity: ${quantity} ${quantity > 1 ? 'pieces' : 'piece'}\n\n`
     })
+    
+    const totalPieces = getTotalPieces()
     
     content += "───────────────────────────────────\n"
     content += `SUMMARY:\n`
     content += `• Total Items: ${cart.length}\n`
-    content += `• Total Pieces: ${getTotalPieces()}\n`
-    content += `• Total Amount: $${getTotalPrice().toFixed(2)}\n\n`
+    content += `• Total Pieces: ${totalPieces}\n\n`
     content += "Thank you for your interest!\n"
     content += "═══════════════════════════════════\n"
     
@@ -232,6 +216,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           height: auto !important;
         }
         
+        /* إخفاء أشرطة التمرير في القائمة الرئيسية */
+        .desktop-nav {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+          overflow-x: auto !important;
+        }
+        
+        .desktop-nav::-webkit-scrollbar {
+          display: none !important;
+        }
+        
         /* إصلاح الـ grid والهوامش في الجوال */
         @media (max-width: 768px) {
           [style*="grid-template-columns"] {
@@ -254,28 +249,21 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             padding-left: 16px !important;
             padding-right: 16px !important;
           }
-        }
-        
-        .dropdown:hover .dropdown-content {
-          opacity: 1 !important;
-          visibility: visible !important;
-        }
-        
-        .dropdown-content {
-          transition: all 0.3s ease;
-        }
-        
-        .dropdown-content a:hover {
-          background: rgba(255, 90, 0, 0.1);
-          color: #ff5a00;
+          
+          /* ضمان ظهور شريط البحث في الجوال */
+          .main-header .search-bar {
+            display: block !important;
+            width: 100% !important;
+            margin: 10px 0 !important;
+          }
         }
         
         @media (max-width: 992px) {
           .desktop-nav {
-            gap: 20px !important;
+            gap: 15px !important;
           }
           .desktop-nav a {
-            font-size: 14px !important;
+            font-size: 13px !important;
           }
         }
         
@@ -288,14 +276,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             order: 1;
             width: auto;
           }
+          .main-header .top-actions {
+            order: 2;
+          }
+          /* شريط البحث يظهر في الصف الثالث */
           .main-header .search-bar {
             order: 3;
             max-width: 100%;
             margin: 10px 0 !important;
             width: 100%;
-          }
-          .main-header .top-actions {
-            order: 2;
+            display: block !important;
           }
           .mobile-menu-btn {
             display: block !important;
@@ -404,7 +394,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               const itemQuantity = item.quantity || 1
               const packetSize = item.packetSize || item.pcs_per_packet || 1
               const isRSS = item.isRSS || false
-              const itemTotal = (item.price_usd || item.unitPrice || 0) * itemQuantity
               const productCode = item.product_code || item._id?.slice(-8) || 'N/A'
               
               return (
@@ -444,9 +433,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <div className="cart-item-quantity" style={{ fontSize: '13px', color: '#666', marginBottom: '5px' }}>
                       Quantity: {itemQuantity} {!isRSS && packetSize > 1 ? `(Carton - ${packetSize} pieces)` : 'piece'}
                     </div>
-                    <div className="cart-item-price" style={{ color: '#ff5a00', fontWeight: 600 }}>
-                      ${itemTotal.toFixed(2)}
-                    </div>
                     <div 
                       className="cart-item-remove" 
                       onClick={() => removeFromCart(index)}
@@ -481,16 +467,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }}>
             <span>Total Pieces:</span>
             <span style={{ fontWeight: 600, color: '#ff5a00' }}>{getTotalPieces()}</span>
-          </div>
-          <div className="cart-total-price" style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '20px',
-            fontWeight: 700,
-            fontSize: '18px'
-          }}>
-            <span>Total Amount:</span>
-            <span style={{ color: '#ff5a00' }}>${getTotalPrice().toFixed(2)}</span>
           </div>
           <div className="cart-actions" style={{ display: 'flex', gap: '10px' }}>
             <button 
@@ -588,37 +564,34 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div style={{ fontWeight: 700, color: '#ff5a00', marginTop: '10px', padding: '12px 0' }}>
             Categories
           </div>
-          <Link href="/en/category/abayas" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+          <Link href="/en/category/abayas" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             Abayas
           </Link>
-          <Link href="/en/category/modest-dresses" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            Modest Dresses
-          </Link>
-          <Link href="/en/category/modest-skirt-sets" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            Skirt Sets
-          </Link>
-          <Link href="/en/category/modest-evening-dresses" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            Evening Dresses
-          </Link>
-          <Link href="/en/category/modest-pants-sets" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            Pants Sets
-          </Link>
-          <Link href="/en/category/hijabs" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+          <Link href="/en/category/hijabs" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             Hijabs
           </Link>
-          <Link href="/en/category/prayer-clothes" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            Prayer Clothes
+          <Link href="/en/category/modest-skirt-sets" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            Skirt Sets
           </Link>
-          <Link href="/en/category/modest-sportswear" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            Sportswear
+          <Link href="/en/category/modest-dresses" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            Modest Dresses
           </Link>
-          <Link href="/en/category/burkini" className="mobile-nav-sub" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+          <Link href="/en/category/burkini" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             Burkini & Swimwear
           </Link>
-          
-          <Link href="/en/blogs" style={{ color: '#000', textDecoration: 'none', fontSize: '16px', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #eee' }}>
-            Blogs
+          <Link href="/en/category/modest-sportswear" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            Sportswear
           </Link>
+          <Link href="/en/category/modest-evening-dresses" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            Evening Dresses
+          </Link>
+          <Link href="/en/category/modest-pants-sets" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            Pants Sets
+          </Link>
+          <Link href="/en/category/prayer-clothes" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            Prayer Clothes
+          </Link>
+          
           <Link href="/en/about-us" style={{ color: '#000', textDecoration: 'none', fontSize: '16px', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #eee' }}>
             About Us
           </Link>
@@ -687,7 +660,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
           
           {/* ✅ Search Bar - كبير في المنتصف */}
-          <div style={{
+          <div className="search-bar" style={{
             flex: 1,
             maxWidth: '500px',
             margin: '0 20px'
@@ -762,7 +735,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   cursor: 'pointer',
                   outline: 'none',
                   color: '#222',
-                  width: '65px'
+                  width: '85px'
                 }}
                 onChange={(e) => {
                   const lang = e.target.value
@@ -777,14 +750,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     window.location.href = `/de${pathWithoutLang}`
                   } else if (lang === 'tr') {
                     window.location.href = `/tr${pathWithoutLang}`
+                  } else if (lang === 'it') {
+                    window.location.href = `/it${pathWithoutLang}`
+                  } else if (lang === 'es') {
+                    window.location.href = `/es${pathWithoutLang}`
                   }
                 }}
               >
-                <option value="en">🇬🇧 En</option>
-                <option value="ar">🇸🇦 Ar</option>
-                <option value="fr">🇫🇷 Fr</option>
-                <option value="de">🇩🇪 De</option>
-                <option value="tr">🇹🇷 Tr</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="tr">🇹🇷 Türkçe</option>
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="es">🇪🇸 Español</option>
               </select>
               <select 
                 id="currencySelect"
@@ -810,6 +789,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <option value="GBP">🇬🇧 GBP</option>
                 <option value="SAR">🇸🇦 SAR</option>
                 <option value="AED">🇦🇪 AED</option>
+                <option value="CAD">🇨🇦 CAD</option>
+                <option value="AUD">🇦🇺 AUD</option>
+                <option value="OMR">🇴🇲 OMR</option>
+                <option value="BHD">🇧🇭 BHD</option>
+                <option value="KWD">🇰🇼 KWD</option>
+                <option value="LYD">🇱🇾 LYD</option>
+                <option value="DZD">🇩🇿 DZD</option>
               </select>
             </div>
             <div 
@@ -841,7 +827,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
         </div>
         
-        {/* ✅ الصف السفلي - القائمة الرئيسية (واسعة) */}
+        {/* ✅ الصف السفلي - القائمة الرئيسية (جميع التصنيفات مباشرة) */}
         <div style={{
           background: '#f8f8f8',
           borderTop: '1px solid #eee',
@@ -856,82 +842,57 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               display: 'flex', 
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '35px',
+              gap: '25px',
               padding: '12px 0',
-              flexWrap: 'wrap'
+              flexWrap: 'nowrap',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
             }}>
-              <Link href="/en" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/en" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 Home
               </Link>
-              <Link href="/en/catalog" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/en/catalog" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 Catalog
               </Link>
-              
-              <div 
-                className="dropdown" 
-                style={{ position: 'relative', display: 'inline-block' }}
-                onMouseEnter={() => setIsCategoryDropdownOpen(true)}
-                onMouseLeave={() => setIsCategoryDropdownOpen(false)}
-              >
-                <button className="dropdown-btn" style={{
-                  color: '#333',
-                  background: 'none',
-                  border: 'none',
-                  fontWeight: 500,
-                  fontSize: '15px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: 0
-                }}>
-                  Categories <i className="fas fa-chevron-down" style={{ fontSize: '10px' }}></i>
-                </button>
-                <div 
-                  className="dropdown-content" 
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    minWidth: '200px',
-                    background: 'white',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                    borderRadius: '10px',
-                    padding: '10px 0',
-                    opacity: isCategoryDropdownOpen ? 1 : 0,
-                    visibility: isCategoryDropdownOpen ? 'visible' : 'hidden',
-                    transition: 'all 0.3s ease',
-                    zIndex: 1000,
-                    marginTop: '10px'
-                  }}
-                >
-                  <Link href="/en/category/abayas" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Abayas</Link>
-                  <Link href="/en/category/hijabs" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Hijabs</Link>
-                  <Link href="/en/category/modest-skirt-sets" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Skirt Sets</Link>
-                  <Link href="/en/category/modest-dresses" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Modest Dresses</Link>
-                  <Link href="/en/category/burkini" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Burkini & Swimwear</Link>
-                  <Link href="/en/category/modest-sportswear" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Sportswear</Link>
-                  <Link href="/en/category/modest-evening-dresses" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Evening Dresses</Link>
-                  <Link href="/en/category/modest-pants-sets" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Pants Sets</Link>
-                  <Link href="/en/category/prayer-clothes" style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none', fontSize: '14px' }}>Prayer Clothes</Link>
-                </div>
-              </div>
-              
-              <Link href="/en/blogs" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
-                Blogs
+              <Link href="/en/category/abayas" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Abayas
               </Link>
-              <Link href="/en/about-us" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/en/category/hijabs" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Hijabs
+              </Link>
+              <Link href="/en/category/modest-skirt-sets" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Skirt Sets
+              </Link>
+              <Link href="/en/category/modest-dresses" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Dresses
+              </Link>
+              <Link href="/en/category/burkini" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Burkini
+              </Link>
+              <Link href="/en/category/modest-sportswear" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Sportswear
+              </Link>
+              <Link href="/en/category/modest-evening-dresses" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Evening
+              </Link>
+              <Link href="/en/category/modest-pants-sets" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Pants Sets
+              </Link>
+              <Link href="/en/category/prayer-clothes" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                Prayer
+              </Link>
+              <Link href="/en/about-us" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 About Us
               </Link>
-              <Link href="/en/contact" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '15px', whiteSpace: 'nowrap' }}>
+              <Link href="/en/contact" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 Contact
               </Link>
             </nav>
           </div>
         </div>
         
-        {/* Mobile Menu Button - يظهر فقط على الشاشات الصغيرة */}
+        {/* Mobile Menu Button */}
         <button 
           className="mobile-menu-btn" 
           onClick={() => setIsMobileNavOpen(true)}
@@ -1109,7 +1070,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div className="footer-channels-simple" style={{ margin: '30px 0 20px', padding: '20px 0', borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
               <div className="simple-channels" style={{ display: 'flex', justifyContent: 'center', gap: '30px', flexWrap: 'wrap' }}>
-                <a href="https://whatsapp.com/channel/0029VaKJqF6A3kLkHxKJmKJ" className="simple-channel whatsapp-simple" target="_blank" rel="noopener noreferrer" style={{
+                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="simple-channel whatsapp-simple" target="_blank" rel="noopener noreferrer" style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '15px',
