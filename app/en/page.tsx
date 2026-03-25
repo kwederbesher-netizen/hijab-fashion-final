@@ -1312,7 +1312,7 @@ export default function HomePageEn() {
             {/* Slide 1 */}
             <div 
               className={`slide ${currentSlide === 0 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/imageshero-slider-1.webp)' }}
+              style={{ backgroundImage: 'url(/images/hero-slider-1.webp)' }}
             >
               <div className="slide-content">
                 <h1>Turkish Modest Fashion</h1>
@@ -1323,7 +1323,7 @@ export default function HomePageEn() {
             {/* Slide 2 */}
             <div 
               className={`slide ${currentSlide === 1 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/imageshero-slider-2.webp)' }}
+              style={{ backgroundImage: 'url(/images/hero-slider-2.webp)' }}
             >
               <div className="slide-content">
                 <h2>Wholesale Prices</h2>
@@ -1334,7 +1334,7 @@ export default function HomePageEn() {
             {/* Slide 3 */}
             <div 
               className={`slide ${currentSlide === 2 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/imageshero-slider-3.webp)' }}
+              style={{ backgroundImage: 'url(/images/hero-slider-3.webp)' }}
             >
               <div className="slide-content">
                 <h2>Fast Worldwide Shipping</h2>

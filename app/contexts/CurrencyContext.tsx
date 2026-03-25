@@ -17,7 +17,9 @@ interface CurrencyContextType {
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined)
 
-// رموز العملات باللغة الإنجليزية (مختصرة)
+// ============================================
+// رموز العملات - الإنجليزية
+// ============================================
 const currencySymbolsEn: Record<Currency, string> = {
   USD: '$',
   EUR: '€',
@@ -34,7 +36,9 @@ const currencySymbolsEn: Record<Currency, string> = {
   DZD: 'DA'
 }
 
-// أسماء العملات بالعربية للعرض
+// ============================================
+// رموز العملات - العربية
+// ============================================
 const currencySymbolsAr: Record<Currency, string> = {
   USD: 'دولار أمريكي',
   EUR: 'يورو',
@@ -51,7 +55,7 @@ const currencySymbolsAr: Record<Currency, string> = {
   DZD: 'دينار جزائري'
 }
 
-// أسماء العملات بالإنجليزية للقائمة المنسدلة
+// أسماء العملات للقائمة المنسدلة - الإنجليزية
 const currencyNamesEn: Record<Currency, string> = {
   USD: '🇺🇸 USD',
   EUR: '🇪🇺 EUR',
@@ -68,7 +72,7 @@ const currencyNamesEn: Record<Currency, string> = {
   DZD: '🇩🇿 DZD'
 }
 
-// أسماء العملات بالعربية للقائمة المنسدلة
+// أسماء العملات للقائمة المنسدلة - العربية
 const currencyNamesAr: Record<Currency, string> = {
   USD: '🇺🇸 دولار أمريكي',
   EUR: '🇪🇺 يورو',
@@ -85,7 +89,7 @@ const currencyNamesAr: Record<Currency, string> = {
   DZD: '🇩🇿 دينار جزائري'
 }
 
-// الأسعار الافتراضية (fallback)
+// الأسعار الافتراضية
 const DEFAULT_RATES: Record<Currency, number> = {
   USD: 1,
   EUR: 0.92,
@@ -124,10 +128,9 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         
         if (data) {
           setRates(data)
-          console.log('✅ تم تحميل العملات:', data)
         }
       } catch (error) {
-        console.error('❌ خطأ في تحميل العملات:', error)
+        console.error('Error loading rates:', error)
         setRates(DEFAULT_RATES)
       } finally {
         setLoading(false)
@@ -150,27 +153,27 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     return priceInUSD * rate
   }
 
-  // تنسيق السعر مع الرمز حسب اللغة
+  // تنسيق السعر
   const formatPrice = (priceInUSD: number): string => {
     const converted = convertPrice(priceInUSD)
     
-    // في الصفحة العربية: نستخدم الأسماء العربية
+    // ✅ تحديد الرمز حسب اللغة
+    let symbol = ''
     if (isArabic) {
-      const symbol = currencySymbolsAr[currency]
-      // تنسيق خاص للعملات التي تحتاج 3 أرقام عشرية
-      if (currency === 'LYD' || currency === 'DZD' || currency === 'KWD' || currency === 'BHD' || currency === 'OMR') {
-        return `${converted.toFixed(3)} ${symbol}`
-      }
-      return `${converted.toFixed(2)} ${symbol}`
+      symbol = currencySymbolsAr[currency]
+    } else {
+      symbol = currencySymbolsEn[currency]
     }
     
-    // في الصفحة الإنجليزية: نستخدم الرموز المختصرة
-    const symbol = currencySymbolsEn[currency]
-    // تنسيق خاص للعملات التي تحتاج 3 أرقام عشرية
-    if (currency === 'LYD' || currency === 'DZD' || currency === 'KWD' || currency === 'BHD' || currency === 'OMR') {
-      return `${symbol} ${converted.toFixed(3)}`
+    // ✅ تنسيق الأرقام (3 منازل للعملات الخاصة، 2 للباقي)
+    const needsThreeDecimals = ['LYD', 'DZD', 'KWD', 'BHD', 'OMR'].includes(currency)
+    const formattedNumber = needsThreeDecimals ? converted.toFixed(3) : converted.toFixed(2)
+    
+    // ✅ في العربية: الرقم ثم الرمز، في الإنجليزية: الرمز ثم الرقم
+    if (isArabic) {
+      return `${formattedNumber} ${symbol}`
     }
-    return `${symbol} ${converted.toFixed(2)}`
+    return `${symbol} ${formattedNumber}`
   }
 
   // الحصول على اسم العملة للعرض في القائمة المنسدلة
@@ -198,17 +201,4 @@ export function useCurrency() {
     throw new Error('useCurrency must be used within a CurrencyProvider')
   }
   return context
-}
-
-// تصدير دالة مساعدة للحصول على اسم العملة للعرض
-export function useCurrencyDisplay() {
-  const { currency } = useCurrency()
-  const pathname = usePathname()
-  const isArabic = pathname?.startsWith('/ar')
-  
-  const getDisplayName = () => {
-    return isArabic ? currencyNamesAr[currency] : currencyNamesEn[currency]
-  }
-  
-  return { getDisplayName }
 }

@@ -1,13 +1,15 @@
 // app/ar/why-were-number-one/page.tsx
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'  // ✅ أضف هذا
 
 export default function WhyWereNumberOneArabicPage() {
   const [cart, setCart] = useState<any[]>([])
   const cartInitialized = useRef(false)
+  const isUpdatingFromEvent = useRef(false)  // ✅ لمنع الحلقات اللانهائية
 
   // Load cart from localStorage - مرة واحدة فقط
   useEffect(() => {
@@ -23,16 +25,24 @@ export default function WhyWereNumberOneArabicPage() {
       cartInitialized.current = true
     }
 
-    // الاستماع لتحديثات السلة
+    // ✅ الاستماع لتحديثات السلة - مع منع الحلقات اللانهائية
     const handleCartUpdate = (event: CustomEvent) => {
+      if (isUpdatingFromEvent.current) return
+      isUpdatingFromEvent.current = true
+      
       const savedCart = localStorage.getItem('cart')
       if (savedCart) {
         try {
-          setCart(JSON.parse(savedCart))
+          const parsedCart = JSON.parse(savedCart)
+          setCart(parsedCart)
         } catch (e) {
           console.error('خطأ في تحميل السلة:', e)
         }
       }
+      
+      setTimeout(() => {
+        isUpdatingFromEvent.current = false
+      }, 100)
     }
 
     window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
@@ -42,25 +52,41 @@ export default function WhyWereNumberOneArabicPage() {
     }
   }, [])
 
-  // Save cart to localStorage
+  // ✅ حفظ السلة في localStorage - بدون التسبب بحلقة لانهائية
   useEffect(() => {
     if (cartInitialized.current) {
-      localStorage.setItem('cart', JSON.stringify(cart))
-      // Update cart count in header
-      const event = new CustomEvent('cartUpdated', { detail: cart.length })
-      window.dispatchEvent(event)
+      const previousCartString = localStorage.getItem('cart')
+      const newCartString = JSON.stringify(cart)
       
-      const cartCountElement = document.getElementById('cartCount')
-      if (cartCountElement) {
-        cartCountElement.textContent = cart.length.toString()
+      if (previousCartString !== newCartString) {
+        localStorage.setItem('cart', newCartString)
+        
+        const cartCountElement = document.getElementById('cartCount')
+        if (cartCountElement) {
+          cartCountElement.textContent = cart.length.toString()
+        }
+        
+        if (!isUpdatingFromEvent.current) {
+          const event = new CustomEvent('cartUpdated', { detail: cart.length })
+          window.dispatchEvent(event)
+        }
       }
     }
   }, [cart])
 
   return (
     <>
+      {/* ✅ Metadata للـ SEO - باستخدام Head من next/head */}
+      <Head>
+        <title>لماذا نحن رقم 1 في سوق الحجاب التركي بالجملة؟ | حجاب فاشون مول</title>
+        <meta name="description" content="تعرف على قصة نجاح حجاب فاشون مول وحصولنا على المركز الأول عالمياً في بيع الحجاب التركي بالجملة. جودة، خدمة عملاء، ثقة وخبرة تمتد لسنوات." />
+        <meta name="keywords" content="حجاب تركي بالجملة, رقم 1, الأفضل في تركيا, حجاب فاشون مول, لماذا نحن الأفضل, تجربة عملاء, جودة منتجات, شحن عالمي" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://hijabfashionmall.com/ar/why-were-number-one" />
+      </Head>
+
       <style>{`
-        /* جميع الأنماط - نفس التصميم الأصلي مع دعم العربية */
+        /* جميع الأنماط - نفس التصميم الأصلي */
         * {
             margin: 0;
             padding: 0;
@@ -571,14 +597,6 @@ export default function WhyWereNumberOneArabicPage() {
         }
       `}</style>
 
-      {/* Metadata للـ SEO - يتم إضافتها في head بواسطة Next.js */}
-      <head>
-        <title>لماذا نحن رقم 1 في سوق الحجاب التركي بالجملة؟ | حجاب فاشون مول</title>
-        <meta name="description" content="تعرف على قصة نجاح حجاب فاشون مول وحصولنا على المركز الأول عالمياً في بيع الحجاب التركي بالجملة. جودة، خدمة عملاء، ثقة وخبرة تمتد لسنوات." />
-        <meta name="keywords" content="حجاب تركي بالجملة, رقم 1, الأفضل في تركيا, حجاب فاشون مول, لماذا نحن الأفضل, تجربة عملاء, جودة منتجات, شحن عالمي" />
-        <link rel="canonical" href="https://hijabfashionmall.com/ar/why-were-number-one" />
-      </head>
-
       {/* Page Header */}
       <section className="page-header">
         <div className="container">
@@ -764,7 +782,7 @@ export default function WhyWereNumberOneArabicPage() {
         </div>
       </article>
 
-      {/* المقالات ذات الصلة - 7 مقالات */}
+      {/* المقالات ذات الصلة */}
       <section className="related-posts">
         <div className="container">
           <h3 className="related-title">مقالات قد تهمك</h3>

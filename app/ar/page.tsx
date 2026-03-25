@@ -1345,7 +1345,7 @@ export default function HomePageAr() {
             {/* Slide 1 */}
             <div 
               className={`slide ${currentSlide === 0 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/imageshero-slider-1.webp)' }}
+              style={{ backgroundImage: 'url(/images/hero-slider-1.webp)' }}
             >
               <div className="slide-content">
                 <h1>ملابس محجبات تركية</h1>
@@ -1356,7 +1356,7 @@ export default function HomePageAr() {
             {/* Slide 2 */}
             <div 
               className={`slide ${currentSlide === 1 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/imageshero-slider-2.webp)' }}
+              style={{ backgroundImage: 'url(/images/hero-slider-2.webp)' }}
             >
               <div className="slide-content">
                 <h2>أسعار الجملة</h2>
@@ -1367,7 +1367,7 @@ export default function HomePageAr() {
             {/* Slide 3 */}
             <div 
               className={`slide ${currentSlide === 2 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/imageshero-slider-3.webp)' }}
+              style={{ backgroundImage: 'url(/images/hero-slider-3.webp)' }}
             >
               <div className="slide-content">
                 <h2>شحن سريع عالمي</h2>
