@@ -29,9 +29,14 @@ const nextConfig = {
         destination: '/ar/catalog',
         permanent: true,
       },
-      // الصفحة الإنجليزية
+      // الصفحات الإنجليزية
       {
         source: '/access-hijab-clothes-prices-catalogues',
+        destination: '/en/catalog',
+        permanent: true,
+      },
+      {
+        source: '/hijab-clothes-catalog',
         destination: '/en/catalog',
         permanent: true,
       },
