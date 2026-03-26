@@ -13,7 +13,7 @@ export default function robots(): MetadataRoute.Robots {
         '/studio/',
         '/_next/',
         '/*.json$',
-        '/*.xml$',
+        // تم حذف: '/*.xml$',
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
