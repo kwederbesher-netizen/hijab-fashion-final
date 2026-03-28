@@ -1,4 +1,3 @@
-// app/ar/page.tsx
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
@@ -11,21 +10,40 @@ export default function HomePageAr() {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
   
-  // مؤشرات لتحسين الأداء
   const isMounted = useRef(true)
   const sliderInterval = useRef<NodeJS.Timeout | null>(null)
 
-  // ✅ Load products from API الجديد مع Pagination
+  // Hero Slider Data - محسن
+  const slides = [
+    {
+      image: '/images/hero-slider-1.webp',
+      title: 'ملابس محجبات تركية',
+      description: 'اكتشف مجموعتنا الحصرية من العبايات والفساتين وأزياء المحجبات',
+      cta: { text: 'تسوق الآن', link: '/ar/catalog' }
+    },
+    {
+      image: '/images/hero-slider-2.webp',
+      title: 'أسعار الجملة',
+      description: 'أفضل الأسعار لتجار التجزئة والمتاجر حول العالم',
+      cta: { text: 'عرض الكتالوج', link: '/ar/catalog' }
+    },
+    {
+      image: '/images/hero-slider-3.webp',
+      title: 'شحن سريع عالمي',
+      description: 'توصيل إلى أكثر من 50 دولة مع شركات شحن موثوقة',
+      cta: { text: 'معرفة المزيد', link: '/ar/catalog' }
+    }
+  ]
+
+  // Load products from API
   useEffect(() => {
     isMounted.current = true
     const abortController = new AbortController()
     
     async function loadProducts() {
       try {
-        // ✅ استخدام API الجديد لجلب أحدث 8 منتجات
         const res = await fetch('/api/products?limit=8&sort=newest', {
           signal: abortController.signal
         })
@@ -53,10 +71,10 @@ export default function HomePageAr() {
     }
   }, [])
 
-  // Hero Slider - محسن
+  // Hero Slider timer
   useEffect(() => {
     sliderInterval.current = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 3)
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 5000)
     
     return () => {
@@ -64,37 +82,20 @@ export default function HomePageAr() {
         clearInterval(sliderInterval.current)
       }
     }
-  }, [])
+  }, [slides.length])
 
-  // Back to top button visibility
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 500)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  // Scroll to top function
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [])
-
-  // ✅ Add to cart function - محسنة تدعم الحزم
+  // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     
-    // جلب السلة الحالية
     const currentCart = JSON.parse(localStorage.getItem('cart') || '[]')
     
-    // تحديد نوع المنتج
     const isRSS = product['rss/not rss message_en']?.includes('single piece') || 
                   product['rss/not rss message_ar']?.includes('قطعة واحدة')
     const packetSize = product.pcs_per_packet ? parseInt(product.pcs_per_packet) : 1
-    const requestedQuantity = 1  // في الصفحة الرئيسية، الكمية الافتراضية 1
+    const requestedQuantity = 1
     
-    // إنشاء كائن المنتج مع الكمية
     const productToAdd = {
       _id: product._id,
       name_ar: product.name_ar,
@@ -111,7 +112,6 @@ export default function HomePageAr() {
       unitPrice: product.price_usd
     }
     
-    // التحقق إذا كان المنتج موجوداً
     const existingIndex = currentCart.findIndex((item: any) => item._id === product._id)
     
     if (existingIndex !== -1) {
@@ -120,26 +120,19 @@ export default function HomePageAr() {
       currentCart.push(productToAdd)
     }
     
-    // حفظ السلة
     localStorage.setItem('cart', JSON.stringify(currentCart))
     
-    // حساب العدد الإجمالي للقطع
     const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
     
-    // تحديث عداد السلة في الهيدر
     const cartCountElement = document.getElementById('cartCount')
     if (cartCountElement) {
       cartCountElement.textContent = totalItems.toString()
     }
     
-    // إرسال حدث لتحديث العداد
-    const cartUpdateEvent = new CustomEvent('cartUpdated', { detail: totalItems })
-    window.dispatchEvent(cartUpdateEvent)
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: totalItems }))
     
-    // فتح السلة
     setTimeout(() => {
-      const openCartEvent = new CustomEvent('openCart')
-      window.dispatchEvent(openCartEvent)
+      window.dispatchEvent(new CustomEvent('openCart'))
     }, 50)
   }, [])
 
@@ -172,29 +165,10 @@ export default function HomePageAr() {
         <meta property="og:url" content="https://hijabfashionmall.com/ar" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://hijabfashionmall.com/images/og-home.jpg" />
-        
-        {/* JSON-LD Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "حجاب فاشون مول",
-              "url": "https://hijabfashionmall.com",
-              "logo": "https://hijabfashionmall.com/logo.png",
-              "description": "مورد رائد لملابس المحجبات التركية بالجملة",
-              "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "TR"
-              }
-            })
-          }}
-        />
       </Head>
 
-      <div dir="rtl">
-        {/* Global CSS to fix mobile white space */}
+      <main id="main-content" dir="rtl">
+        {/* Global CSS */}
         <style>{`
           /* إصلاح الفراغ الأبيض على اليمين في الجوال */
           html, body {
@@ -214,7 +188,6 @@ export default function HomePageAr() {
             box-sizing: border-box !important;
           }
           
-          /* منع أي عنصر من التسبب في overflow */
           .container,
           [class*="container"],
           [style*="max-width"] {
@@ -262,7 +235,6 @@ export default function HomePageAr() {
             padding: 0 20px;
           }
 
-          /* تحسين حجم الخطوط */
           h1, h2, h3, h4, h5, h6 {
             font-family: 'Tajawal', sans-serif;
             font-weight: 700;
@@ -272,7 +244,6 @@ export default function HomePageAr() {
             font-family: 'Tajawal', sans-serif;
           }
 
-          /* ===== Section Titles ===== */
           .section-title {
             text-align: center;
             font-size: 42px;
@@ -290,7 +261,6 @@ export default function HomePageAr() {
             font-weight: 400;
           }
 
-          /* ===== Buttons ===== */
           .btn, .btn-primary {
             display: inline-block;
             background: var(--primary);
@@ -333,130 +303,6 @@ export default function HomePageAr() {
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
           }
 
-          /* ===== Back to Top Button ===== */
-          .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 15px rgba(255, 90, 0, 0.3);
-            z-index: 999;
-            transition: all 0.3s;
-            opacity: 0;
-            visibility: hidden;
-            animation: fadeIn 0.3s;
-          }
-
-          .back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-          }
-
-          .back-to-top:hover {
-            transform: translateY(-5px);
-            background: var(--primary-dark);
-          }
-
-          /* ===== Hero Slider ===== */
-          .hero-slider {
-            position: relative;
-            height: 650px;
-            overflow: hidden;
-          }
-
-          .slider-container {
-            position: relative;
-            height: 100%;
-          }
-
-          .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--white);
-          }
-
-          .slide.active {
-            opacity: 1;
-          }
-
-          .slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-          }
-
-          .slide-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 20px;
-            animation: fadeInUp 1s ease;
-          }
-
-          .slide h1, .slide h2 {
-            font-size: 54px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            line-height: 1.3;
-          }
-
-          .slide p {
-            font-size: 22px;
-            margin-bottom: 30px;
-            opacity: 0.95;
-          }
-
-          .slider-dots {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 3;
-          }
-
-          .dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-          }
-
-          .dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
-          }
-
-          /* ===== Ranked Section ===== */
           .ranked-section {
             padding: 60px 0 40px;
             background: var(--light-gray);
@@ -539,7 +385,6 @@ export default function HomePageAr() {
             color: var(--white);
           }
 
-          /* ===== Channels Section - تصميم جميل من الصفحة القديمة ===== */
           .channels-section {
             padding: 60px 0;
             background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
@@ -547,7 +392,7 @@ export default function HomePageAr() {
 
           .channels-grid {
             display: grid;
-            grid-template-columns: repeat(2, 420px);  /* ← عرض ثابت لكل عمود */
+            grid-template-columns: repeat(2, 420px);
             gap: 30px;
             justify-content: center;
             margin: 0 auto;
@@ -653,7 +498,6 @@ export default function HomePageAr() {
             background: var(--telegram-dark);
           }
 
-          /* ===== Features Section ===== */
           .features-section {
             padding: 70px 0;
             background: var(--white);
@@ -724,7 +568,6 @@ export default function HomePageAr() {
             line-height: 1.7;
           }
 
-          /* ===== Private Label Section ===== */
           .privatelabel-section {
             padding: 80px 0;
             background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
@@ -838,7 +681,6 @@ export default function HomePageAr() {
             font-size: 20px;
           }
 
-          /* ===== Categories Section ===== */
           .categories-section {
             padding: 70px 0;
             background: var(--light-gray);
@@ -901,7 +743,6 @@ export default function HomePageAr() {
             margin: 0;
           }
 
-          /* ===== Products Section ===== */
           .products-section {
             padding: 70px 0;
             background: var(--white);
@@ -996,7 +837,6 @@ export default function HomePageAr() {
             margin-top: 30px;
           }
 
-          /* ===== FAQ Section ===== */
           .faq-section {
             padding: 70px 0;
             background: var(--light-gray);
@@ -1058,7 +898,6 @@ export default function HomePageAr() {
             margin: 0;
           }
 
-          /* ===== Testimonials Section ===== */
           .testimonials-section {
             padding: 70px 0;
             background: var(--white);
@@ -1121,7 +960,6 @@ export default function HomePageAr() {
             font-style: italic;
           }
 
-          /* ===== Blogs Section ===== */
           .blogs-section {
             padding: 70px 0;
             background: var(--light-gray);
@@ -1214,7 +1052,6 @@ export default function HomePageAr() {
             transform: rotate(180deg);
           }
 
-          /* Animations */
           @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1255,14 +1092,6 @@ export default function HomePageAr() {
               height: 500px;
             }
             
-            .slide h1, .slide h2 {
-              font-size: 36px;
-            }
-            
-            .slide p {
-              font-size: 18px;
-            }
-            
             .section-title {
               font-size: 32px;
             }
@@ -1279,7 +1108,6 @@ export default function HomePageAr() {
               grid-template-columns: 1fr !important;
             }
             
-            /* ✅ المنتجات: صفين في الجوال (منتجين في الصف) */
             .products-grid {
               grid-template-columns: repeat(2, 1fr) !important;
               gap: 15px;
@@ -1299,7 +1127,6 @@ export default function HomePageAr() {
               justify-content: center;
             }
             
-            /* ✅ قنوات التواصل - تصميم الجوال (صف واحد) */
             .channels-grid {
               grid-template-columns: 1fr;
             }
@@ -1330,65 +1157,84 @@ export default function HomePageAr() {
           }
         `}</style>
 
-        {/* Back to Top Button */}
-        <button
-          onClick={scrollToTop}
-          className={`back-to-top ${showBackToTop ? 'show' : ''}`}
-          aria-label="العودة إلى الأعلى"
-        >
-          <i className="fas fa-arrow-up"></i>
-        </button>
-
-        {/* Hero Slider */}
-        <section className="hero-slider">
-          <div className="slider-container">
-            {/* Slide 1 */}
-            <div 
-              className={`slide ${currentSlide === 0 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-1.webp)' }}
-            >
-              <div className="slide-content">
-                <h1>ملابس محجبات تركية</h1>
-                <p>اكتشف مجموعتنا الحصرية من العبايات والفساتين وأزياء المحجبات</p>
-                <Link href="/ar/catalog" className="btn">تسوق الآن</Link>
+        {/* Hero Slider - Optimized with next/image and priority */}
+        <section className="hero-slider" style={{ position: 'relative', height: '650px', overflow: 'hidden' }}>
+          <div style={{ position: 'relative', height: '100%' }}>
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  opacity: currentSlide === index ? 1 : 0,
+                  transition: 'opacity 0.5s ease-in-out'
+                }}
+              >
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                  sizes="100vw"
+                  style={{ objectFit: 'cover' }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'rgba(0, 0, 0, 0.55)',
+                  zIndex: 1
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 2,
+                  textAlign: 'center',
+                  color: 'white',
+                  width: '90%',
+                  maxWidth: '800px'
+                }}>
+                  <h1 style={{ fontSize: '54px', fontWeight: 800, marginBottom: '20px' }}>{slide.title}</h1>
+                  <p style={{ fontSize: '22px', marginBottom: '30px' }}>{slide.description}</p>
+                  <Link href={slide.cta.link} className="btn">
+                    {slide.cta.text}
+                  </Link>
+                </div>
               </div>
-            </div>
-            {/* Slide 2 */}
-            <div 
-              className={`slide ${currentSlide === 1 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-2.webp)' }}
-            >
-              <div className="slide-content">
-                <h2>أسعار الجملة</h2>
-                <p>أفضل الأسعار لتجار التجزئة والمتاجر حول العالم</p>
-                <Link href="/ar/catalog" className="btn">عرض الكتالوج</Link>
-              </div>
-            </div>
-            {/* Slide 3 */}
-            <div 
-              className={`slide ${currentSlide === 2 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-3.webp)' }}
-            >
-              <div className="slide-content">
-                <h2>شحن سريع عالمي</h2>
-                <p>توصيل إلى أكثر من 50 دولة مع شركات شحن موثوقة</p>
-                <Link href="/ar/catalog" className="btn">معرفة المزيد</Link>
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="slider-dots">
-            <span 
-              className={`dot ${currentSlide === 0 ? 'active' : ''}`} 
-              onClick={() => setCurrentSlide(0)}
-            ></span>
-            <span 
-              className={`dot ${currentSlide === 1 ? 'active' : ''}`} 
-              onClick={() => setCurrentSlide(1)}
-            ></span>
-            <span 
-              className={`dot ${currentSlide === 2 ? 'active' : ''}`} 
-              onClick={() => setCurrentSlide(2)}
-            ></span>
+          <div style={{
+            position: 'absolute',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '10px',
+            zIndex: 3
+          }}>
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                style={{
+                  width: '14px',
+                  height: '14px',
+                  borderRadius: '50%',
+                  background: currentSlide === index ? '#ff5a00' : 'rgba(255,255,255,0.5)',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+                aria-label={`الانتقال إلى الشريحة ${index + 1}`}
+              />
+            ))}
           </div>
         </section>
 
@@ -1415,7 +1261,7 @@ export default function HomePageAr() {
           </div>
         </section>
 
-        {/* Channels Section - تصميم جميل من الصفحة القديمة */}
+        {/* Channels Section */}
         <section className="channels-section">
           <div className="container">
             <h2 className="section-title">انضم إلى قنواتنا</h2>
@@ -1457,14 +1303,14 @@ export default function HomePageAr() {
             <div className="features-grid">
               <div className="feature-card">
                 <div className="feature-icon">
-                  <Image src="/images/mix-icon.webp" alt="جملة ملابس محجبات - مزج منتجات تركية مختلفة في طلب واحد" width={100} height={100} loading="lazy" />
+                  <Image src="/images/mix-icon.webp" alt="مزج المنتجات المختلفة في طلب واحد" width={100} height={100} loading="lazy" />
                 </div>
                 <h3>مزج الطلب</h3>
                 <p>جميع مجموعاتك في طلب واحد. يمكنك طلب الكمية التي تريدها وبالتكلفة المناسبة.</p>
               </div>
               <div className="feature-card">
                 <div className="feature-icon">
-                  <Image src="/images/no-minimum-icon.webp" alt="لا يوجد حد أدنى للطلب - اطلب أي كمية" width={100} height={100} loading="lazy" />
+                  <Image src="/images/no-minimum-icon.webp" alt="لا يوجد حد أدنى للطلب" width={100} height={100} loading="lazy" />
                 </div>
                 <h3>لا حد أدنى للطلب</h3>
                 <p>لا يوجد حد أدنى للطلب، بفضل خدمة التجميع لدينا. اطلب ما تحتاجه.</p>
@@ -1641,6 +1487,7 @@ export default function HomePageAr() {
                           <button 
                             className="add-to-cart" 
                             onClick={(e) => addToCart(product, e)}
+                            aria-label={`إضافة ${productName} إلى سلة الاستفسار`}
                           >
                             <i className="fas fa-shopping-cart"></i> أضف للاستفسار
                           </button>
@@ -1785,7 +1632,7 @@ export default function HomePageAr() {
             </div>
           </div>
         </section>
-      </div>
+      </main>
     </>
   )
 }
