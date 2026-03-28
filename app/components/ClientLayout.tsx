@@ -3,6 +3,37 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+// ✅ استيراد react-icons بدلاً من Font Awesome
+import { 
+  FaWhatsapp, 
+  FaTelegramPlane, 
+  FaShoppingCart, 
+  FaSearch, 
+  FaBars, 
+  FaTimes, 
+  FaArrowUp,
+  FaUsers,
+  FaImage,
+  FaVideo,
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube,
+  FaGlobeAmericas,
+  FaGlobeEurope,
+  FaGlobeAsia,
+  FaMapMarkedAlt,
+  FaPlane,
+  FaBox,
+  FaClock,
+  FaCheckCircle,
+  FaLock,
+  FaTruck,
+  FaFileAlt,
+  FaStore,
+  FaCreditCard,
+  FaBoxes,
+  FaNewspaper
+} from 'react-icons/fa'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [cartCount, setCartCount] = useState(0)
@@ -379,10 +410,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <h3 style={{ fontSize: '20px', color: '#000' }}>Inquiry Cart</h3>
           <button 
             onClick={() => setIsCartOpen(false)}
-            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none' }}
+            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             aria-label="Close cart"
           >
-            ✕
+            <FaTimes size={24} />
           </button>
         </div>
         <div className="cart-items" style={{
@@ -485,11 +516,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 fontWeight: 600,
                 cursor: 'pointer',
                 background: '#25d366',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
               aria-label="Send inquiry via WhatsApp"
             >
-              <i className="fab fa-whatsapp"></i> Send via WhatsApp
+              <FaWhatsapp size={18} /> Send via WhatsApp
             </button>
             <button 
               className="cart-pdf" 
@@ -502,11 +537,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 fontWeight: 600,
                 cursor: 'pointer',
                 background: '#ff5a00',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
               aria-label="Export cart as text file"
             >
-              <i className="fas fa-file-alt"></i> Export
+              <FaFileAlt size={18} /> Export
             </button>
           </div>
         </div>
@@ -560,10 +599,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <h3 style={{ fontSize: '20px', color: '#000' }}>Menu</h3>
           <button 
             onClick={() => setIsMobileNavOpen(false)}
-            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none' }}
+            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             aria-label="Close menu"
           >
-            ✕
+            <FaTimes size={24} />
           </button>
         </div>
         <div className="mobile-nav-links" style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -727,7 +766,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
                 aria-label="Search"
               >
-                <i className="fas fa-search"></i>
+                <FaSearch size={18} />
               </button>
             </form>
           </div>
@@ -827,10 +866,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <button 
               className="cart-icon" 
               onClick={() => setIsCartOpen(true)}
-              style={{ position: 'relative', cursor: 'pointer', fontSize: '22px', color: '#000', background: 'none', border: 'none' }}
+              style={{ position: 'relative', cursor: 'pointer', fontSize: '22px', color: '#000', background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               aria-label={`Shopping cart with ${cartCount} items`}
             >
-              <i className="fas fa-shopping-cart"></i>
+              <FaShoppingCart size={22} />
               <span 
                 className="cart-count" 
                 id="cartCount"
@@ -937,7 +976,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }}
           aria-label="Open menu"
         >
-          <i className="fas fa-bars"></i>
+          <FaBars size={24} />
         </button>
       </header>
 
@@ -996,14 +1035,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             borderRadius: '50px'
           }}>
             <div className="trust-badges" style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
-              <span><i className="fas fa-truck" style={{ color: '#ff5a00' }}></i> Fast Shipping</span>
-              <span><i className="fas fa-lock" style={{ color: '#ff5a00' }}></i> Secure Payment</span>
-              <span><i className="fas fa-check-circle" style={{ color: '#ff5a00' }}></i> 100% Original</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaTruck style={{ color: '#ff5a00' }} /> Fast Shipping</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaLock style={{ color: '#ff5a00' }} /> Secure Payment</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaCheckCircle style={{ color: '#ff5a00' }} /> 100% Original</span>
             </div>
             <div className="footer-social" style={{ display: 'flex', gap: '15px' }}>
-              <a href="https://facebook.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook (opens in new tab)"><i className="fab fa-facebook-f"></i></a>
-              <a href="https://instagram.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram (opens in new tab)"><i className="fab fa-instagram"></i></a>
-              <a href="https://youtube.com/@hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to our YouTube channel (opens in new tab)"><i className="fab fa-youtube"></i></a>
+              <a href="https://facebook.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook (opens in new tab)"><FaFacebookF /></a>
+              <a href="https://instagram.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram (opens in new tab)"><FaInstagram /></a>
+              <a href="https://youtube.com/@hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to our YouTube channel (opens in new tab)"><FaYoutube /></a>
             </div>
           </div>
 
@@ -1018,7 +1057,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }}>
             {/* Americas & Oceania */}
             <div className="country-section">
-              <h4><i className="fas fa-globe-americas"></i> Americas & Oceania</h4>
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaGlobeAmericas /> Americas & Oceania</h4>
               <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 <a href="/en/wholesale-usa" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>USA</a>
                 <a href="/en/wholesale-canada" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Canada</a>
@@ -1033,7 +1072,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             
             {/* Europe */}
             <div className="country-section">
-              <h4><i className="fas fa-globe-europe"></i> Europe</h4>
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaGlobeEurope /> Europe</h4>
               <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 <a href="/en/wholesale-uk" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>UK</a>
                 <a href="/en/wholesale-germany" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Germany</a>
@@ -1054,7 +1093,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             
             {/* Middle East & Africa */}
             <div className="country-section">
-              <h4><i className="fas fa-globe-asia"></i> Middle East & Africa</h4>
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaGlobeAsia /> Middle East & Africa</h4>
               <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 <a href="/en/wholesale-saudiarabia" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Saudi Arabia</a>
                 <a href="/en/wholesale-uae" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>UAE</a>
@@ -1076,19 +1115,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             
             {/* Map Section */}
             <div className="country-section map-section">
-              <h4><i className="fas fa-map-marked-alt"></i> Worldwide Shipping</h4>
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaMapMarkedAlt /> Worldwide Shipping</h4>
               <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', lineHeight: '1.6', marginBottom: '15px' }}>
                 We ship to 50+ countries worldwide. Fast & reliable delivery.
               </p>
               <div className="shipping-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                 <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="fas fa-plane" style={{ color: '#ff5a00' }}></i> Express
+                  <FaPlane style={{ color: '#ff5a00' }} /> Express
                 </span>
                 <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="fas fa-box" style={{ color: '#ff5a00' }}></i> Door-to-door
+                  <FaBox style={{ color: '#ff5a00' }} /> Door-to-door
                 </span>
                 <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="fas fa-clock" style={{ color: '#ff5a00' }}></i> 3-7 days
+                  <FaClock style={{ color: '#ff5a00' }} /> 3-7 days
                 </span>
               </div>
             </div>
@@ -1110,7 +1149,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   minWidth: '280px',
                   background: '#25d366'
                 }} aria-label="Join our WhatsApp channel (opens in new tab)">
-                  <i className="fab fa-whatsapp"></i>
+                  <FaWhatsapp size={20} />
                   <span>Join WhatsApp Channel</span>
                   <small style={{ fontSize: '12px', opacity: 0.8, marginLeft: 'auto' }}>1,500+ members</small>
                 </a>
@@ -1126,7 +1165,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   minWidth: '280px',
                   background: '#0088cc'
                 }} aria-label="Join our Telegram channel (opens in new tab)">
-                  <i className="fab fa-telegram-plane"></i>
+                  <FaTelegramPlane size={20} />
                   <span>Join Telegram Channel</span>
                   <small style={{ fontSize: '12px', opacity: 0.8, marginLeft: 'auto' }}>11,000+ members</small>
                 </a>
@@ -1189,7 +1228,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         }}
         aria-label="Contact us on WhatsApp (opens in new tab)"
       >
-        <i className="fab fa-whatsapp"></i>
+        <FaWhatsapp size={30} />
       </a>
 
       {/* Back to Top Button */}
@@ -1220,7 +1259,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         }}
         aria-label="Back to top"
       >
-        <i className="fas fa-arrow-up"></i>
+        <FaArrowUp size={24} />
       </button>
     </>
   )

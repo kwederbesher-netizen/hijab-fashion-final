@@ -33,7 +33,7 @@ export default function HomePageEn() {
       image: '/images/hero-slider-3.webp',
       title: 'Fast Worldwide Shipping',
       description: 'Delivery to 50+ countries with reliable carriers',
-      cta: { text: 'Learn More', link: '/en/catalog' }
+      cta: { text: 'Explore Our Collection', link: '/en/catalog' }
     }
   ]
 
