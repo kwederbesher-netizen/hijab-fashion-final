@@ -1,4 +1,3 @@
-// app/en/components/ClientLayout.tsx
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -347,7 +346,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           zIndex: 1999,
           display: isCartOpen ? 'block' : 'none'
         }}
-      ></div>
+        aria-hidden="true"
+      />
 
       {/* Cart Sidebar */}
       <div 
@@ -365,6 +365,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           display: 'flex',
           flexDirection: 'column'
         }}
+        role="dialog"
+        aria-label="Shopping cart"
+        aria-modal="true"
       >
         <div className="cart-header" style={{
           padding: '25px',
@@ -374,11 +377,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           alignItems: 'center'
         }}>
           <h3 style={{ fontSize: '20px', color: '#000' }}>Inquiry Cart</h3>
-          <span 
-            className="close-cart" 
+          <button 
             onClick={() => setIsCartOpen(false)}
-            style={{ fontSize: '24px', cursor: 'pointer', color: '#555' }}
-          >&times;</span>
+            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none' }}
+            aria-label="Close cart"
+          >
+            ✕
+          </button>
         </div>
         <div className="cart-items" style={{
           flex: 1,
@@ -433,13 +438,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <div className="cart-item-quantity" style={{ fontSize: '13px', color: '#666', marginBottom: '5px' }}>
                       Quantity: {itemQuantity} {!isRSS && packetSize > 1 ? `(Carton - ${packetSize} pieces)` : 'piece'}
                     </div>
-                    <div 
-                      className="cart-item-remove" 
+                    <button 
                       onClick={() => removeFromCart(index)}
-                      style={{ color: '#dc2626', cursor: 'pointer', fontSize: '14px', marginTop: '5px' }}
+                      style={{ color: '#dc2626', cursor: 'pointer', fontSize: '14px', marginTop: '5px', background: 'none', border: 'none' }}
+                      aria-label={`Remove ${item.name_en || item.name || 'Product'} from cart`}
                     >
                       Remove
-                    </div>
+                    </button>
                   </div>
                 </div>
               )
@@ -482,6 +487,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 background: '#25d366',
                 color: 'white'
               }}
+              aria-label="Send inquiry via WhatsApp"
             >
               <i className="fab fa-whatsapp"></i> Send via WhatsApp
             </button>
@@ -498,6 +504,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 background: '#ff5a00',
                 color: 'white'
               }}
+              aria-label="Export cart as text file"
             >
               <i className="fas fa-file-alt"></i> Export
             </button>
@@ -519,7 +526,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           zIndex: 1999,
           display: isMobileNavOpen ? 'block' : 'none'
         }}
-      ></div>
+        aria-hidden="true"
+      />
 
       {/* Mobile Navigation */}
       <div 
@@ -537,6 +545,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           padding: '30px 20px',
           overflowY: 'auto'
         }}
+        role="dialog"
+        aria-label="Mobile navigation menu"
+        aria-modal="true"
       >
         <div className="mobile-nav-header" style={{
           display: 'flex',
@@ -547,11 +558,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           borderBottom: '1px solid #eee'
         }}>
           <h3 style={{ fontSize: '20px', color: '#000' }}>Menu</h3>
-          <span 
-            className="close-mobile-nav" 
+          <button 
             onClick={() => setIsMobileNavOpen(false)}
-            style={{ fontSize: '24px', cursor: 'pointer', color: '#555' }}
-          >&times;</span>
+            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none' }}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
         </div>
         <div className="mobile-nav-links" style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
           <Link href="/en" style={{ color: '#000', textDecoration: 'none', fontSize: '16px', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #eee' }}>
@@ -636,7 +649,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         }}>
           {/* Logo */}
           <div className="logo" style={{ flexShrink: 0 }}>
-            <Link href="/en" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/en" style={{ textDecoration: 'none', color: 'inherit' }} aria-label="Hijab Fashion Mall - Home">
               <h1 style={{ 
                 fontSize: '28px', 
                 color: '#000', 
@@ -665,8 +678,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             maxWidth: '500px',
             margin: '0 20px'
           }}>
-            <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }}>
+            <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }} role="search" aria-label="Site search">
+              <label htmlFor="searchInput" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
+                Search products by name, code, or color
+              </label>
               <input
+                id="searchInput"
                 ref={searchInputRef}
                 type="text"
                 placeholder="Search products... (name, code, color)"
@@ -708,6 +725,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
                 onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
+                aria-label="Search"
               >
                 <i className="fas fa-search"></i>
               </button>
@@ -723,6 +741,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               padding: '6px 10px',
               borderRadius: '40px'
             }}>
+              <label htmlFor="languageSelect" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
+                Select language
+              </label>
               <select 
                 id="languageSelect"
                 defaultValue="en"
@@ -756,6 +777,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     window.location.href = `/es${pathWithoutLang}`
                   }
                 }}
+                aria-label="Select language"
               >
                 <option value="en">🇬🇧 English</option>
                 <option value="ar">🇸🇦 العربية</option>
@@ -765,6 +787,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <option value="it">🇮🇹 Italiano</option>
                 <option value="es">🇪🇸 Español</option>
               </select>
+              <label htmlFor="currencySelect" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
+                Select currency
+              </label>
               <select 
                 id="currencySelect"
                 value={currency}
@@ -782,6 +807,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   width: '65px',
                   opacity: currencyLoading ? 0.7 : 1
                 }}
+                aria-label="Select currency"
               >
                 <option value="USD">🇺🇸 USD</option>
                 <option value="EUR">🇪🇺 EUR</option>
@@ -798,10 +824,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <option value="DZD">🇩🇿 DZD</option>
               </select>
             </div>
-            <div 
+            <button 
               className="cart-icon" 
               onClick={() => setIsCartOpen(true)}
-              style={{ position: 'relative', cursor: 'pointer', fontSize: '22px', color: '#000' }}
+              style={{ position: 'relative', cursor: 'pointer', fontSize: '22px', color: '#000', background: 'none', border: 'none' }}
+              aria-label={`Shopping cart with ${cartCount} items`}
             >
               <i className="fas fa-shopping-cart"></i>
               <span 
@@ -823,7 +850,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   fontWeight: 600
                 }}
               >{cartCount}</span>
-            </div>
+            </button>
           </div>
         </div>
         
@@ -848,7 +875,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               overflowX: 'auto',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none'
-            }}>
+            }} aria-label="Main navigation">
               <Link href="/en" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 Home
               </Link>
@@ -908,6 +935,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             left: '20px',
             zIndex: 1001
           }}
+          aria-label="Open menu"
         >
           <i className="fas fa-bars"></i>
         </button>
@@ -973,9 +1001,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span><i className="fas fa-check-circle" style={{ color: '#ff5a00' }}></i> 100% Original</span>
             </div>
             <div className="footer-social" style={{ display: 'flex', gap: '15px' }}>
-              <a href="https://facebook.com/hijabfashionmall" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
-              <a href="https://instagram.com/hijabfashionmall" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
-              <a href="https://youtube.com/@hijabfashionmall" target="_blank" rel="noopener noreferrer"><i className="fab fa-youtube"></i></a>
+              <a href="https://facebook.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook (opens in new tab)"><i className="fab fa-facebook-f"></i></a>
+              <a href="https://instagram.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram (opens in new tab)"><i className="fab fa-instagram"></i></a>
+              <a href="https://youtube.com/@hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to our YouTube channel (opens in new tab)"><i className="fab fa-youtube"></i></a>
             </div>
           </div>
 
@@ -1081,7 +1109,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   transition: 'transform 0.3s',
                   minWidth: '280px',
                   background: '#25d366'
-                }}>
+                }} aria-label="Join our WhatsApp channel (opens in new tab)">
                   <i className="fab fa-whatsapp"></i>
                   <span>Join WhatsApp Channel</span>
                   <small style={{ fontSize: '12px', opacity: 0.8, marginLeft: 'auto' }}>1,500+ members</small>
@@ -1097,7 +1125,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   transition: 'transform 0.3s',
                   minWidth: '280px',
                   background: '#0088cc'
-                }}>
+                }} aria-label="Join our Telegram channel (opens in new tab)">
                   <i className="fab fa-telegram-plane"></i>
                   <span>Join Telegram Channel</span>
                   <small style={{ fontSize: '12px', opacity: 0.8, marginLeft: 'auto' }}>11,000+ members</small>
@@ -1159,6 +1187,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           transition: 'all 0.3s',
           textDecoration: 'none'
         }}
+        aria-label="Contact us on WhatsApp (opens in new tab)"
       >
         <i className="fab fa-whatsapp"></i>
       </a>
@@ -1189,6 +1218,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           opacity: 0,
           visibility: 'hidden'
         }}
+        aria-label="Back to top"
       >
         <i className="fas fa-arrow-up"></i>
       </button>
