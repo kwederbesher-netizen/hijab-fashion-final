@@ -1,4 +1,3 @@
-// app/en/page.tsx
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
@@ -11,13 +10,34 @@ export default function HomePageEn() {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
   
   const isMounted = useRef(true)
   const sliderInterval = useRef<NodeJS.Timeout | null>(null)
 
-  // Load products from API with Pagination
+  // Hero Slider Data
+  const slides = [
+    {
+      image: '/images/hero-slider-1.webp',
+      title: 'Turkish Modest Fashion',
+      description: 'Discover our exclusive collection of Abayas, Dresses, and Modest Wear',
+      cta: { text: 'Shop Now', link: '/en/catalog' }
+    },
+    {
+      image: '/images/hero-slider-2.webp',
+      title: 'Wholesale Prices',
+      description: 'Best prices for retailers and stores worldwide',
+      cta: { text: 'View Catalog', link: '/en/catalog' }
+    },
+    {
+      image: '/images/hero-slider-3.webp',
+      title: 'Fast Worldwide Shipping',
+      description: 'Delivery to 50+ countries with reliable carriers',
+      cta: { text: 'Learn More', link: '/en/catalog' }
+    }
+  ]
+
+  // Load products from API
   useEffect(() => {
     isMounted.current = true
     const abortController = new AbortController()
@@ -31,7 +51,6 @@ export default function HomePageEn() {
         
         if (data.result && isMounted.current) {
           setProducts(data.result)
-          console.log('✅ Products loaded:', data.result.length)
         }
       } catch (error: any) {
         if (error.name !== 'AbortError' && isMounted.current) {
@@ -51,10 +70,10 @@ export default function HomePageEn() {
     }
   }, [])
 
-  // Hero Slider
+  // Hero Slider timer
   useEffect(() => {
     sliderInterval.current = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 3)
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 5000)
     
     return () => {
@@ -62,20 +81,7 @@ export default function HomePageEn() {
         clearInterval(sliderInterval.current)
       }
     }
-  }, [])
-
-  // Back to top button visibility
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 500)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [])
+  }, [slides.length])
 
   // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
@@ -158,29 +164,10 @@ export default function HomePageEn() {
         <meta property="og:url" content="https://hijabfashionmall.com/en" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://hijabfashionmall.com/images/og-home.jpg" />
-        
-        {/* JSON-LD Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Hijab Fashion Mall",
-              "url": "https://hijabfashionmall.com",
-              "logo": "https://hijabfashionmall.com/logo.png",
-              "description": "Leading wholesale supplier of Turkish modest fashion",
-              "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "TR"
-              }
-            })
-          }}
-        />
       </Head>
 
-      <div>
-        {/* Global CSS to fix mobile white space */}
+      <main id="main-content">
+        {/* Global CSS */}
         <style>{`
           /* Fix white space on right in mobile */
           html, body {
@@ -200,7 +187,6 @@ export default function HomePageEn() {
             box-sizing: border-box !important;
           }
           
-          /* Prevent any element from causing overflow */
           .container,
           [class*="container"],
           [style*="max-width"] {
@@ -211,8 +197,6 @@ export default function HomePageEn() {
             max-width: 100% !important;
             height: auto !important;
           }
-          
-          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
           
           :root {
             --primary: #ff5a00;
@@ -312,127 +296,6 @@ export default function HomePageEn() {
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
           }
 
-          .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 15px rgba(255, 90, 0, 0.3);
-            z-index: 999;
-            transition: all 0.3s;
-            opacity: 0;
-            visibility: hidden;
-            animation: fadeIn 0.3s;
-          }
-
-          .back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-          }
-
-          .back-to-top:hover {
-            transform: translateY(-5px);
-            background: var(--primary-dark);
-          }
-
-          .hero-slider {
-            position: relative;
-            height: 650px;
-            overflow: hidden;
-          }
-
-          .slider-container {
-            position: relative;
-            height: 100%;
-          }
-
-          .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--white);
-          }
-
-          .slide.active {
-            opacity: 1;
-          }
-
-          .slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-          }
-
-          .slide-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 20px;
-            animation: fadeInUp 1s ease;
-          }
-
-          .slide h1, .slide h2 {
-            font-size: 54px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            line-height: 1.3;
-          }
-
-          .slide p {
-            font-size: 22px;
-            margin-bottom: 30px;
-            opacity: 0.95;
-          }
-
-          .slider-dots {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 3;
-          }
-
-          .dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-          }
-
-          .dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
-          }
-
           .ranked-section {
             padding: 60px 0 40px;
             background: var(--light-gray);
@@ -514,7 +377,6 @@ export default function HomePageEn() {
             color: var(--white);
           }
 
-          /* ===== Channels Section - عرض ثابت للبطاقات ===== */
           .channels-section {
             padding: 60px 0;
             background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
@@ -874,7 +736,6 @@ export default function HomePageEn() {
             background: var(--white);
           }
 
-          /* ✅ Products Grid - 4 products per row on desktop */
           .products-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1215,14 +1076,6 @@ export default function HomePageEn() {
               height: 500px;
             }
             
-            .slide h1, .slide h2 {
-              font-size: 36px;
-            }
-            
-            .slide p {
-              font-size: 18px;
-            }
-            
             .section-title {
               font-size: 32px;
             }
@@ -1239,7 +1092,6 @@ export default function HomePageEn() {
               grid-template-columns: 1fr !important;
             }
             
-            /* ✅ Products Grid - 2 products per row on mobile */
             .products-grid {
               grid-template-columns: repeat(2, 1fr) !important;
               gap: 15px;
@@ -1259,7 +1111,6 @@ export default function HomePageEn() {
               justify-content: center;
             }
             
-            /* ✅ Channels Section - 1 column on mobile */
             .channels-grid {
               grid-template-columns: 1fr;
               gap: 20px;
@@ -1297,65 +1148,84 @@ export default function HomePageEn() {
           }
         `}</style>
 
-        {/* Back to Top Button */}
-        <button
-          onClick={scrollToTop}
-          className={`back-to-top ${showBackToTop ? 'show' : ''}`}
-          aria-label="Back to top"
-        >
-          <i className="fas fa-arrow-up"></i>
-        </button>
-
-        {/* Hero Slider */}
-        <section className="hero-slider">
-          <div className="slider-container">
-            {/* Slide 1 */}
-            <div 
-              className={`slide ${currentSlide === 0 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-1.webp)' }}
-            >
-              <div className="slide-content">
-                <h1>Turkish Modest Fashion</h1>
-                <p>Discover our exclusive collection of Abayas, Dresses, and Modest Wear</p>
-                <Link href="/en/catalog" className="btn">Shop Now</Link>
+        {/* Hero Slider - Optimized with next/image and priority */}
+        <section className="hero-slider" style={{ position: 'relative', height: '650px', overflow: 'hidden' }}>
+          <div style={{ position: 'relative', height: '100%' }}>
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  opacity: currentSlide === index ? 1 : 0,
+                  transition: 'opacity 0.5s ease-in-out'
+                }}
+              >
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                  sizes="100vw"
+                  style={{ objectFit: 'cover' }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'rgba(0, 0, 0, 0.55)',
+                  zIndex: 1
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 2,
+                  textAlign: 'center',
+                  color: 'white',
+                  width: '90%',
+                  maxWidth: '800px'
+                }}>
+                  <h1 style={{ fontSize: '54px', fontWeight: 800, marginBottom: '20px' }}>{slide.title}</h1>
+                  <p style={{ fontSize: '22px', marginBottom: '30px' }}>{slide.description}</p>
+                  <Link href={slide.cta.link} className="btn">
+                    {slide.cta.text}
+                  </Link>
+                </div>
               </div>
-            </div>
-            {/* Slide 2 */}
-            <div 
-              className={`slide ${currentSlide === 1 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-2.webp)' }}
-            >
-              <div className="slide-content">
-                <h2>Wholesale Prices</h2>
-                <p>Best prices for retailers and stores worldwide</p>
-                <Link href="/en/catalog" className="btn">View Catalog</Link>
-              </div>
-            </div>
-            {/* Slide 3 */}
-            <div 
-              className={`slide ${currentSlide === 2 ? 'active' : ''}`} 
-              style={{ backgroundImage: 'url(/images/hero-slider-3.webp)' }}
-            >
-              <div className="slide-content">
-                <h2>Fast Worldwide Shipping</h2>
-                <p>Delivery to 50+ countries with reliable carriers</p>
-                <Link href="/en/catalog" className="btn">Learn More</Link>
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="slider-dots">
-            <span 
-              className={`dot ${currentSlide === 0 ? 'active' : ''}`} 
-              onClick={() => setCurrentSlide(0)}
-            ></span>
-            <span 
-              className={`dot ${currentSlide === 1 ? 'active' : ''}`} 
-              onClick={() => setCurrentSlide(1)}
-            ></span>
-            <span 
-              className={`dot ${currentSlide === 2 ? 'active' : ''}`} 
-              onClick={() => setCurrentSlide(2)}
-            ></span>
+          <div style={{
+            position: 'absolute',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '10px',
+            zIndex: 3
+          }}>
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                style={{
+                  width: '14px',
+                  height: '14px',
+                  borderRadius: '50%',
+                  background: currentSlide === index ? '#ff5a00' : 'rgba(255,255,255,0.5)',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
           </div>
         </section>
 
@@ -1608,6 +1478,7 @@ export default function HomePageEn() {
                           <button 
                             className="add-to-cart" 
                             onClick={(e) => addToCart(product, e)}
+                            aria-label={`Add ${productName} to inquiry cart`}
                           >
                             <i className="fas fa-shopping-cart"></i> Add to Inquiry
                           </button>
@@ -1752,7 +1623,7 @@ export default function HomePageEn() {
             </div>
           </div>
         </section>
-      </div>
+      </main>
     </>
   )
 }
