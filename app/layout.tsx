@@ -31,8 +31,8 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  // ✅ تم إزالة alternates.canonical الثابت
   alternates: {
-    canonical: 'https://www.hijabfashionmall.com',
     languages: {
       'en': 'https://www.hijabfashionmall.com/en',
       'ar': 'https://www.hijabfashionmall.com/ar',
