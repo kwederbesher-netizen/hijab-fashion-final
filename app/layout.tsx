@@ -31,7 +31,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // ✅ تم إزالة alternates.canonical الثابت
   alternates: {
     languages: {
       'en': 'https://www.hijabfashionmall.com/en',
@@ -81,20 +80,23 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr">
       <head>
+        {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         
-        {/* Google Analytics */}
+        {/* ✅ Font Awesome - تمت إزالته (مستبدل بـ react-icons) */}
+        {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /> */}
+        
+        {/* ✅ Google Analytics - تحميل بعد تحميل المحتوى (lazyOnload) */}
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
