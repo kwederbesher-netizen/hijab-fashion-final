@@ -5,6 +5,25 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { 
+  FaUsers, 
+  FaWhatsapp, 
+  FaTelegramPlane, 
+  FaShoppingCart, 
+  FaArrowUp, 
+  FaImage, 
+  FaVideo,
+  FaCheckCircle,
+  FaNewspaper,
+  FaStore,
+  FaGlobe,
+  FaCreditCard,
+  FaBoxes,
+  FaTruck,
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube
+} from 'react-icons/fa'
 
 export default function HomePageEn() {
   const [products, setProducts] = useState<any[]>([])
@@ -33,7 +52,7 @@ export default function HomePageEn() {
       image: '/images/hero-slider-3.webp',
       title: 'Fast Worldwide Shipping',
       description: 'Delivery to 50+ countries with reliable carriers',
-      cta: { text: 'Explore Our Collection', link: '/en/catalog' }
+      cta: { text: 'Shop Now', link: '/en/catalog' }
     }
   ]
 
@@ -150,20 +169,10 @@ export default function HomePageEn() {
     <>
       <Head>
         <title>Hijab Fashion Mall | Wholesale Turkish Hijab Wear - Modest Fashion Supplier from Turkey</title>
-        <meta name="description" content="Premium Turkish hijab wholesale since 2019. 5000+ products: Abayas, Modest Dresses, Sets, Sportswear. No minimum order, worldwide shipping, 24/7 support. Join 5000+ retailers worldwide." />
-        <meta name="keywords" content="wholesale hijab turkish, modest fashion wholesale, hijab wholesale, abaya wholesale, modest dresses turkey, turkish hijab supplier, turkey" />
+        <meta name="description" content="Premium Turkish hijab wholesale since 2019. 5000+ products: Abayas, Modest Dresses, Sets, Sportswear. No minimum order, worldwide shipping, 24/7 support." />
+        <meta name="keywords" content="wholesale hijab turkish, modest fashion wholesale, hijab wholesale" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://hijabfashionmall.com/en" />
-        <link rel="alternate" href="https://hijabfashionmall.com" hrefLang="en" />
-        <link rel="alternate" href="https://hijabfashionmall.com/ar" hrefLang="ar" />
-        <link rel="alternate" href="https://hijabfashionmall.com" hrefLang="x-default" />
-        
-        {/* Open Graph */}
-        <meta property="og:title" content="Hijab Fashion Mall - Wholesale Turkish Hijab Wear" />
-        <meta property="og:description" content="Leading supplier of Turkish modest fashion wholesale. 5000+ products, worldwide shipping, no minimum order." />
-        <meta property="og:url" content="https://hijabfashionmall.com/en" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://hijabfashionmall.com/images/og-home.jpg" />
       </Head>
 
       <main id="main-content">
@@ -450,11 +459,9 @@ export default function HomePageEn() {
           .channel-stats span {
             font-size: 14px;
             color: var(--medium-gray);
-          }
-
-          .channel-stats i {
-            margin-right: 5px;
-            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
           }
 
           .channel-btn {
@@ -472,6 +479,8 @@ export default function HomePageEn() {
             max-width: 250px;
             margin: 0 auto;
             color: var(--white);
+            border: none;
+            cursor: pointer;
           }
 
           .whatsapp-btn {
@@ -584,6 +593,7 @@ export default function HomePageEn() {
             height: 100%;
             min-height: 450px;
             overflow: hidden;
+            position: relative;
           }
 
           .privatelabel-image img {
@@ -643,7 +653,7 @@ export default function HomePageEn() {
             gap: 10px;
           }
 
-          .privatelabel-features i {
+          .privatelabel-features svg {
             color: var(--primary);
             font-size: 20px;
           }
@@ -661,6 +671,8 @@ export default function HomePageEn() {
             font-size: 17px;
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(255, 90, 0, 0.2);
+            border: none;
+            cursor: pointer;
           }
 
           .privatelabel-btn:hover {
@@ -814,6 +826,10 @@ export default function HomePageEn() {
             font-weight: 600;
             width: 100%;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
           }
 
           .add-to-cart:hover {
@@ -920,12 +936,7 @@ export default function HomePageEn() {
             overflow: hidden;
             margin: 0 auto 20px;
             border: 3px solid var(--primary);
-          }
-
-          .testimonial-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            position: relative;
           }
 
           .testimonial-card h4 {
@@ -977,13 +988,7 @@ export default function HomePageEn() {
             width: 100%;
             height: 220px;
             overflow: hidden;
-          }
-
-          .blog-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
+            position: relative;
           }
 
           .blog-card:hover .blog-image img {
@@ -1261,27 +1266,31 @@ export default function HomePageEn() {
             <div className="channels-grid">
               <div className="channel-card whatsapp-card">
                 <div className="channel-icon">
-                  <i className="fab fa-whatsapp"></i>
+                  <FaWhatsapp size={40} />
                 </div>
                 <h3>WhatsApp Channel</h3>
                 <p>Join our WhatsApp channel for daily new arrivals, special discounts, and early access to collections.</p>
                 <div className="channel-stats">
-                  <span><i className="fas fa-users"></i> 1,500+ members</span>
-                  <span><i className="fas fa-image"></i> Daily updates</span>
+                  <span><FaUsers size={14} /> 1,500+ members</span>
+                  <span><FaImage size={14} /> Daily updates</span>
                 </div>
-                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">Join WhatsApp Channel</a>
+                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">
+                  <FaWhatsapp size={18} /> Join WhatsApp Channel
+                </a>
               </div>
               <div className="channel-card telegram-card">
                 <div className="channel-icon">
-                  <i className="fab fa-telegram-plane"></i>
+                  <FaTelegramPlane size={40} />
                 </div>
                 <h3>Telegram Channel</h3>
                 <p>Join our Telegram channel for exclusive content, styling tips, and special offers.</p>
                 <div className="channel-stats">
-                  <span><i className="fas fa-users"></i> 11,000+ members</span>
-                  <span><i className="fas fa-video"></i> Video tutorials</span>
+                  <span><FaUsers size={14} /> 11,000+ members</span>
+                  <span><FaVideo size={14} /> Video tutorials</span>
                 </div>
-                <a href="https://t.me/hijabfashionmall" className="channel-btn telegram-btn" target="_blank" rel="noopener noreferrer">Join Telegram Channel</a>
+                <a href="https://t.me/hijabfashionmall" className="channel-btn telegram-btn" target="_blank" rel="noopener noreferrer">
+                  <FaTelegramPlane size={18} /> Join Telegram Channel
+                </a>
               </div>
             </div>
           </div>
@@ -1341,20 +1350,20 @@ export default function HomePageEn() {
                   Build your brand with Turkish quality and global reach.
                 </p>
                 <ul className="privatelabel-features">
-                  <li><i className="fas fa-check-circle"></i> Custom packaging with your logo</li>
-                  <li><i className="fas fa-check-circle"></i> Exclusive designs for your brand</li>
-                  <li><i className="fas fa-check-circle"></i> Flexible minimum for regular orders</li>
-                  <li><i className="fas fa-check-circle"></i> Quality control and fast shipping</li>
+                  <li><FaCheckCircle /> Custom packaging with your logo</li>
+                  <li><FaCheckCircle /> Exclusive designs for your brand</li>
+                  <li><FaCheckCircle /> Flexible minimum for regular orders</li>
+                  <li><FaCheckCircle /> Quality control and fast shipping</li>
                 </ul>
                 
                 <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
                   <Link href="/en/private-label-service" className="privatelabel-btn" style={{ background: 'transparent', color: 'var(--primary)', border: '2px solid var(--primary)', boxShadow: 'none' }}>
-                    <i className="fas fa-newspaper"></i> Read Full Guide
+                    <FaNewspaper /> Read Full Guide
                   </Link>
                   
                   <a href="https://wa.me/905519522448?text=Hello%2C%20I%27m%20interested%20in%20your%20private%20label%20service%20for%20regular%20orders.%20Please%20provide%20more%20information." 
                      className="privatelabel-btn" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-whatsapp"></i> Inquire Now
+                    <FaWhatsapp /> Inquire Now
                   </a>
                 </div>
               </div>
@@ -1481,7 +1490,7 @@ export default function HomePageEn() {
                             onClick={(e) => addToCart(product, e)}
                             aria-label={`Add ${productName} to inquiry cart`}
                           >
-                            <i className="fas fa-shopping-cart"></i> Add to Inquiry
+                            <FaShoppingCart /> Add to Inquiry
                           </button>
                         </div>
                       </Link>
@@ -1504,42 +1513,42 @@ export default function HomePageEn() {
             <div className="faq-grid-cards">
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-store"></i>
+                  <FaStore size={36} />
                 </div>
                 <h3>Who are we?</h3>
                 <p>Hijab Fashion Mall is Turkey's leading marketplace connecting wholesalers with modest fashion retailers worldwide.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-shopping-cart"></i>
+                  <FaShoppingCart size={36} />
                 </div>
                 <h3>How to order?</h3>
                 <p>Browse catalog, select products, add to inquiry cart, and send via WhatsApp. Our team will confirm within 24 hours.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-globe"></i>
+                  <FaGlobe size={36} />
                 </div>
                 <h3>Do you ship worldwide?</h3>
                 <p>Yes! We ship to 50+ countries with reliable carriers. Fast door-to-door delivery with tracking number.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-credit-card"></i>
+                  <FaCreditCard size={36} />
                 </div>
                 <h3>Payment methods?</h3>
                 <p>We accept bank transfer, Western Union, and major credit cards. Secure payment processing for your convenience.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-boxes"></i>
+                  <FaBoxes size={36} />
                 </div>
                 <h3>Minimum order?</h3>
                 <p>No minimum quantity! Order what you need - perfect for small boutiques and large retailers alike.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-truck"></i>
+                  <FaTruck size={36} />
                 </div>
                 <h3>Order tracking?</h3>
                 <p>Once shipped, you'll receive carrier name and tracking number to follow your package in real-time.</p>
