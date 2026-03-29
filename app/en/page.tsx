@@ -1170,6 +1170,7 @@ export default function HomePageEn() {
                   fill
                   priority={index === 0}
                   fetchPriority={index === 0 ? 'high' : 'auto'}
+                  loading={index === 0 ? 'eager' : 'lazy'}
                   sizes="100vw"
                   style={{ objectFit: 'cover' }}
                 />
