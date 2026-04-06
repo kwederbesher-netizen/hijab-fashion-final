@@ -1,3 +1,5 @@
+'use client'
+
 // app/ar/online-store-guide/page.tsx
 'use client'
 

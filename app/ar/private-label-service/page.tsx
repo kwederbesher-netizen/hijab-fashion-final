@@ -1,3 +1,5 @@
+'use client'
+
 // app/ar/private-label-service/page.tsx
 'use client'
 

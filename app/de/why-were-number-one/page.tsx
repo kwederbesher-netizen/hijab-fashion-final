@@ -1,4 +1,6 @@
-﻿// app/de/why-were-number-one/page.tsx
+﻿'use client'
+
+// app/de/why-were-number-one/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -13,9 +15,9 @@ export default function WhyWereNumberOnePageDe() {
   return (
     <>
       <Head>
-        <title>Unsere Position im türkischen Hijab-Großhandel | Hijab Fashion Mall</title>
-        <meta name="description" content="Hijab Fashion Mall ist ein vertrauenswürdiger Anbieter im türkischen Hijab-Großhandel. Qualitätsprodukte, Kundenservice und jahrelange Erfahrung." />
-        <meta name="keywords" content="türkischer Hijab-Großhandel, vertrauenswürdiger Lieferant, Hijab Fashion Mall, Kleidung für Hijabis türkisch" />
+        <title>Unsere Position im t rkischen Hijab-Gro?handel | Hijab Fashion Mall</title>
+        <meta name="description" content="Hijab Fashion Mall ist ein vertrauensw rdiger Anbieter im t rkischen Hijab-Gro?handel. Qualit?tsprodukte, Kundenservice und jahrelange Erfahrung." />
+        <meta name="keywords" content="t rkischer Hijab-Gro?handel, vertrauensw rdiger Lieferant, Hijab Fashion Mall, Kleidung f r Hijabis t rkisch" />
         <meta name="author" content="Hijab Fashion Mall" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/de/why-were-number-one" />
@@ -25,14 +27,14 @@ export default function WhyWereNumberOnePageDe() {
         <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/why-were-number-one" />
         <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/why-were-number-one" />
         <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/why-were-number-one" />
-        <meta property="og:title" content="Unsere Position im türkischen Hijab-Großhandel | Hijab Fashion Mall" />
-        <meta property="og:description" content="Hijab Fashion Mall ist ein vertrauenswürdiger Anbieter im türkischen Hijab-Großhandel." />
+        <meta property="og:title" content="Unsere Position im t rkischen Hijab-Gro?handel | Hijab Fashion Mall" />
+        <meta property="og:description" content="Hijab Fashion Mall ist ein vertrauensw rdiger Anbieter im t rkischen Hijab-Gro?handel." />
         <meta property="og:image" content="https://hijabfashionmall.com/images/celebration-global-rank.webp" />
         <meta property="og:url" content="https://hijabfashionmall.com/de/why-were-number-one" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Unsere Position im türkischen Hijab-Großhandel" />
-        <meta name="twitter:description" content="Hijab Fashion Mall ist ein vertrauenswürdiger Anbieter im türkischen Hijab-Großhandel." />
+        <meta name="twitter:title" content="Unsere Position im t rkischen Hijab-Gro?handel" />
+        <meta name="twitter:description" content="Hijab Fashion Mall ist ein vertrauensw rdiger Anbieter im t rkischen Hijab-Gro?handel." />
         <meta name="twitter:image" content="https://hijabfashionmall.com/images/celebration-global-rank.webp" />
       </Head>
 
@@ -215,10 +217,10 @@ export default function WhyWereNumberOnePageDe() {
           <div className="breadcrumb">
             <Link href="/de">Startseite</Link> <span>&gt;</span> <span>Warum wir</span>
           </div>
-          <h1>Hijab Fashion Mall: Ein <span>vertrauenswürdiger Name</span> im türkischen Hijab-Großhandel</h1>
-          <p className="lead">Wie wir zu einem zuverlässigen Lieferanten für Einzelhändler weltweit wurden</p>
+          <h1>Hijab Fashion Mall: Ein <span>vertrauensw rdiger Name</span> im t rkischen Hijab-Gro?handel</h1>
+          <p className="lead">Wie wir zu einem zuverl?ssigen Lieferanten f r Einzelh?ndler weltweit wurden</p>
           <div className="meta-info">
-            <span><FaCalendarAlt size={14} /> 13. März 2026</span>
+            <span><FaCalendarAlt size={14} /> 13. M?rz 2026</span>
             <span><FaClock size={14} /> 6 Min. Lesezeit</span>
           </div>
         </div>
@@ -231,68 +233,68 @@ export default function WhyWereNumberOnePageDe() {
             <div className="featured-image">
               <Image 
                 src="/images/celebration-global-rank.webp" 
-                alt="Hijab Fashion Mall - Vertrauenswürdiger türkischer Hijab-Lieferant" 
+                alt="Hijab Fashion Mall - Vertrauensw rdiger t rkischer Hijab-Lieferant" 
                 width={800} 
                 height={450} 
                 priority
               />
             </div>
 
-            <p className="lead">Im Laufe der Jahre ist <strong>Hijab Fashion Mall</strong> zu einem bekannten Namen im türkischen Hijab-Großhandel geworden. Durch konstante Qualität und zuverlässigen Service haben wir das Vertrauen von Einzelhändlern in vielen Ländern gewonnen.</p>
+            <p className="lead">Im Laufe der Jahre ist <strong>Hijab Fashion Mall</strong> zu einem bekannten Namen im t rkischen Hijab-Gro?handel geworden. Durch konstante Qualit?t und zuverl?ssigen Service haben wir das Vertrauen von Einzelh?ndlern in vielen L?ndern gewonnen.</p>
 
             <div className="highlight-box">
-              <h4>🏆 Keywords, bei denen wir gut positioniert sind:</h4>
+              <h4>?? Keywords, bei denen wir gut positioniert sind:</h4>
               <div className="country-list">
-                <span className="country-tag"><FaTag size={12} /> Türkischer Hijab-Großhandel</span>
-                <span className="country-tag"><FaTag size={12} /> Kleidung für Hijabis türkisch</span>
-                <span className="country-tag"><FaTag size={12} /> Hijabis Kleidung Großhandel</span>
-                <span className="country-tag"><FaTag size={12} /> Türkische Abayas Großhandel</span>
-                <span className="country-tag"><FaTag size={12} /> Kleider für Hijabis Türkei</span>
-                <span className="country-tag"><FaTag size={12} /> Türkischer Hijab-Lieferant</span>
+                <span className="country-tag"><FaTag size={12} /> T rkischer Hijab-Gro?handel</span>
+                <span className="country-tag"><FaTag size={12} /> Kleidung f r Hijabis t rkisch</span>
+                <span className="country-tag"><FaTag size={12} /> Hijabis Kleidung Gro?handel</span>
+                <span className="country-tag"><FaTag size={12} /> T rkische Abayas Gro?handel</span>
+                <span className="country-tag"><FaTag size={12} /> Kleider f r Hijabis T rkei</span>
+                <span className="country-tag"><FaTag size={12} /> T rkischer Hijab-Lieferant</span>
               </div>
             </div>
 
             <h2>Danke an unsere Kunden</h2>
-            <p>Wir möchten unseren Kunden weltweit unseren aufrichtigen Dank aussprechen. Ihr Vertrauen und Ihre fortgesetzte Zusammenarbeit haben uns geholfen, zu wachsen und unsere Dienstleistungen zu verbessern. Wir behaupten nicht, perfekt zu sein, aber wir geben jeden Tag unser Bestes.</p>
+            <p>Wir m?chten unseren Kunden weltweit unseren aufrichtigen Dank aussprechen. Ihr Vertrauen und Ihre fortgesetzte Zusammenarbeit haben uns geholfen, zu wachsen und unsere Dienstleistungen zu verbessern. Wir behaupten nicht, perfekt zu sein, aber wir geben jeden Tag unser Bestes.</p>
 
             <div className="stats-grid">
               <div className="stat-item"><div className="stat-number">4.8/5</div><div className="stat-label">Kundenfeedback</div></div>
               <div className="stat-item"><div className="stat-number">3000+</div><div className="stat-label">Produkte</div></div>
-              <div className="stat-item"><div className="stat-number">40+</div><div className="stat-label">Bediente Länder</div></div>
+              <div className="stat-item"><div className="stat-number">40+</div><div className="stat-label">Bediente L?nder</div></div>
             </div>
 
             <h2>Unsere Schwerpunkte</h2>
-            <p>Wir haben hart daran gearbeitet, ein Unternehmen aufzubauen, auf das Einzelhändler zählen können. Hier sind unsere Prioritäten:</p>
+            <p>Wir haben hart daran gearbeitet, ein Unternehmen aufzubauen, auf das Einzelh?ndler z?hlen k?nnen. Hier sind unsere Priorit?ten:</p>
 
-            <h3>1. Produktqualität</h3>
-            <p>Wir beziehen unsere Produkte von vertrauenswürdigen türkischen Herstellern, die unser Qualitätsengagement teilen. Jeder Artikel durchläuft vor dem Versand grundlegende Qualitätskontrollen.</p>
+            <h3>1. Produktqualit?t</h3>
+            <p>Wir beziehen unsere Produkte von vertrauensw rdigen t rkischen Herstellern, die unser Qualit?tsengagement teilen. Jeder Artikel durchl?uft vor dem Versand grundlegende Qualit?tskontrollen.</p>
 
             <h3>2. Kundenservice</h3>
-            <p>Unser Support-Team ist über WhatsApp erreichbar, um Fragen zu beantworten, bei Bestellungen zu helfen und bei Bedarf Unterstützung zu bieten. Wir glauben an klare Kommunikation.</p>
+            <p>Unser Support-Team ist  ber WhatsApp erreichbar, um Fragen zu beantworten, bei Bestellungen zu helfen und bei Bedarf Unterst tzung zu bieten. Wir glauben an klare Kommunikation.</p>
 
-            <h3>3. Ehrliche Geschäftspraktiken</h3>
-            <p>Wir sind transparent in Bezug auf Preise, Lieferzeiten und Richtlinien. Unsere "Keine Mindestbestellmenge"-Richtlinie ermöglicht es kleinen Boutiquen, ohne Druck auf türkische Produkte zuzugreifen.</p>
+            <h3>3. Ehrliche Gesch?ftspraktiken</h3>
+            <p>Wir sind transparent in Bezug auf Preise, Lieferzeiten und Richtlinien. Unsere "Keine Mindestbestellmenge"-Richtlinie erm?glicht es kleinen Boutiquen, ohne Druck auf t rkische Produkte zuzugreifen.</p>
 
             <h3>4. Benutzerfreundliche Website</h3>
-            <p>Wir haben eine Website entwickelt, die einfach zu navigieren ist, gut auf mobilen Geräten funktioniert und mehrere Sprachen unterstützt. Wir verbessern uns kontinuierlich basierend auf Kundenfeedback.</p>
+            <p>Wir haben eine Website entwickelt, die einfach zu navigieren ist, gut auf mobilen Ger?ten funktioniert und mehrere Sprachen unterst tzt. Wir verbessern uns kontinuierlich basierend auf Kundenfeedback.</p>
 
             <blockquote>
-              "Ich arbeite seit zwei Jahren mit Hijab Fashion Mall zusammen. Die Qualität ist konstant und ihr Team reagiert schnell, wenn ich Fragen habe. Ein zuverlässiger Partner für meine Boutique." — Sarah, Boutiquenbesitzerin
+              "Ich arbeite seit zwei Jahren mit Hijab Fashion Mall zusammen. Die Qualit?t ist konstant und ihr Team reagiert schnell, wenn ich Fragen habe. Ein zuverl?ssiger Partner f r meine Boutique."   Sarah, Boutiquenbesitzerin
             </blockquote>
 
             <h2>Wohin wir liefern</h2>
-            <p>Wir liefern derzeit in viele Länder, darunter <strong>die USA, Kanada, Großbritannien, Europa und Australien</strong>.</p>
+            <p>Wir liefern derzeit in viele L?nder, darunter <strong>die USA, Kanada, Gro?britannien, Europa und Australien</strong>.</p>
 
             <div className="country-list">
               <span className="country-tag"><FaGlobe size={14} /> USA</span>
               <span className="country-tag"><FaGlobe size={14} /> Kanada</span>
-              <span className="country-tag"><FaGlobe size={14} /> Großbritannien</span>
+              <span className="country-tag"><FaGlobe size={14} /> Gro?britannien</span>
               <span className="country-tag"><FaGlobe size={14} /> Deutschland</span>
               <span className="country-tag"><FaGlobe size={14} /> Frankreich</span>
               <span className="country-tag"><FaGlobe size={14} /> Italien</span>
               <span className="country-tag"><FaGlobe size={14} /> Belgien</span>
               <span className="country-tag"><FaGlobe size={14} /> Schweden</span>
-              <span className="country-tag"><FaGlobe size={14} /> Österreich</span>
+              <span className="country-tag"><FaGlobe size={14} /> ?sterreich</span>
               <span className="country-tag"><FaGlobe size={14} /> Spanien</span>
               <span className="country-tag"><FaGlobe size={14} /> Portugal</span>
               <span className="country-tag"><FaGlobe size={14} /> Schweiz</span>
@@ -305,7 +307,7 @@ export default function WhyWereNumberOnePageDe() {
 
             <div className="cta-box">
               <h3>Interessiert an unseren Produkten?</h3>
-              <p>Durchstöbern Sie unseren Katalog mit türkischer Hijab-Kleidung und sehen Sie, ob wir der richtige Partner für Ihre Boutique sind.</p>
+              <p>Durchst?bern Sie unseren Katalog mit t rkischer Hijab-Kleidung und sehen Sie, ob wir der richtige Partner f r Ihre Boutique sind.</p>
               <Link href="/de/catalog" className="btn">Katalog durchsuchen</Link>
             </div>
 
@@ -327,23 +329,23 @@ export default function WhyWereNumberOnePageDe() {
       {/* Related Posts */}
       <section className="related-posts">
         <div className="container">
-          <h3 className="related-title">Das könnte Ihnen auch gefallen</h3>
+          <h3 className="related-title">Das k?nnte Ihnen auch gefallen</h3>
           <div className="related-grid">
             <div className="related-card">
               <div className="related-image">
-                <Image src="/images/complete-guide-thumb.webp" alt="Leitfaden für türkische Abayas" width={300} height={150} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }} />
+                <Image src="/images/complete-guide-thumb.webp" alt="Leitfaden f r t rkische Abayas" width={300} height={150} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }} />
               </div>
               <div className="related-content">
-                <h4><Link href="/de/complete-guide-turkish-abayas">Leitfaden für türkische Abayas: Typen und Stoffe</Link></h4>
-                <div className="related-meta">5. März 2026</div>
+                <h4><Link href="/de/complete-guide-turkish-abayas">Leitfaden f r t rkische Abayas: Typen und Stoffe</Link></h4>
+                <div className="related-meta">5. M?rz 2026</div>
               </div>
             </div>
             <div className="related-card">
               <div className="related-image">
-                <Image src="/images/wholesale-tips-thumb.webp" alt="Großhandelstipps" width={300} height={150} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }} />
+                <Image src="/images/wholesale-tips-thumb.webp" alt="Gro?handelstipps" width={300} height={150} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }} />
               </div>
               <div className="related-content">
-                <h4><Link href="/de/wholesale-buying-tips-boutique-owners">Großhandelstipps für Boutiquenbesitzer</Link></h4>
+                <h4><Link href="/de/wholesale-buying-tips-boutique-owners">Gro?handelstipps f r Boutiquenbesitzer</Link></h4>
                 <div className="related-meta">28. Februar 2026</div>
               </div>
             </div>
@@ -352,7 +354,7 @@ export default function WhyWereNumberOnePageDe() {
                 <Image src="/images/chiffon-hijab-guide-thumb.webp" alt="Chiffon-Hijab-Leitfaden" width={300} height={150} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }} />
               </div>
               <div className="related-content">
-                <h4><Link href="/de/chiffon-hijab-ultimate-guide">Leitfaden für Chiffon-Hijab: Typen und Pflege</Link></h4>
+                <h4><Link href="/de/chiffon-hijab-ultimate-guide">Leitfaden f r Chiffon-Hijab: Typen und Pflege</Link></h4>
                 <div className="related-meta">20. Februar 2026</div>
               </div>
             </div>

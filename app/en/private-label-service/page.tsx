@@ -1,4 +1,6 @@
-﻿// app/en/private-label-service/page.tsx
+﻿'use client'
+
+// app/en/private-label-service/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -567,7 +569,7 @@ export default function PrivateLabelServicePage() {
         }
 
         .process-step:not(:last-child)::after {
-            content: '→';
+            content: '?';
             position: absolute;
             top: 40px;
             right: -20px;
@@ -1008,9 +1010,9 @@ export default function PrivateLabelServicePage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/en">🏠 Home</Link> 
+            <Link href="/en">?? Home</Link> 
             <span> &gt; </span> 
-            <span>✨ Private Label Service 2026</span>
+            <span>? Private Label Service 2026</span>
           </div>
           <h1><span>Private Label Service</span> 2026</h1>
           <p>Build your own modest fashion brand with our comprehensive solutions. From labels to packaging, everything you need to create a unique identity.</p>
@@ -1022,9 +1024,9 @@ export default function PrivateLabelServicePage() {
         <div className="container">
           <div className="intro-wrapper">
             <div className="intro-content">
-              <span className="badge-2026">✨ 2026 EDITION | TURKISH QUALITY</span>
+              <span className="badge-2026">? 2026 EDITION | TURKISH QUALITY</span>
               <h2>Build Your <span>Distinct Brand Identity</span> in the Modest Fashion Market</h2>
-              <p className="lead">In today's competitive fashion market, having a distinctive brand identity is no longer optional—it's essential for success and longevity.</p>
+              <p className="lead">In today's competitive fashion market, having a distinctive brand identity is no longer optional it's essential for success and longevity.</p>
               <p>Our comprehensive private label service empowers you to build and expand your brand in the hijab market without the complexities of manufacturing. We provide premium Turkish products as a blank canvas for your brand vision, allowing you to focus on what truly matters: growing your business and connecting with your customers.</p>
               <p>Whether you're launching a new boutique, expanding an existing business, or creating an exclusive collection, our private label solution gives you the flexibility and quality you need to stand out in the modest fashion market.</p>
             </div>
@@ -1144,7 +1146,7 @@ export default function PrivateLabelServicePage() {
               </div>
               <div className="service-content">
                 <h3>Complete Branding Package</h3>
-                <p>The ultimate solution for serious brand builders. We coordinate all elements—labels, tags, and packaging—to create a cohesive, professional brand identity for your products.</p>
+                <p>The ultimate solution for serious brand builders. We coordinate all elements labels, tags, and packaging to create a cohesive, professional brand identity for your products.</p>
                 <ul className="service-features">
                   <li><FaCheck size={14} /> Coordinated design across all items</li>
                   <li><FaCheck size={14} /> Volume pricing advantage</li>
@@ -1193,7 +1195,7 @@ export default function PrivateLabelServicePage() {
         <div className="container">
           <div className="brand-content">
             <h2>Build a Brand <span>That Lasts</span></h2>
-            <p>In the fast-paced fashion industry, brands with strong identities and loyal followings are the ones that thrive. Our private label service gives you the foundation to build exactly that—a brand customers recognize, trust, and return to season after season.</p>
+            <p>In the fast-paced fashion industry, brands with strong identities and loyal followings are the ones that thrive. Our private label service gives you the foundation to build exactly that a brand customers recognize, trust, and return to season after season.</p>
             <p>With your own brand, you're not just selling products; you're building equity. Every sale reinforces your brand recognition, and every satisfied customer becomes an ambassador for your unique identity in the modest fashion space.</p>
             
             <div className="brand-stats">
@@ -1227,7 +1229,7 @@ export default function PrivateLabelServicePage() {
                   <FaQuestionCircle size={22} />
                   <h3>What is the minimum order quantity for private label?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 0 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 0 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 0 ? 'open' : ''}`}>
                 We offer flexible options to suit businesses of all sizes. Whether you're just starting out or scaling up, we can accommodate your needs. Contact us to discuss your specific requirements and we'll find a solution that works for you.
@@ -1240,10 +1242,10 @@ export default function PrivateLabelServicePage() {
                   <FaQuestionCircle size={22} />
                   <h3>Can I mix different products in my private label order?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 1 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 1 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 1 ? 'open' : ''}`}>
-                Absolutely! You can select any combination of products from our catalog—abayas, hijabs, dresses, prayer clothes, and more—all with your custom branding. This gives you the flexibility to create a diverse collection that truly represents your brand.
+                Absolutely! You can select any combination of products from our catalog abayas, hijabs, dresses, prayer clothes, and more all with your custom branding. This gives you the flexibility to create a diverse collection that truly represents your brand.
               </div>
             </div>
             
@@ -1253,7 +1255,7 @@ export default function PrivateLabelServicePage() {
                   <FaQuestionCircle size={22} />
                   <h3>How long does the private label process take?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 2 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 2 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 2 ? 'open' : ''}`}>
                 Timeline depends on your specific requirements. Typically, label production takes 2-3 weeks, with shipping taking 3-7 business days worldwide. We'll provide you with a detailed timeline based on your order.
@@ -1266,7 +1268,7 @@ export default function PrivateLabelServicePage() {
                   <FaQuestionCircle size={22} />
                   <h3>Can you help with design if I don't have artwork?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 3 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 3 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 3 ? 'open' : ''}`}>
                 Yes! Our team can provide basic design guidance and specifications to ensure your labels and tags meet professional standards. We'll work with you to bring your brand vision to life, even if you're starting from scratch.
@@ -1279,7 +1281,7 @@ export default function PrivateLabelServicePage() {
                   <FaQuestionCircle size={22} />
                   <h3>Do you ship worldwide?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 4 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 4 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 4 ? 'open' : ''}`}>
                 Yes, we ship to customers worldwide. Our logistics network ensures reliable delivery to most countries with tracking information provided for every order.
@@ -1292,7 +1294,7 @@ export default function PrivateLabelServicePage() {
                   <FaQuestionCircle size={22} />
                   <h3>What makes Turkish products special?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 5 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 5 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 5 ? 'open' : ''}`}>
                 Turkish textiles are world-renowned for their exceptional quality, durability, and craftsmanship. Our products are made from premium materials with attention to every detail, ensuring your brand is associated with excellence.

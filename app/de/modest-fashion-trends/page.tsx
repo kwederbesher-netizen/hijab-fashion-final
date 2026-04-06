@@ -1,3 +1,5 @@
+'use client'
+
 // app/de/modest-fashion-trends/page.tsx
 'use client'
 

@@ -1,4 +1,6 @@
-﻿// app/it/physical-store-guide/page.tsx
+﻿'use client'
+
+// app/it/physical-store-guide/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -101,7 +103,7 @@ export default function PhysicalStoreGuideItalianPage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/it">🏠 Home</Link> <span>&gt;</span> <Link href="/it/blogs">📝 Blog</Link> <span>&gt;</span> <span>🏬 Negozio Fisico 2026</span>
+            <Link href="/it">?? Home</Link> <span>&gt;</span> <Link href="/it/blogs">?? Blog</Link> <span>&gt;</span> <span>?? Negozio Fisico 2026</span>
           </div>
           <h1>Come Aprire un <span>Negozio di Abbigliamento</span> Fisico nel 2026</h1>
           <p>Una guida completa passo dopo passo per aprire una boutique di moda di successo</p>
@@ -119,10 +121,10 @@ export default function PhysicalStoreGuideItalianPage() {
               <Image src="/images/physical-clothing-store-guide.webp" alt="Negozio di Abbigliamento Fisico 2026" width={800} height={450} priority />
             </div>
 
-            <p className="lead">Nonostante la crescita dell'e-commerce, i negozi fisici sono tutt'altro che morti. Il commercio al dettaglio sta vivendo un rinascimento poiché i consumatori cercano esperienze di acquisto tangibili e servizio personalizzato.</p>
+            <p className="lead">Nonostante la crescita dell'e-commerce, i negozi fisici sono tutt'altro che morti. Il commercio al dettaglio sta vivendo un rinascimento poich  i consumatori cercano esperienze di acquisto tangibili e servizio personalizzato.</p>
 
             <div className="toc">
-              <h3>📋 Indice dei Contenuti</h3>
+              <h3>?? Indice dei Contenuti</h3>
               <ul>
                 <li><a href="#introduction"><FaChevronRight size={10} /> Introduzione</a></li>
                 <li><a href="#retail-concept"><FaChevronRight size={10} /> 1. Sviluppa il Tuo Concetto</a></li>
@@ -141,19 +143,19 @@ export default function PhysicalStoreGuideItalianPage() {
             </div>
 
             <div className="tip-box">
-              <strong>💡 Consiglio Pro:</strong> Le boutique di maggior successo hanno un chiaro "perché". Non cercare di essere tutto per tutti.
+              <strong>?? Consiglio Pro:</strong> Le boutique di maggior successo hanno un chiaro "perch ". Non cercare di essere tutto per tutti.
             </div>
 
             <h2 id="sourcing">4. Il Vantaggio del Private Label</h2>
             <ul className="checklist">
               <li><FaCheckCircle size={18} /> <strong>Distinzione del Marchio:</strong> Prodotti esclusivi</li>
-              <li><FaCheckCircle size={18} /> <strong>Margini più Alti:</strong> 50-60% di margine</li>
-              <li><FaCheckCircle size={18} /> <strong>Fedeltà del Cliente:</strong> I clienti tornano</li>
+              <li><FaCheckCircle size={18} /> <strong>Margini pi  Alti:</strong> 50-60% di margine</li>
+              <li><FaCheckCircle size={18} /> <strong>Fedelt  del Cliente:</strong> I clienti tornano</li>
             </ul>
 
             <div className="cta-box">
               <h3>Pronto ad Aprire il Tuo Negozio dei Sogni?</h3>
-              <p>Contattaci per saperne di più sui nostri servizi Private Label.</p>
+              <p>Contattaci per saperne di pi  sui nostri servizi Private Label.</p>
               <div className="share-buttons">
                 <a href="https://wa.me/905519522448" className="btn-whatsapp" target="_blank" rel="noopener noreferrer"><FaWhatsapp size={18} /> WhatsApp</a>
                 <Link href="/it/contact" className="btn-primary">Contattaci</Link>

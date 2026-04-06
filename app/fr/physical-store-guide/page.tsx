@@ -1,4 +1,6 @@
-﻿// app/fr/physical-store-guide/page.tsx
+﻿'use client'
+
+// app/fr/physical-store-guide/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -36,9 +38,9 @@ export default function PhysicalStoreGuideFrenchPage() {
   return (
     <>
       <Head>
-        <title>Comment Ouvrir une Boutique de Vêtements Physique en 2026 | Guide Complet | Hijab Fashion Mall</title>
-        <meta name="description" content="Un guide complet étape par étape pour lancer et développer une boutique de mode réussie en 2026. Apprenez l'emplacement, la marque privée, le design du magasin, le marketing et plus." />
-        <meta name="keywords" content="boutique de vêtements physique, ouvrir un magasin de détail, boutique de mode, magasin physique, entreprise de vente au détail, guide boutique de vêtements 2026" />
+        <title>Comment Ouvrir une Boutique de V tements Physique en 2026 | Guide Complet | Hijab Fashion Mall</title>
+        <meta name="description" content="Un guide complet  tape par  tape pour lancer et d velopper une boutique de mode r ussie en 2026. Apprenez l'emplacement, la marque priv e, le design du magasin, le marketing et plus." />
+        <meta name="keywords" content="boutique de v tements physique, ouvrir un magasin de d tail, boutique de mode, magasin physique, entreprise de vente au d tail, guide boutique de v tements 2026" />
         <meta name="author" content="Hijab Fashion Mall" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/fr/physical-store-guide" />
@@ -48,8 +50,8 @@ export default function PhysicalStoreGuideFrenchPage() {
         <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/physical-store-guide" />
         <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/physical-store-guide" />
         <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/physical-store-guide" />
-        <meta property="og:title" content="Comment Ouvrir une Boutique de Vêtements Physique en 2026 | Guide Complet" />
-        <meta property="og:description" content="Un guide complet pour lancer une boutique de mode réussie en 2026." />
+        <meta property="og:title" content="Comment Ouvrir une Boutique de V tements Physique en 2026 | Guide Complet" />
+        <meta property="og:description" content="Un guide complet pour lancer une boutique de mode r ussie en 2026." />
         <meta property="og:image" content="https://hijabfashionmall.com/images/physical-clothing-store-guide.webp" />
         <meta property="og:url" content="https://hijabfashionmall.com/fr/physical-store-guide" />
         <meta property="og:type" content="article" />
@@ -107,10 +109,10 @@ export default function PhysicalStoreGuideFrenchPage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/fr">🏠 Accueil</Link> <span>&gt;</span> <Link href="/fr/blogs">📝 Blog</Link> <span>&gt;</span> <span>🏬 Boutique Physique 2026</span>
+            <Link href="/fr">?? Accueil</Link> <span>&gt;</span> <Link href="/fr/blogs">?? Blog</Link> <span>&gt;</span> <span>?? Boutique Physique 2026</span>
           </div>
-          <h1>Comment Ouvrir une <span>Boutique de Vêtements</span> Physique en 2026</h1>
-          <p>Un guide complet étape par étape pour lancer et développer une boutique de mode réussie</p>
+          <h1>Comment Ouvrir une <span>Boutique de V tements</span> Physique en 2026</h1>
+          <p>Un guide complet  tape par  tape pour lancer et d velopper une boutique de mode r ussie</p>
           <div className="meta-info">
             <span><FaCalendarAlt size={14} /> 15 Mars 2026</span>
             <span><FaClock size={14} /> 16 min de lecture</span>
@@ -122,55 +124,55 @@ export default function PhysicalStoreGuideFrenchPage() {
         <div className="container">
           <div className="article-wrapper">
             <div className="featured-image">
-              <Image src="/images/physical-clothing-store-guide.webp" alt="Boutique de Vêtements Physique 2026" width={800} height={450} priority />
+              <Image src="/images/physical-clothing-store-guide.webp" alt="Boutique de V tements Physique 2026" width={800} height={450} priority />
             </div>
 
-            <p className="lead">Malgré la croissance du commerce électronique, les magasins physiques sont loin d'être morts. En fait, le commerce de détail traditionnel connaît une renaissance alors que les consommateurs recherchent des expériences d'achat tangibles, un service personnalisé et la possibilité de voir et toucher les produits avant d'acheter.</p>
+            <p className="lead">Malgr  la croissance du commerce  lectronique, les magasins physiques sont loin d' tre morts. En fait, le commerce de d tail traditionnel conna t une renaissance alors que les consommateurs recherchent des exp riences d'achat tangibles, un service personnalis  et la possibilit  de voir et toucher les produits avant d'acheter.</p>
 
             <div className="toc">
-              <h3>📋 Table des Matières</h3>
+              <h3>?? Table des Mati res</h3>
               <ul>
                 <li><a href="#introduction"><FaChevronRight size={10} /> Introduction</a></li>
-                <li><a href="#retail-concept"><FaChevronRight size={10} /> 1. Développez Votre Concept</a></li>
-                <li><a href="#business-plan"><FaChevronRight size={10} /> 2. Créez un Plan d'Affaires</a></li>
+                <li><a href="#retail-concept"><FaChevronRight size={10} /> 1. D veloppez Votre Concept</a></li>
+                <li><a href="#business-plan"><FaChevronRight size={10} /> 2. Cr ez un Plan d'Affaires</a></li>
                 <li><a href="#location"><FaChevronRight size={10} /> 3. Choisissez l'Emplacement Parfait</a></li>
-                <li><a href="#sourcing"><FaChevronRight size={10} /> 4. Approvisionnement avec Marque Privée</a></li>
+                <li><a href="#sourcing"><FaChevronRight size={10} /> 4. Approvisionnement avec Marque Priv e</a></li>
                 <li><a href="#marketing"><FaChevronRight size={10} /> 5. Marketing</a></li>
                 <li><a href="#conclusion"><FaChevronRight size={10} /> Conclusion</a></li>
               </ul>
             </div>
 
-            <h2 id="introduction">Le Paysage du Commerce de Détail Physique en 2026</h2>
-            <p>Le commerce de détail physique évolue, il ne meurt pas. Les magasins qui réussissent en 2026 sont ceux qui offrent des expériences, pas seulement des transactions.</p>
+            <h2 id="introduction">Le Paysage du Commerce de D tail Physique en 2026</h2>
+            <p>Le commerce de d tail physique  volue, il ne meurt pas. Les magasins qui r ussissent en 2026 sont ceux qui offrent des exp riences, pas seulement des transactions.</p>
 
             <div className="stats-grid">
-              <div className="stat-item"><div className="stat-number">72%</div><div className="stat-label">Préfèrent les Magasins Physiques</div></div>
+              <div className="stat-item"><div className="stat-number">72%</div><div className="stat-label">Pr f rent les Magasins Physiques</div></div>
               <div className="stat-item"><div className="stat-number">85%</div><div className="stat-label">des Ventes en Magasin</div></div>
-              <div className="stat-item"><div className="stat-number">$5T+</div><div className="stat-label">Marché Mondial</div></div>
+              <div className="stat-item"><div className="stat-number">$5T+</div><div className="stat-label">March  Mondial</div></div>
             </div>
 
-            <h2 id="retail-concept">1. Développez Votre Concept de Magasin</h2>
+            <h2 id="retail-concept">1. D veloppez Votre Concept de Magasin</h2>
             <div className="tags">
               <span className="tag"><FaCheck size={12} /> Mode Modeste</span>
-              <span className="tag"><FaCheck size={12} /> Vêtements Durables</span>
+              <span className="tag"><FaCheck size={12} /> V tements Durables</span>
               <span className="tag"><FaCheck size={12} /> Grandes Tailles</span>
               <span className="tag"><FaCheck size={12} /> Luxe</span>
             </div>
 
             <div className="tip-box">
-              <strong>💡 Conseil Pro :</strong> Les boutiques les plus performantes ont un "pourquoi" clair. Ne cherchez pas à être tout pour tout le monde.
+              <strong>?? Conseil Pro :</strong> Les boutiques les plus performantes ont un "pourquoi" clair. Ne cherchez pas    tre tout pour tout le monde.
             </div>
 
-            <h2 id="sourcing">4. L'Avantage de la Marque Privée</h2>
+            <h2 id="sourcing">4. L'Avantage de la Marque Priv e</h2>
             <ul className="checklist">
               <li><FaCheckCircle size={18} /> <strong>Distinction de Marque :</strong> Produits exclusifs introuvables ailleurs</li>
-              <li><FaCheckCircle size={18} /> <strong>Marges Plus Élevées :</strong> 50-60% de marge</li>
-              <li><FaCheckCircle size={18} /> <strong>Fidélisation Client :</strong> Les clients reviennent pour votre marque</li>
+              <li><FaCheckCircle size={18} /> <strong>Marges Plus Elev es :</strong> 50-60% de marge</li>
+              <li><FaCheckCircle size={18} /> <strong>Fid lisation Client :</strong> Les clients reviennent pour votre marque</li>
             </ul>
 
             <div className="cta-box">
-              <h3>Prêt à Ouvrir Votre Magasin de Rêve ?</h3>
-              <p>Contactez-nous pour en savoir plus sur nos services de marque privée.</p>
+              <h3>Pr t   Ouvrir Votre Magasin de R ve ?</h3>
+              <p>Contactez-nous pour en savoir plus sur nos services de marque priv e.</p>
               <div className="share-buttons">
                 <a href="https://wa.me/905519522448" className="btn-whatsapp" target="_blank" rel="noopener noreferrer"><FaWhatsapp size={18} /> WhatsApp</a>
                 <Link href="/fr/contact" className="btn-primary">Contactez-nous</Link>
@@ -181,9 +183,9 @@ export default function PhysicalStoreGuideFrenchPage() {
               <h4>Partagez ce Guide</h4>
               <div className="share-buttons">
                 <button className="share-btn facebook" onClick={() => window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href), '_blank')}><FaFacebookF size={18} /></button>
-                <button className="share-btn twitter" onClick={() => window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Boutique de Vêtements Physique 2026')+'&url='+encodeURIComponent(window.location.href), '_blank')}><FaTwitter size={18} /></button>
+                <button className="share-btn twitter" onClick={() => window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Boutique de V tements Physique 2026')+'&url='+encodeURIComponent(window.location.href), '_blank')}><FaTwitter size={18} /></button>
                 <button className="share-btn linkedin" onClick={() => window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href), '_blank')}><FaLinkedinIn size={18} /></button>
-                <button className="share-btn whatsapp" onClick={() => window.open('https://wa.me/?text='+encodeURIComponent('Boutique de Vêtements Physique 2026: '+window.location.href), '_blank')}><FaWhatsapp size={18} /></button>
+                <button className="share-btn whatsapp" onClick={() => window.open('https://wa.me/?text='+encodeURIComponent('Boutique de V tements Physique 2026: '+window.location.href), '_blank')}><FaWhatsapp size={18} /></button>
               </div>
             </div>
           </div>

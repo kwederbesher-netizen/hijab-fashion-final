@@ -1,4 +1,6 @@
-﻿// app/de/physical-store-guide/page.tsx
+﻿'use client'
+
+// app/de/physical-store-guide/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -33,9 +35,9 @@ export default function PhysicalStoreGuideGermanPage() {
   return (
     <>
       <Head>
-        <title>Wie man einen physischen Bekleidungsstore in 2026 eröffnet | Vollständiger Leitfaden | Hijab Fashion Mall</title>
-        <meta name="description" content="Eine umfassende Schritt-für-Schritt-Anleitung zum Eröffnen und Ausbauen einer erfolgreichen Modeboutique im Jahr 2026." />
-        <meta name="keywords" content="physischer Bekleidungsstore, Einzelhandelsgeschäft eröffnen, Modeboutique, stationärer Handel, Bekleidungsgeschäft Leitfaden 2026" />
+        <title>Wie man einen physischen Bekleidungsstore in 2026 er?ffnet | Vollst?ndiger Leitfaden | Hijab Fashion Mall</title>
+        <meta name="description" content="Eine umfassende Schritt-f r-Schritt-Anleitung zum Er?ffnen und Ausbauen einer erfolgreichen Modeboutique im Jahr 2026." />
+        <meta name="keywords" content="physischer Bekleidungsstore, Einzelhandelsgesch?ft er?ffnen, Modeboutique, station?rer Handel, Bekleidungsgesch?ft Leitfaden 2026" />
         <meta name="author" content="Hijab Fashion Mall" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/de/physical-store-guide" />
@@ -45,8 +47,8 @@ export default function PhysicalStoreGuideGermanPage() {
         <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/physical-store-guide" />
         <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/physical-store-guide" />
         <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/physical-store-guide" />
-        <meta property="og:title" content="Wie man einen physischen Bekleidungsstore in 2026 eröffnet" />
-        <meta property="og:description" content="Eine umfassende Anleitung zur Eröffnung einer erfolgreichen Modeboutique." />
+        <meta property="og:title" content="Wie man einen physischen Bekleidungsstore in 2026 er?ffnet" />
+        <meta property="og:description" content="Eine umfassende Anleitung zur Er?ffnung einer erfolgreichen Modeboutique." />
         <meta property="og:image" content="https://hijabfashionmall.com/images/physical-clothing-store-guide.webp" />
         <meta property="og:url" content="https://hijabfashionmall.com/de/physical-store-guide" />
         <meta property="og:type" content="article" />
@@ -101,12 +103,12 @@ export default function PhysicalStoreGuideGermanPage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/de">🏠 Startseite</Link> <span>&gt;</span> <Link href="/de/blogs">📝 Blog</Link> <span>&gt;</span> <span>🏬 Physischer Store 2026</span>
+            <Link href="/de">?? Startseite</Link> <span>&gt;</span> <Link href="/de/blogs">?? Blog</Link> <span>&gt;</span> <span>?? Physischer Store 2026</span>
           </div>
-          <h1>Wie man einen <span>physischen Bekleidungsstore</span> in 2026 eröffnet</h1>
-          <p>Eine umfassende Schritt-für-Schritt-Anleitung zur Eröffnung einer erfolgreichen Modeboutique</p>
+          <h1>Wie man einen <span>physischen Bekleidungsstore</span> in 2026 er?ffnet</h1>
+          <p>Eine umfassende Schritt-f r-Schritt-Anleitung zur Er?ffnung einer erfolgreichen Modeboutique</p>
           <div className="meta-info">
-            <span><FaCalendarAlt size={14} /> 15. März 2026</span>
+            <span><FaCalendarAlt size={14} /> 15. M?rz 2026</span>
             <span><FaClock size={14} /> 16 Min. Lesezeit</span>
           </div>
         </div>
@@ -119,41 +121,41 @@ export default function PhysicalStoreGuideGermanPage() {
               <Image src="/images/physical-clothing-store-guide.webp" alt="Physischer Bekleidungsstore 2026" width={800} height={450} priority />
             </div>
 
-            <p className="lead">Trotz des Wachstums des E-Commerce sind physische Geschäfte keineswegs tot. Tatsächlich erlebt der stationäre Einzelhandel eine Renaissance, da Verbraucher greifbare Einkaufserlebnisse und persönlichen Service suchen.</p>
+            <p className="lead">Trotz des Wachstums des E-Commerce sind physische Gesch?fte keineswegs tot. Tats?chlich erlebt der station?re Einzelhandel eine Renaissance, da Verbraucher greifbare Einkaufserlebnisse und pers?nlichen Service suchen.</p>
 
             <div className="toc">
-              <h3>📋 Inhaltsverzeichnis</h3>
+              <h3>?? Inhaltsverzeichnis</h3>
               <ul>
-                <li><a href="#introduction"><FaChevronRight size={10} /> Einführung</a></li>
+                <li><a href="#introduction"><FaChevronRight size={10} /> Einf hrung</a></li>
                 <li><a href="#retail-concept"><FaChevronRight size={10} /> 1. Entwickeln Sie Ihr Konzept</a></li>
                 <li><a href="#business-plan"><FaChevronRight size={10} /> 2. Businessplan erstellen</a></li>
-                <li><a href="#location"><FaChevronRight size={10} /> 3. Perfekten Standort wählen</a></li>
+                <li><a href="#location"><FaChevronRight size={10} /> 3. Perfekten Standort w?hlen</a></li>
                 <li><a href="#sourcing"><FaChevronRight size={10} /> 4. Private Label</a></li>
                 <li><a href="#conclusion"><FaChevronRight size={10} /> Fazit</a></li>
               </ul>
             </div>
 
-            <h2 id="introduction">Die stationäre Einzelhandelslandschaft 2026</h2>
+            <h2 id="introduction">Die station?re Einzelhandelslandschaft 2026</h2>
             <div className="stats-grid">
-              <div className="stat-item"><div className="stat-number">72%</div><div className="stat-label">Bevorzugen physische Geschäfte</div></div>
-              <div className="stat-item"><div className="stat-number">85%</div><div className="stat-label">der Einzelhandelsumsätze</div></div>
+              <div className="stat-item"><div className="stat-number">72%</div><div className="stat-label">Bevorzugen physische Gesch?fte</div></div>
+              <div className="stat-item"><div className="stat-number">85%</div><div className="stat-label">der Einzelhandelsums?tze</div></div>
               <div className="stat-item"><div className="stat-number">$5T+</div><div className="stat-label">Globaler Markt</div></div>
             </div>
 
             <div className="tip-box">
-              <strong>💡 Profi-Tipp:</strong> Die erfolgreichsten Boutiquen haben ein klares "Warum". Versuchen Sie nicht, alles für alle zu sein.
+              <strong>?? Profi-Tipp:</strong> Die erfolgreichsten Boutiquen haben ein klares "Warum". Versuchen Sie nicht, alles f r alle zu sein.
             </div>
 
             <h2 id="sourcing">4. Private Label Vorteil</h2>
             <ul className="checklist">
               <li><FaCheckCircle size={18} /> <strong>Markenunterscheidung:</strong> Exklusive Produkte</li>
-              <li><FaCheckCircle size={18} /> <strong>Höhere Margen:</strong> 50-60% Marge</li>
-              <li><FaCheckCircle size={18} /> <strong>Kundenbindung:</strong> Kunden kommen zurück</li>
+              <li><FaCheckCircle size={18} /> <strong>H?here Margen:</strong> 50-60% Marge</li>
+              <li><FaCheckCircle size={18} /> <strong>Kundenbindung:</strong> Kunden kommen zur ck</li>
             </ul>
 
             <div className="cta-box">
-              <h3>Bereit für Ihren Traumladen?</h3>
-              <p>Kontaktieren Sie uns für mehr über Private Label Services.</p>
+              <h3>Bereit f r Ihren Traumladen?</h3>
+              <p>Kontaktieren Sie uns f r mehr  ber Private Label Services.</p>
               <div className="share-buttons">
                 <a href="https://wa.me/905519522448" className="btn-whatsapp" target="_blank" rel="noopener noreferrer"><FaWhatsapp size={18} /> WhatsApp</a>
                 <Link href="/de/contact" className="btn-primary">Kontakt</Link>

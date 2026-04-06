@@ -1,4 +1,6 @@
-﻿// app/en/physical-store-guide/page.tsx
+﻿'use client'
+
+// app/en/physical-store-guide/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -876,11 +878,11 @@ export default function PhysicalStoreGuideEnglishPage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/en">🏠 Home</Link> 
+            <Link href="/en">?? Home</Link> 
             <span> &gt; </span> 
-            <Link href="/en/blogs">📝 Blog</Link> 
+            <Link href="/en/blogs">?? Blog</Link> 
             <span> &gt; </span> 
-            <span>🏬 How to Open a Physical Clothing Store 2026</span>
+            <span>?? How to Open a Physical Clothing Store 2026</span>
           </div>
           <h1>How to Open a <span>Physical Clothing Store</span> in 2026</h1>
           <p>A comprehensive step-by-step guide to launching and growing a successful fashion boutique</p>
@@ -912,19 +914,19 @@ export default function PhysicalStoreGuideEnglishPage() {
             </div>
 
             {/* Lead Paragraph */}
-            <p className="lead">Despite the growth of e-commerce, physical stores are far from dead. In fact, brick-and-mortar retail is experiencing a renaissance as consumers crave tangible shopping experiences, personalized service, and the ability to see and touch products before buying. In 2026, opening a physical clothing store can be a powerful business move—if you do it right.</p>
+            <p className="lead">Despite the growth of e-commerce, physical stores are far from dead. In fact, brick-and-mortar retail is experiencing a renaissance as consumers crave tangible shopping experiences, personalized service, and the ability to see and touch products before buying. In 2026, opening a physical clothing store can be a powerful business move if you do it right.</p>
 
             {/* Mobile TOC Button */}
             <button 
               className="toc-mobile-btn" 
               onClick={() => setIsTocOpen(!isTocOpen)}
             >
-              📋 {isTocOpen ? 'Close' : 'Open'} Table of Contents
+              ?? {isTocOpen ? 'Close' : 'Open'} Table of Contents
             </button>
 
             {/* Table of Contents */}
             <div className={`toc ${isTocOpen ? 'open' : ''}`}>
-              <h3>📋 Table of Contents</h3>
+              <h3>?? Table of Contents</h3>
               <ul>
                 <li><a href="#introduction"><FaChevronRight size={10} /> Introduction</a></li>
                 <li><a href="#retail-concept"><FaChevronRight size={10} /> 1. Develop Your Store Concept</a></li>
@@ -980,13 +982,13 @@ export default function PhysicalStoreGuideEnglishPage() {
             <h4>Questions to Define Your Concept:</h4>
             <ul className="checklist">
               <li><FaCheckCircle size={18} /> <strong>Who is your target customer?</strong> Create detailed customer personas including age, income, lifestyle, and shopping preferences.</li>
-              <li><FaCheckCircle size={18} /> <strong>What makes your store unique?</strong> Identify your unique value proposition—why will customers choose your store over competitors?</li>
-              <li><FaCheckCircle size={18} /> <strong>What is your brand personality?</strong> Define how your store will feel—luxurious, warm, modern, minimalist, or eclectic.</li>
+              <li><FaCheckCircle size={18} /> <strong>What makes your store unique?</strong> Identify your unique value proposition why will customers choose your store over competitors?</li>
+              <li><FaCheckCircle size={18} /> <strong>What is your brand personality?</strong> Define how your store will feel luxurious, warm, modern, minimalist, or eclectic.</li>
               <li><FaCheckCircle size={18} /> <strong>What is your price positioning?</strong> Will you be a discount store, mid-market, or luxury boutique?</li>
             </ul>
 
             <div className="tip-box">
-              <strong>💡 Pro Tip:</strong> The most successful boutiques in 2026 have a clear "why." Don't try to be everything to everyone. Focus on serving a specific customer exceptionally well.
+              <strong>?? Pro Tip:</strong> The most successful boutiques in 2026 have a clear "why." Don't try to be everything to everyone. Focus on serving a specific customer exceptionally well.
             </div>
 
             {/* Section 2: Business Plan */}
@@ -1028,7 +1030,7 @@ export default function PhysicalStoreGuideEnglishPage() {
             </ul>
 
             <div className="warning-box">
-              <strong>⚠️ Important Financial Advice:</strong> Retail experts recommend having at least 6-12 months of operating expenses in reserve before opening. Many new businesses take time to become profitable.
+              <strong>?? Important Financial Advice:</strong> Retail experts recommend having at least 6-12 months of operating expenses in reserve before opening. Many new businesses take time to become profitable.
             </div>
 
             {/* Section 4: Location */}
@@ -1093,14 +1095,14 @@ export default function PhysicalStoreGuideEnglishPage() {
             <ul>
               <li><strong><FaLightbulb size={14} style={{color: 'var(--primary)'}} /> Lighting:</strong> Layered lighting (ambient, task, accent) to highlight products and create atmosphere</li>
               <li><strong><FaBoxes size={14} style={{color: 'var(--primary)'}} /> Fixtures:</strong> Racks, shelves, mannequins, and display tables that match your aesthetic</li>
-              <li><strong><FaUsers size={14} style={{color: 'var(--primary)'}} /> Fitting Rooms:</strong> Well-lit, spacious, with mirrors and hooks—often the deciding factor in purchases</li>
+              <li><strong><FaUsers size={14} style={{color: 'var(--primary)'}} /> Fitting Rooms:</strong> Well-lit, spacious, with mirrors and hooks often the deciding factor in purchases</li>
               <li><strong><FaRegCreditCard size={14} style={{color: 'var(--primary)'}} /> Checkout Area:</strong> Efficient, organized, with impulse items nearby</li>
               <li><strong><FaTags size={14} style={{color: 'var(--primary)'}} /> Signage:</strong> Clear department signs, pricing, and promotional displays</li>
               <li><strong><FaUsers size={14} style={{color: 'var(--primary)'}} /> Seating Areas:</strong> Comfortable spots for waiting companions</li>
             </ul>
 
             <div className="tip-box">
-              <strong>💡 Pro Tip:</strong> The "power wall" (the wall customers see when entering) should feature your best or highest-margin products. Place essentials in the back to encourage full store browsing.
+              <strong>?? Pro Tip:</strong> The "power wall" (the wall customers see when entering) should feature your best or highest-margin products. Place essentials in the back to encourage full store browsing.
             </div>
 
             {/* Section 6: Sourcing with Private Label */}
@@ -1117,7 +1119,7 @@ export default function PhysicalStoreGuideEnglishPage() {
             </ul>
 
             <div className="highlight-box">
-              <h4>🏷️ What is Private Label?</h4>
+              <h4>??? What is Private Label?</h4>
               <p>Private label means you partner with a manufacturer to create products that carry your own brand name. You get to add custom labels, hang tags, and packaging that feature your logo and brand identity. This transforms generic products into exclusive merchandise that customers can only find at your store.</p>
             </div>
 
@@ -1153,7 +1155,7 @@ export default function PhysicalStoreGuideEnglishPage() {
             </ul>
 
             <div className="warning-box">
-              <strong>⚠️ Important:</strong> Requirements vary by location. Consult with a local attorney or Small Business Development Center to ensure compliance.
+              <strong>?? Important:</strong> Requirements vary by location. Consult with a local attorney or Small Business Development Center to ensure compliance.
             </div>
 
             {/* Section 8: Staff */}
@@ -1248,13 +1250,13 @@ export default function PhysicalStoreGuideEnglishPage() {
 
             {/* Conclusion */}
             <h2 id="conclusion">Conclusion: Your Success Partner</h2>
-            <p>Opening a physical clothing store in 2026 is an exciting venture with tremendous potential. The key to success lies in thoughtful planning, strong brand identity, quality products, and exceptional customer experience. Remember that every successful boutique started with one step—and that step is deciding to start.</p>
+            <p>Opening a physical clothing store in 2026 is an exciting venture with tremendous potential. The key to success lies in thoughtful planning, strong brand identity, quality products, and exceptional customer experience. Remember that every successful boutique started with one step and that step is deciding to start.</p>
 
             <p>The retail landscape rewards those who are authentic, customer-focused, and persistent. By following this guide and carefully building your brand, you're positioning yourself for long-term success in this dynamic industry.</p>
 
             <div className="highlight-box">
-              <h4>🤝 We're Here to Be Your Success Partner</h4>
-              <p>At <strong>Hijab Fashion Mall</strong>, we specialize in helping retailers like you build successful clothing businesses. Our private label service allows you to create your unique brand identity with custom labels, hang tags, and packaging—everything you need to stand out in the market and build lasting customer loyalty.</p>
+              <h4>?? We're Here to Be Your Success Partner</h4>
+              <p>At <strong>Hijab Fashion Mall</strong>, we specialize in helping retailers like you build successful clothing businesses. Our private label service allows you to create your unique brand identity with custom labels, hang tags, and packaging everything you need to stand out in the market and build lasting customer loyalty.</p>
               <p>With our premium Turkish products and flexible wholesale options, we provide the foundation for your store's success. Whether you're just starting out or looking to expand, we're committed to being your trusted partner every step of the way.</p>
             </div>
 

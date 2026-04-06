@@ -1,4 +1,6 @@
-﻿// app/en/why-were-number-one/page.tsx
+﻿'use client'
+
+// app/en/why-were-number-one/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -241,7 +243,7 @@ export default function WhyWereNumberOnePage() {
             <p className="lead">Over the years, <strong>Hijab Fashion Mall</strong> has grown to become a recognized name in Turkish hijab wholesale. Through consistent quality and reliable service, we've earned the trust of retailers across multiple countries.</p>
 
             <div className="highlight-box">
-              <h4>🏆 Keywords We Rank Well For:</h4>
+              <h4>?? Keywords We Rank Well For:</h4>
               <div className="country-list">
                 <span className="country-tag"><FaTag size={12} /> Turkish Hijab Wholesale</span>
                 <span className="country-tag"><FaTag size={12} /> Turkish Modest Wear</span>
@@ -277,7 +279,7 @@ export default function WhyWereNumberOnePage() {
             <p>We've built a website that's easy to navigate, works well on mobile devices, and supports multiple languages. We continue to make improvements based on customer feedback.</p>
 
             <blockquote>
-              "I've been working with Hijab Fashion Mall for two years. The quality is consistent, and their team is responsive when I have questions. A reliable partner for my boutique." — Sarah, Boutique Owner
+              "I've been working with Hijab Fashion Mall for two years. The quality is consistent, and their team is responsive when I have questions. A reliable partner for my boutique."   Sarah, Boutique Owner
             </blockquote>
 
             <h2>Where We Ship</h2>

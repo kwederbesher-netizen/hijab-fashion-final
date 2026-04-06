@@ -1,4 +1,6 @@
-﻿// app/es/physical-store-guide/page.tsx
+﻿'use client'
+
+// app/es/physical-store-guide/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -33,9 +35,9 @@ export default function PhysicalStoreGuideSpanishPage() {
   return (
     <>
       <Head>
-        <title>Cómo Abrir una Tienda de Ropa Física en 2026 | Guía Completa | Hijab Fashion Mall</title>
-        <meta name="description" content="Una guía completa paso a paso para abrir y hacer crecer una boutique de moda exitosa en 2026." />
-        <meta name="keywords" content="tienda de ropa física, abrir tienda minorista, boutique de moda, tienda física, guía tienda de ropa 2026" />
+        <title>C?mo Abrir una Tienda de Ropa F?sica en 2026 | Gu?a Completa | Hijab Fashion Mall</title>
+        <meta name="description" content="Una gu?a completa paso a paso para abrir y hacer crecer una boutique de moda exitosa en 2026." />
+        <meta name="keywords" content="tienda de ropa f?sica, abrir tienda minorista, boutique de moda, tienda f?sica, gu?a tienda de ropa 2026" />
         <meta name="author" content="Hijab Fashion Mall" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/es/physical-store-guide" />
@@ -45,8 +47,8 @@ export default function PhysicalStoreGuideSpanishPage() {
         <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/physical-store-guide" />
         <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/physical-store-guide" />
         <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/physical-store-guide" />
-        <meta property="og:title" content="Cómo Abrir una Tienda de Ropa Física en 2026 | Guía Completa" />
-        <meta property="og:description" content="Guía completa para abrir una boutique de moda exitosa." />
+        <meta property="og:title" content="C?mo Abrir una Tienda de Ropa F?sica en 2026 | Gu?a Completa" />
+        <meta property="og:description" content="Gu?a completa para abrir una boutique de moda exitosa." />
         <meta property="og:image" content="https://hijabfashionmall.com/images/physical-clothing-store-guide.webp" />
         <meta property="og:url" content="https://hijabfashionmall.com/es/physical-store-guide" />
         <meta property="og:type" content="article" />
@@ -101,10 +103,10 @@ export default function PhysicalStoreGuideSpanishPage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/es">🏠 Inicio</Link> <span>&gt;</span> <Link href="/es/blogs">📝 Blog</Link> <span>&gt;</span> <span>🏬 Tienda Física 2026</span>
+            <Link href="/es">?? Inicio</Link> <span>&gt;</span> <Link href="/es/blogs">?? Blog</Link> <span>&gt;</span> <span>?? Tienda F?sica 2026</span>
           </div>
-          <h1>Cómo Abrir una <span>Tienda de Ropa</span> Física en 2026</h1>
-          <p>Una guía completa paso a paso para abrir una boutique de moda exitosa</p>
+          <h1>C?mo Abrir una <span>Tienda de Ropa</span> F?sica en 2026</h1>
+          <p>Una gu?a completa paso a paso para abrir una boutique de moda exitosa</p>
           <div className="meta-info">
             <span><FaCalendarAlt size={14} /> 15 de Marzo de 2026</span>
             <span><FaClock size={14} /> 16 min de lectura</span>
@@ -116,57 +118,57 @@ export default function PhysicalStoreGuideSpanishPage() {
         <div className="container">
           <div className="article-wrapper">
             <div className="featured-image">
-              <Image src="/images/physical-clothing-store-guide.webp" alt="Tienda de Ropa Física 2026" width={800} height={450} priority />
+              <Image src="/images/physical-clothing-store-guide.webp" alt="Tienda de Ropa F?sica 2026" width={800} height={450} priority />
             </div>
 
-            <p className="lead">A pesar del crecimiento del comercio electrónico, las tiendas físicas están lejos de estar muertas. El comercio minorista está experimentando un renacimiento a medida que los consumidores buscan experiencias de compra tangibles y servicio personalizado.</p>
+            <p className="lead">A pesar del crecimiento del comercio electr?nico, las tiendas f?sicas est?n lejos de estar muertas. El comercio minorista est? experimentando un renacimiento a medida que los consumidores buscan experiencias de compra tangibles y servicio personalizado.</p>
 
             <div className="toc">
-              <h3>📋 Tabla de Contenidos</h3>
+              <h3>?? Tabla de Contenidos</h3>
               <ul>
-                <li><a href="#introduction"><FaChevronRight size={10} /> Introducción</a></li>
+                <li><a href="#introduction"><FaChevronRight size={10} /> Introducci?n</a></li>
                 <li><a href="#retail-concept"><FaChevronRight size={10} /> 1. Desarrolle su Concepto</a></li>
                 <li><a href="#business-plan"><FaChevronRight size={10} /> 2. Plan de Negocios</a></li>
-                <li><a href="#location"><FaChevronRight size={10} /> 3. Elija la Ubicación</a></li>
+                <li><a href="#location"><FaChevronRight size={10} /> 3. Elija la Ubicaci?n</a></li>
                 <li><a href="#sourcing"><FaChevronRight size={10} /> 4. Marca Privada</a></li>
-                <li><a href="#conclusion"><FaChevronRight size={10} /> Conclusión</a></li>
+                <li><a href="#conclusion"><FaChevronRight size={10} /> Conclusi?n</a></li>
               </ul>
             </div>
 
-            <h2 id="introduction">El Panorama Minorista Físico en 2026</h2>
+            <h2 id="introduction">El Panorama Minorista F?sico en 2026</h2>
             <div className="stats-grid">
-              <div className="stat-item"><div className="stat-number">72%</div><div className="stat-label">Prefieren Tiendas Físicas</div></div>
+              <div className="stat-item"><div className="stat-number">72%</div><div className="stat-label">Prefieren Tiendas F?sicas</div></div>
               <div className="stat-item"><div className="stat-number">85%</div><div className="stat-label">de las Ventas Minoristas</div></div>
               <div className="stat-item"><div className="stat-number">$5T+</div><div className="stat-label">Mercado Global</div></div>
             </div>
 
             <div className="tip-box">
-              <strong>💡 Consejo Pro:</strong> Las boutiques más exitosas tienen un claro "por qué". No intentes ser todo para todos.
+              <strong>?? Consejo Pro:</strong> Las boutiques m?s exitosas tienen un claro "por qu ". No intentes ser todo para todos.
             </div>
 
             <h2 id="sourcing">4. La Ventaja de la Marca Privada</h2>
             <ul className="checklist">
-              <li><FaCheckCircle size={18} /> <strong>Distinción de Marca:</strong> Productos exclusivos</li>
-              <li><FaCheckCircle size={18} /> <strong>Mayores Márgenes:</strong> 50-60% de margen</li>
+              <li><FaCheckCircle size={18} /> <strong>Distinci?n de Marca:</strong> Productos exclusivos</li>
+              <li><FaCheckCircle size={18} /> <strong>Mayores M?rgenes:</strong> 50-60% de margen</li>
               <li><FaCheckCircle size={18} /> <strong>Lealtad del Cliente:</strong> Los clientes vuelven</li>
             </ul>
 
             <div className="cta-box">
-              <h3>¿Listo para Abrir tu Tienda de Ensueño?</h3>
-              <p>Contáctenos para más información sobre nuestros servicios de marca privada.</p>
+              <h3>?Listo para Abrir tu Tienda de Ensue?o?</h3>
+              <p>Cont?ctenos para m?s informaci?n sobre nuestros servicios de marca privada.</p>
               <div className="share-buttons">
                 <a href="https://wa.me/905519522448" className="btn-whatsapp" target="_blank" rel="noopener noreferrer"><FaWhatsapp size={18} /> WhatsApp</a>
-                <Link href="/es/contact" className="btn-primary">Contáctenos</Link>
+                <Link href="/es/contact" className="btn-primary">Cont?ctenos</Link>
               </div>
             </div>
 
             <div className="share-section">
-              <h4>Comparte esta Guía</h4>
+              <h4>Comparte esta Gu?a</h4>
               <div className="share-buttons">
                 <button className="share-btn facebook" onClick={() => window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href), '_blank')}><FaFacebookF size={18} /></button>
-                <button className="share-btn twitter" onClick={() => window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Tienda de Ropa Física 2026')+'&url='+encodeURIComponent(window.location.href), '_blank')}><FaTwitter size={18} /></button>
+                <button className="share-btn twitter" onClick={() => window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Tienda de Ropa F?sica 2026')+'&url='+encodeURIComponent(window.location.href), '_blank')}><FaTwitter size={18} /></button>
                 <button className="share-btn linkedin" onClick={() => window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href), '_blank')}><FaLinkedinIn size={18} /></button>
-                <button className="share-btn whatsapp" onClick={() => window.open('https://wa.me/?text='+encodeURIComponent('Tienda de Ropa Física 2026: '+window.location.href), '_blank')}><FaWhatsapp size={18} /></button>
+                <button className="share-btn whatsapp" onClick={() => window.open('https://wa.me/?text='+encodeURIComponent('Tienda de Ropa F?sica 2026: '+window.location.href), '_blank')}><FaWhatsapp size={18} /></button>
               </div>
             </div>
           </div>

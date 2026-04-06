@@ -1,4 +1,6 @@
-﻿// app/it/private-label-service/page.tsx
+﻿'use client'
+
+// app/it/private-label-service/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -130,7 +132,7 @@ export default function PrivateLabelServiceItalianPage() {
 
       <section className="page-header">
         <div className="container">
-          <div className="breadcrumb"><Link href="/it">🏠 Home</Link> <span>&gt;</span> <span>✨ Servizio Private Label 2026</span></div>
+          <div className="breadcrumb"><Link href="/it">?? Home</Link> <span>&gt;</span> <span>? Servizio Private Label 2026</span></div>
           <h1><span>Servizio Private Label</span> 2026</h1>
           <p>Crea il tuo marchio di moda modesta con le nostre soluzioni complete.</p>
         </div>
@@ -140,11 +142,11 @@ export default function PrivateLabelServiceItalianPage() {
         <div className="container">
           <div className="intro-wrapper">
             <div className="intro-content">
-              <span className="badge-2026">✨ Edizione 2026 | Qualità Turca</span>
-              <h2>Crea <span>La Tua Identità di Marchio Distintiva</span> nel Mercato della Moda Modesta</h2>
-              <p className="lead">Nel competitivo mercato della moda di oggi, avere un'identità di marchio distintiva non è più opzionale - è essenziale per il successo e la longevità.</p>
-              <p>Il nostro servizio Private Label completo ti permette di costruire ed espandere il tuo marchio nel mercato dell'hijab senza le complessità della produzione. Forniamo prodotti turchi premium come tela bianca per la tua visione del marchio.</p>
-              <p>Che tu stia lanciando una nuova boutique, espandendo un'attività esistente o creando una collezione esclusiva, la nostra soluzione Private Label ti dà la flessibilità e la qualità di cui hai bisogno per distinguerti.</p>
+              <span className="badge-2026">? Edizione 2026 | Qualit  Turca</span>
+              <h2>Crea <span>La Tua Identit  di Marchio Distintiva</span> nel Mercato della Moda Modesta</h2>
+              <p className="lead">Nel competitivo mercato della moda di oggi, avere un'identit  di marchio distintiva non   pi  opzionale -   essenziale per il successo e la longevit .</p>
+              <p>Il nostro servizio Private Label completo ti permette di costruire ed espandere il tuo marchio nel mercato dell'hijab senza le complessit  della produzione. Forniamo prodotti turchi premium come tela bianca per la tua visione del marchio.</p>
+              <p>Che tu stia lanciando una nuova boutique, espandendo un'attivit  esistente o creando una collezione esclusiva, la nostra soluzione Private Label ti d  la flessibilit  e la qualit  di cui hai bisogno per distinguerti.</p>
             </div>
             <div className="intro-image">
               <Image src="/images/private-label-intro.webp" alt="Servizio Private Label" width={500} height={400} priority onError={(e) => { const target = e.target as HTMLImageElement; target.src = '/images/fallback-private-label.webp'; }} />
@@ -155,10 +157,10 @@ export default function PrivateLabelServiceItalianPage() {
 
       <section className="why-section">
         <div className="container">
-          <h2 className="section-title">Perché <span>Private Label</span> nel 2026?</h2>
+          <h2 className="section-title">Perch  <span>Private Label</span> nel 2026?</h2>
           <div className="why-grid">
-            <div className="why-card"><div className="why-icon"><FaCrown size={32} /></div><h3>Proprietà del Marchio</h3><p>Costruisci un marchio che possiedi completamente.</p></div>
-            <div className="why-card"><div className="why-icon"><FaChartLine size={32} /></div><h3>Crescita a Lungo Termine</h3><p>Crea fedeltà al marchio e clienti abituali.</p></div>
+            <div className="why-card"><div className="why-icon"><FaCrown size={32} /></div><h3>Propriet  del Marchio</h3><p>Costruisci un marchio che possiedi completamente.</p></div>
+            <div className="why-card"><div className="why-icon"><FaChartLine size={32} /></div><h3>Crescita a Lungo Termine</h3><p>Crea fedelt  al marchio e clienti abituali.</p></div>
             <div className="why-card"><div className="why-icon"><FaStar size={32} /></div><h3>Posizionamento Premium</h3><p>Posiziona i tuoi prodotti a un livello premium.</p></div>
           </div>
         </div>
@@ -168,10 +170,10 @@ export default function PrivateLabelServiceItalianPage() {
         <div className="container">
           <h2 className="section-title">I Nostri <span>Servizi Private Label</span> Completi</h2>
           <div className="services-grid">
-            <div className="service-item"><div className="service-icon"><FaTag size={36} /></div><div className="service-content"><h3>Etichette Tessute Personalizzate</h3><p>Etichette tessute di alta qualità con il nome del tuo marchio.</p><ul className="service-features"><li><FaCheck size={14} /> Satin tessuto premium</li><li><FaCheck size={14} /> Più opzioni di colore</li><li><FaCheck size={14} /> Dimensioni personalizzate</li></ul></div></div>
+            <div className="service-item"><div className="service-icon"><FaTag size={36} /></div><div className="service-content"><h3>Etichette Tessute Personalizzate</h3><p>Etichette tessute di alta qualit  con il nome del tuo marchio.</p><ul className="service-features"><li><FaCheck size={14} /> Satin tessuto premium</li><li><FaCheck size={14} /> Pi  opzioni di colore</li><li><FaCheck size={14} /> Dimensioni personalizzate</li></ul></div></div>
             <div className="service-item"><div className="service-icon"><FaTags size={36} /></div><div className="service-content"><h3>Cartellini Personalizzati</h3><p>Cartellini professionali che comunicano la storia del tuo marchio.</p><ul className="service-features"><li><FaCheck size={14} /> Carta premium</li><li><FaCheck size={14} /> Goffratura</li><li><FaCheck size={14} /> Forme personalizzate</li></ul></div></div>
             <div className="service-item"><div className="service-icon"><FaBox size={36} /></div><div className="service-content"><h3>Packaging Personalizzato</h3><p>Crea un'esperienza di unboxing completa.</p><ul className="service-features"><li><FaCheck size={14} /> Sacchetti stampati</li><li><FaCheck size={14} /> Scatole personalizzate</li><li><FaCheck size={14} /> Opzioni ecologiche</li></ul></div></div>
-            <div className="service-item"><div className="service-icon"><FaPalette size={36} /></div><div className="service-content"><h3>Pacchetto Branding Completo</h3><p>La soluzione definitiva per costruttori di marchi seri.</p><ul className="service-features"><li><FaCheck size={14} /> Design coordinato</li><li><FaCheck size={14} /> Prezzi vantaggiosi</li><li><FaCheck size={14} /> Qualità costante</li></ul></div></div>
+            <div className="service-item"><div className="service-icon"><FaPalette size={36} /></div><div className="service-content"><h3>Pacchetto Branding Completo</h3><p>La soluzione definitiva per costruttori di marchi seri.</p><ul className="service-features"><li><FaCheck size={14} /> Design coordinato</li><li><FaCheck size={14} /> Prezzi vantaggiosi</li><li><FaCheck size={14} /> Qualit  costante</li></ul></div></div>
           </div>
         </div>
       </section>
@@ -193,8 +195,8 @@ export default function PrivateLabelServiceItalianPage() {
           <h2>Costruisci un Marchio <span>Che Dura</span></h2>
           <div className="brand-stats">
             <div className="brand-stat"><div className="number">78%</div><div className="label">preferiscono prodotti di marca</div></div>
-            <div className="brand-stat"><div className="number">3.5x</div><div className="label">più fidelizzazione clienti</div></div>
-            <div className="brand-stat"><div className="number">40%+</div><div className="label">margini di profitto più alti</div></div>
+            <div className="brand-stat"><div className="number">3.5x</div><div className="label">pi  fidelizzazione clienti</div></div>
+            <div className="brand-stat"><div className="number">40%+</div><div className="label">margini di profitto pi  alti</div></div>
           </div>
         </div>
       </section>
@@ -203,10 +205,10 @@ export default function PrivateLabelServiceItalianPage() {
         <div className="container">
           <h2 className="section-title">Domande <span>Frequenti</span></h2>
           <div className="faq-grid">
-            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(0)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Quantità minima d'ordine?</h3></div><span className={`faq-icon ${openFaq === 0 ? 'open' : ''}`}>▼</span></div><div className={`faq-answer ${openFaq === 0 ? 'open' : ''}`}>Offriamo opzioni flessibili per aziende di tutte le dimensioni.</div></div>
-            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(1)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Posso mescolare prodotti?</h3></div><span className={`faq-icon ${openFaq === 1 ? 'open' : ''}`}>▼</span></div><div className={`faq-answer ${openFaq === 1 ? 'open' : ''}`}>Assolutamente! Qualsiasi combinazione dal nostro catalogo.</div></div>
-            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(2)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Tempi del processo?</h3></div><span className={`faq-icon ${openFaq === 2 ? 'open' : ''}`}>▼</span></div><div className={`faq-answer ${openFaq === 2 ? 'open' : ''}`}>Produzione 2-3 settimane, consegna 3-7 giorni.</div></div>
-            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(3)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Aiuto con il design?</h3></div><span className={`faq-icon ${openFaq === 3 ? 'open' : ''}`}>▼</span></div><div className={`faq-answer ${openFaq === 3 ? 'open' : ''}`}>Sì! Il nostro team fornisce consulenza sul design.</div></div>
+            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(0)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Quantit  minima d'ordine?</h3></div><span className={`faq-icon ${openFaq === 0 ? 'open' : ''}`}>?</span></div><div className={`faq-answer ${openFaq === 0 ? 'open' : ''}`}>Offriamo opzioni flessibili per aziende di tutte le dimensioni.</div></div>
+            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(1)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Posso mescolare prodotti?</h3></div><span className={`faq-icon ${openFaq === 1 ? 'open' : ''}`}>?</span></div><div className={`faq-answer ${openFaq === 1 ? 'open' : ''}`}>Assolutamente! Qualsiasi combinazione dal nostro catalogo.</div></div>
+            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(2)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Tempi del processo?</h3></div><span className={`faq-icon ${openFaq === 2 ? 'open' : ''}`}>?</span></div><div className={`faq-answer ${openFaq === 2 ? 'open' : ''}`}>Produzione 2-3 settimane, consegna 3-7 giorni.</div></div>
+            <div className="faq-item"><div className="faq-question" onClick={() => toggleFaq(3)}><div className="faq-question-left"><FaQuestionCircle size={22} /><h3>Aiuto con il design?</h3></div><span className={`faq-icon ${openFaq === 3 ? 'open' : ''}`}>?</span></div><div className={`faq-answer ${openFaq === 3 ? 'open' : ''}`}>S?! Il nostro team fornisce consulenza sul design.</div></div>
           </div>
         </div>
       </section>

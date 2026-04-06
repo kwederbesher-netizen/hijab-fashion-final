@@ -1,3 +1,5 @@
+'use client'
+
 // app/ar/physical-store-guide/page.tsx
 'use client'
 

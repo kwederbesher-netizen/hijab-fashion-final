@@ -1,4 +1,6 @@
-﻿// app/fr/why-were-number-one/page.tsx
+﻿'use client'
+
+// app/fr/why-were-number-one/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -14,8 +16,8 @@ export default function WhyWereNumberOnePageFr() {
     <>
       <Head>
         <title>Notre position dans le hijab turc en gros | Hijab Fashion Mall</title>
-        <meta name="description" content="Hijab Fashion Mall est un fournisseur reconnu dans le hijab turc en gros. Produits de qualité, service client et années d'expérience." />
-        <meta name="keywords" content="hijab turc en gros, fournisseur de confiance, Hijab Fashion Mall, vêtements pour hijabis turcs" />
+        <meta name="description" content="Hijab Fashion Mall est un fournisseur reconnu dans le hijab turc en gros. Produits de qualit , service client et ann es d'exp rience." />
+        <meta name="keywords" content="hijab turc en gros, fournisseur de confiance, Hijab Fashion Mall, v tements pour hijabis turcs" />
         <meta name="author" content="Hijab Fashion Mall" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/fr/why-were-number-one" />
@@ -216,7 +218,7 @@ export default function WhyWereNumberOnePageFr() {
             <Link href="/fr">Accueil</Link> <span>&gt;</span> <span>Pourquoi nous choisir</span>
           </div>
           <h1>Hijab Fashion Mall: Un <span>nom de confiance</span> dans le hijab turc en gros</h1>
-          <p className="lead">Comment nous sommes devenus un fournisseur fiable pour les détaillants du monde entier</p>
+          <p className="lead">Comment nous sommes devenus un fournisseur fiable pour les d taillants du monde entier</p>
           <div className="meta-info">
             <span><FaCalendarAlt size={14} /> 13 mars 2026</span>
             <span><FaClock size={14} /> 6 min de lecture</span>
@@ -238,22 +240,22 @@ export default function WhyWereNumberOnePageFr() {
               />
             </div>
 
-            <p className="lead">Au fil des années, <strong>Hijab Fashion Mall</strong> est devenu un nom reconnu dans le hijab turc en gros. Grâce à une qualité constante et un service fiable, nous avons gagné la confiance des détaillants dans de nombreux pays.</p>
+            <p className="lead">Au fil des ann es, <strong>Hijab Fashion Mall</strong> est devenu un nom reconnu dans le hijab turc en gros. Gr ce   une qualit  constante et un service fiable, nous avons gagn  la confiance des d taillants dans de nombreux pays.</p>
 
             <div className="highlight-box">
-              <h4>🏆 Mots-clés pour lesquels nous sommes bien positionnés :</h4>
+              <h4>?? Mots-cl s pour lesquels nous sommes bien positionn s :</h4>
               <div className="country-list">
                 <span className="country-tag"><FaTag size={12} /> Hijab turc en gros</span>
-                <span className="country-tag"><FaTag size={12} /> Vêtements pour hijabis turcs</span>
-                <span className="country-tag"><FaTag size={12} /> Vêtements hijabis en gros</span>
+                <span className="country-tag"><FaTag size={12} /> V tements pour hijabis turcs</span>
+                <span className="country-tag"><FaTag size={12} /> V tements hijabis en gros</span>
                 <span className="country-tag"><FaTag size={12} /> Abayas turques en gros</span>
                 <span className="country-tag"><FaTag size={12} /> Robes pour hijabis Turquie</span>
                 <span className="country-tag"><FaTag size={12} /> Fournisseur hijab turc</span>
               </div>
             </div>
 
-            <h2>Merci à nos clients</h2>
-            <p>Nous tenons à exprimer notre sincère gratitude à nos clients du monde entier. Votre confiance et votre fidélité nous ont aidés à grandir et à améliorer nos services. Nous ne prétendons pas être parfaits, mais nous faisons de notre mieux chaque jour.</p>
+            <h2>Merci   nos clients</h2>
+            <p>Nous tenons   exprimer notre sinc re gratitude   nos clients du monde entier. Votre confiance et votre fid lit  nous ont aid s   grandir et   am liorer nos services. Nous ne pr tendons pas  tre parfaits, mais nous faisons de notre mieux chaque jour.</p>
 
             <div className="stats-grid">
               <div className="stat-item"><div className="stat-number">4.8/5</div><div className="stat-label">Avis clients</div></div>
@@ -262,49 +264,49 @@ export default function WhyWereNumberOnePageFr() {
             </div>
 
             <h2>Ce sur quoi nous nous concentrons</h2>
-            <p>Nous avons travaillé dur pour construire une entreprise sur laquelle les détaillants peuvent compter. Voici nos priorités :</p>
+            <p>Nous avons travaill  dur pour construire une entreprise sur laquelle les d taillants peuvent compter. Voici nos priorit s :</p>
 
-            <h3>1. Qualité des produits</h3>
-            <p>Nous nous approvisionnons auprès de fabricants turcs de confiance qui partagent notre engagement envers la qualité. Chaque article passe par des contrôles de qualité de base avant expédition.</p>
+            <h3>1. Qualit  des produits</h3>
+            <p>Nous nous approvisionnons aupr s de fabricants turcs de confiance qui partagent notre engagement envers la qualit . Chaque article passe par des contr les de qualit  de base avant exp dition.</p>
 
             <h3>2. Service client</h3>
-            <p>Notre équipe de support est disponible via WhatsApp pour répondre aux questions, aider avec les commandes et fournir une assistance en cas de besoin. Nous croyons en une communication claire.</p>
+            <p>Notre  quipe de support est disponible via WhatsApp pour r pondre aux questions, aider avec les commandes et fournir une assistance en cas de besoin. Nous croyons en une communication claire.</p>
 
-            <h3>3. Pratiques commerciales honnêtes</h3>
-            <p>Nous sommes transparents sur nos prix, nos délais de livraison et nos politiques. Notre politique "sans minimum de commande" permet aux petites boutiques d'accéder aux produits turcs sans pression.</p>
+            <h3>3. Pratiques commerciales honn tes</h3>
+            <p>Nous sommes transparents sur nos prix, nos d lais de livraison et nos politiques. Notre politique "sans minimum de commande" permet aux petites boutiques d'acc der aux produits turcs sans pression.</p>
 
             <h3>4. Site web convivial</h3>
-            <p>Nous avons construit un site web facile à naviguer, qui fonctionne bien sur mobile et supporte plusieurs langues. Nous continuons à nous améliorer grâce aux retours de nos clients.</p>
+            <p>Nous avons construit un site web facile   naviguer, qui fonctionne bien sur mobile et supporte plusieurs langues. Nous continuons   nous am liorer gr ce aux retours de nos clients.</p>
 
             <blockquote>
-              "Je travaille avec Hijab Fashion Mall depuis deux ans. La qualité est constante et leur équipe est réactive quand j'ai des questions. Un partenaire fiable pour ma boutique." — Sarah, propriétaire de boutique
+              "Je travaille avec Hijab Fashion Mall depuis deux ans. La qualit  est constante et leur  quipe est r active quand j'ai des questions. Un partenaire fiable pour ma boutique."   Sarah, propri taire de boutique
             </blockquote>
 
-            <h2>Où nous livrons</h2>
-            <p>Nous livrons actuellement dans de nombreux pays, y compris <strong>les États-Unis, le Canada, le Royaume-Uni, l'Europe et l'Australie</strong>.</p>
+            <h2>O  nous livrons</h2>
+            <p>Nous livrons actuellement dans de nombreux pays, y compris <strong>les Etats-Unis, le Canada, le Royaume-Uni, l'Europe et l'Australie</strong>.</p>
 
             <div className="country-list">
-              <span className="country-tag"><FaGlobe size={14} /> États-Unis</span>
+              <span className="country-tag"><FaGlobe size={14} /> Etats-Unis</span>
               <span className="country-tag"><FaGlobe size={14} /> Canada</span>
               <span className="country-tag"><FaGlobe size={14} /> Royaume-Uni</span>
               <span className="country-tag"><FaGlobe size={14} /> Allemagne</span>
               <span className="country-tag"><FaGlobe size={14} /> France</span>
               <span className="country-tag"><FaGlobe size={14} /> Italie</span>
               <span className="country-tag"><FaGlobe size={14} /> Belgique</span>
-              <span className="country-tag"><FaGlobe size={14} /> Suède</span>
+              <span className="country-tag"><FaGlobe size={14} /> Su de</span>
               <span className="country-tag"><FaGlobe size={14} /> Autriche</span>
               <span className="country-tag"><FaGlobe size={14} /> Espagne</span>
               <span className="country-tag"><FaGlobe size={14} /> Portugal</span>
               <span className="country-tag"><FaGlobe size={14} /> Suisse</span>
               <span className="country-tag"><FaGlobe size={14} /> Australie</span>
               <span className="country-tag"><FaGlobe size={14} /> Arabie Saoudite</span>
-              <span className="country-tag"><FaGlobe size={14} /> Émirats Arabes Unis</span>
-              <span className="country-tag"><FaGlobe size={14} /> Koweït</span>
+              <span className="country-tag"><FaGlobe size={14} /> Emirats Arabes Unis</span>
+              <span className="country-tag"><FaGlobe size={14} /> Kowe t</span>
               <span className="country-tag"><FaGlobe size={14} /> Qatar</span>
             </div>
 
             <div className="cta-box">
-              <h3>Intéressé par nos produits ?</h3>
+              <h3>Int ress  par nos produits ?</h3>
               <p>Parcourez notre catalogue de hijab turc et voyez si nous sommes le bon partenaire pour votre boutique.</p>
               <Link href="/fr/catalog" className="btn">Parcourir le catalogue</Link>
             </div>
@@ -344,7 +346,7 @@ export default function WhyWereNumberOnePageFr() {
               </div>
               <div className="related-content">
                 <h4><Link href="/fr/wholesale-buying-tips-boutique-owners">Conseils d'achat en gros pour boutiques</Link></h4>
-                <div className="related-meta">28 février 2026</div>
+                <div className="related-meta">28 f vrier 2026</div>
               </div>
             </div>
             <div className="related-card">
@@ -353,7 +355,7 @@ export default function WhyWereNumberOnePageFr() {
               </div>
               <div className="related-content">
                 <h4><Link href="/fr/chiffon-hijab-ultimate-guide">Guide du hijab en mousseline : types et entretien</Link></h4>
-                <div className="related-meta">20 février 2026</div>
+                <div className="related-meta">20 f vrier 2026</div>
               </div>
             </div>
           </div>

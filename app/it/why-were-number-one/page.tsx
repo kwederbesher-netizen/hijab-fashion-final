@@ -1,4 +1,6 @@
-﻿// app/it/why-were-number-one/page.tsx
+﻿'use client'
+
+// app/it/why-were-number-one/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -14,7 +16,7 @@ export default function WhyWereNumberOnePageIt() {
     <>
       <Head>
         <title>La nostra posizione nell'ingrosso di hijab turco | Hijab Fashion Mall</title>
-        <meta name="description" content="Hijab Fashion Mall è un fornitore affidabile nell'ingrosso di hijab turco. Prodotti di qualità, servizio clienti e anni di esperienza." />
+        <meta name="description" content="Hijab Fashion Mall   un fornitore affidabile nell'ingrosso di hijab turco. Prodotti di qualit , servizio clienti e anni di esperienza." />
         <meta name="keywords" content="ingrosso hijab turco, fornitore affidabile, Hijab Fashion Mall, abbigliamento per hijabis turco" />
         <meta name="author" content="Hijab Fashion Mall" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,13 +28,13 @@ export default function WhyWereNumberOnePageIt() {
         <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/why-were-number-one" />
         <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/why-were-number-one" />
         <meta property="og:title" content="La nostra posizione nell'ingrosso di hijab turco | Hijab Fashion Mall" />
-        <meta property="og:description" content="Hijab Fashion Mall è un fornitore affidabile nell'ingrosso di hijab turco." />
+        <meta property="og:description" content="Hijab Fashion Mall   un fornitore affidabile nell'ingrosso di hijab turco." />
         <meta property="og:image" content="https://hijabfashionmall.com/images/celebration-global-rank.webp" />
         <meta property="og:url" content="https://hijabfashionmall.com/it/why-were-number-one" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="La nostra posizione nell'ingrosso di hijab turco" />
-        <meta name="twitter:description" content="Hijab Fashion Mall è un fornitore affidabile nell'ingrosso di hijab turco." />
+        <meta name="twitter:description" content="Hijab Fashion Mall   un fornitore affidabile nell'ingrosso di hijab turco." />
         <meta name="twitter:image" content="https://hijabfashionmall.com/images/celebration-global-rank.webp" />
       </Head>
 
@@ -213,7 +215,7 @@ export default function WhyWereNumberOnePageIt() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/it">Home</Link> <span>&gt;</span> <span>Perché scegliere noi</span>
+            <Link href="/it">Home</Link> <span>&gt;</span> <span>Perch  scegliere noi</span>
           </div>
           <h1>Hijab Fashion Mall: Un <span>nome di fiducia</span> nell'ingrosso di hijab turco</h1>
           <p className="lead">Come siamo diventati un fornitore affidabile per i rivenditori di tutto il mondo</p>
@@ -238,10 +240,10 @@ export default function WhyWereNumberOnePageIt() {
               />
             </div>
 
-            <p className="lead">Nel corso degli anni, <strong>Hijab Fashion Mall</strong> è diventato un nome riconosciuto nell'ingrosso di hijab turco. Attraverso una qualità costante e un servizio affidabile, abbiamo guadagnato la fiducia dei rivenditori in molti paesi.</p>
+            <p className="lead">Nel corso degli anni, <strong>Hijab Fashion Mall</strong>   diventato un nome riconosciuto nell'ingrosso di hijab turco. Attraverso una qualit  costante e un servizio affidabile, abbiamo guadagnato la fiducia dei rivenditori in molti paesi.</p>
 
             <div className="highlight-box">
-              <h4>🏆 Parole chiave per cui siamo ben posizionati:</h4>
+              <h4>?? Parole chiave per cui siamo ben posizionati:</h4>
               <div className="country-list">
                 <span className="country-tag"><FaTag size={12} /> Ingrosso hijab turco</span>
                 <span className="country-tag"><FaTag size={12} /> Abbigliamento per hijabis turco</span>
@@ -262,22 +264,22 @@ export default function WhyWereNumberOnePageIt() {
             </div>
 
             <h2>I nostri punti di forza</h2>
-            <p>Abbiamo lavorato duramente per costruire un'attività su cui i rivenditori possono contare. Ecco le nostre priorità:</p>
+            <p>Abbiamo lavorato duramente per costruire un'attivit  su cui i rivenditori possono contare. Ecco le nostre priorit :</p>
 
-            <h3>1. Qualità dei prodotti</h3>
-            <p>Ci approvvigioniamo da produttori turchi affidabili che condividono il nostro impegno per la qualità. Ogni articolo viene sottoposto a controlli di qualità di base prima della spedizione.</p>
+            <h3>1. Qualit  dei prodotti</h3>
+            <p>Ci approvvigioniamo da produttori turchi affidabili che condividono il nostro impegno per la qualit . Ogni articolo viene sottoposto a controlli di qualit  di base prima della spedizione.</p>
 
             <h3>2. Assistenza clienti</h3>
-            <p>Il nostro team di supporto è disponibile tramite WhatsApp per rispondere alle domande, aiutare con gli ordini e fornire assistenza quando necessario. Crediamo in una comunicazione chiara.</p>
+            <p>Il nostro team di supporto   disponibile tramite WhatsApp per rispondere alle domande, aiutare con gli ordini e fornire assistenza quando necessario. Crediamo in una comunicazione chiara.</p>
 
             <h3>3. Pratiche commerciali oneste</h3>
             <p>Siamo trasparenti su prezzi, tempi di spedizione e politiche. La nostra politica "nessun ordine minimo" consente alle piccole boutique di accedere ai prodotti turchi senza pressioni.</p>
 
             <h3>4. Sito web facile da usare</h3>
-            <p>Abbiamo costruito un sito web facile da navigare, che funziona bene sui dispositivi mobili e supporta più lingue. Continuiamo a migliorare in base al feedback dei clienti.</p>
+            <p>Abbiamo costruito un sito web facile da navigare, che funziona bene sui dispositivi mobili e supporta pi  lingue. Continuiamo a migliorare in base al feedback dei clienti.</p>
 
             <blockquote>
-              "Lavoro con Hijab Fashion Mall da due anni. La qualità è costante e il loro team è reattivo quando ho domande. Un partner affidabile per la mia boutique." — Sarah, proprietaria di boutique
+              "Lavoro con Hijab Fashion Mall da due anni. La qualit    costante e il loro team   reattivo quando ho domande. Un partner affidabile per la mia boutique."   Sarah, proprietaria di boutique
             </blockquote>
 
             <h2>Dove spediamo</h2>

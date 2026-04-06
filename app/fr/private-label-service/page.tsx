@@ -1,4 +1,6 @@
-﻿// app/fr/private-label-service/page.tsx
+﻿'use client'
+
+// app/fr/private-label-service/page.tsx
 'use client'
 
 import Link from 'next/link'
@@ -34,9 +36,9 @@ export default function PrivateLabelServiceFrenchPage() {
   return (
     <>
       <Head>
-        <title>Service Marque Privée 2026 | Créez Votre Propre Marque | Hijab Fashion Mall</title>
-        <meta name="description" content="Créez votre propre marque de mode modeste avec notre service de marque privée complet. Étiquettes personnalisées, étiquettes de prix, emballage premium et plus encore. Lancez votre marque dès aujourd'hui !" />
-        <meta name="keywords" content="marque privée hijab, étiquettes personnalisées, étiquettes de prix, emballage personnalisé, services de marque, grossiste turc, marque de mode modeste, vêtements marque privée" />
+        <title>Service Marque Priv e 2026 | Cr ez Votre Propre Marque | Hijab Fashion Mall</title>
+        <meta name="description" content="Cr ez votre propre marque de mode modeste avec notre service de marque priv e complet. Etiquettes personnalis es,  tiquettes de prix, emballage premium et plus encore. Lancez votre marque d s aujourd'hui !" />
+        <meta name="keywords" content="marque priv e hijab,  tiquettes personnalis es,  tiquettes de prix, emballage personnalis , services de marque, grossiste turc, marque de mode modeste, v tements marque priv e" />
         <meta name="author" content="Hijab Fashion Mall" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="robots" content="index, follow" />
@@ -48,8 +50,8 @@ export default function PrivateLabelServiceFrenchPage() {
         <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/private-label-service" />
         <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/private-label-service" />
         <link rel="alternate" hrefLang="x-default" href="https://hijabfashionmall.com/en/private-label-service" />
-        <meta property="og:title" content="Service Marque Privée 2026 | Créez Votre Propre Marque" />
-        <meta property="og:description" content="Créez votre propre marque de mode modeste avec notre service de marque privée complet." />
+        <meta property="og:title" content="Service Marque Priv e 2026 | Cr ez Votre Propre Marque" />
+        <meta property="og:description" content="Cr ez votre propre marque de mode modeste avec notre service de marque priv e complet." />
         <meta property="og:image" content="https://hijabfashionmall.com/images/private-label-intro.webp" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -57,8 +59,8 @@ export default function PrivateLabelServiceFrenchPage() {
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="fr_FR" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Service Marque Privée 2026 | Créez Votre Propre Marque" />
-        <meta name="twitter:description" content="Créez votre propre marque de mode modeste avec notre service de marque privée complet." />
+        <meta name="twitter:title" content="Service Marque Priv e 2026 | Cr ez Votre Propre Marque" />
+        <meta name="twitter:description" content="Cr ez votre propre marque de mode modeste avec notre service de marque priv e complet." />
         <meta name="twitter:image" content="https://hijabfashionmall.com/images/private-label-intro.webp" />
       </Head>
 
@@ -202,7 +204,7 @@ export default function PrivateLabelServiceFrenchPage() {
         }
 
         .page-header::before {
-            content: 'MARQUE PRIVÉE 2026';
+            content: 'MARQUE PRIVEE 2026';
             position: absolute;
             top: 15%;
             right: 3%;
@@ -507,7 +509,7 @@ export default function PrivateLabelServiceFrenchPage() {
         }
 
         .process-step:not(:last-child)::after {
-            content: '→';
+            content: '?';
             position: absolute;
             top: 40px;
             right: -20px;
@@ -893,12 +895,12 @@ export default function PrivateLabelServiceFrenchPage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/fr">🏠 Accueil</Link> 
+            <Link href="/fr">?? Accueil</Link> 
             <span> &gt; </span> 
-            <span>✨ Service Marque Privée 2026</span>
+            <span>? Service Marque Priv e 2026</span>
           </div>
-          <h1><span>Service Marque Privée</span> 2026</h1>
-          <p>Créez votre propre marque de mode modeste avec nos solutions complètes. Des étiquettes à l'emballage, tout ce dont vous avez besoin pour créer une identité unique.</p>
+          <h1><span>Service Marque Priv e</span> 2026</h1>
+          <p>Cr ez votre propre marque de mode modeste avec nos solutions compl tes. Des  tiquettes   l'emballage, tout ce dont vous avez besoin pour cr er une identit  unique.</p>
         </div>
       </section>
 
@@ -906,16 +908,16 @@ export default function PrivateLabelServiceFrenchPage() {
         <div className="container">
           <div className="intro-wrapper">
             <div className="intro-content">
-              <span className="badge-2026">✨ Édition 2026 | Qualité Turque</span>
-              <h2>Créez <span>Votre Identité de Marque Distinctive</span> sur le Marché de la Mode Modeste</h2>
-              <p className="lead">Sur le marché de la mode concurrentiel d'aujourd'hui, avoir une identité de marque distinctive n'est plus optionnel - c'est essentiel pour le succès et la longévité.</p>
-              <p>Notre service de marque privée complet vous permet de construire et développer votre marque sur le marché du hijab sans les complexités de la fabrication. Nous fournissons des produits turcs premium comme toile vierge pour votre vision de marque, vous permettant de vous concentrer sur ce qui compte vraiment : développer votre entreprise et vous connecter avec vos clients.</p>
-              <p>Que vous lanciez une nouvelle boutique, développiez une entreprise existante ou créiez une collection exclusive, notre solution de marque privée vous donne la flexibilité et la qualité dont vous avez besoin pour vous démarquer sur le marché de la mode modeste.</p>
+              <span className="badge-2026">? Edition 2026 | Qualit  Turque</span>
+              <h2>Cr ez <span>Votre Identit  de Marque Distinctive</span> sur le March  de la Mode Modeste</h2>
+              <p className="lead">Sur le march  de la mode concurrentiel d'aujourd'hui, avoir une identit  de marque distinctive n'est plus optionnel - c'est essentiel pour le succ s et la long vit .</p>
+              <p>Notre service de marque priv e complet vous permet de construire et d velopper votre marque sur le march  du hijab sans les complexit s de la fabrication. Nous fournissons des produits turcs premium comme toile vierge pour votre vision de marque, vous permettant de vous concentrer sur ce qui compte vraiment : d velopper votre entreprise et vous connecter avec vos clients.</p>
+              <p>Que vous lanciez une nouvelle boutique, d veloppiez une entreprise existante ou cr iez une collection exclusive, notre solution de marque priv e vous donne la flexibilit  et la qualit  dont vous avez besoin pour vous d marquer sur le march  de la mode modeste.</p>
             </div>
             <div className="intro-image">
               <Image 
                 src="/images/private-label-intro.webp" 
-                alt="Service marque privée pour la mode modeste" 
+                alt="Service marque priv e pour la mode modeste" 
                 width={500} 
                 height={400} 
                 priority
@@ -931,24 +933,24 @@ export default function PrivateLabelServiceFrenchPage() {
 
       <section className="why-section">
         <div className="container">
-          <h2 className="section-title">Pourquoi la <span>Marque Privée</span> en 2026?</h2>
-          <p className="section-subtitle">La clé pour construire une marque de mode durable et reconnue</p>
+          <h2 className="section-title">Pourquoi la <span>Marque Priv e</span> en 2026?</h2>
+          <p className="section-subtitle">La cl  pour construire une marque de mode durable et reconnue</p>
           
           <div className="why-grid">
             <div className="why-card">
               <div className="why-icon"><FaCrown size={32} /></div>
-              <h3>Propriété de la Marque</h3>
-              <p>Construisez une marque que vous possédez entièrement. La marque privée vous permet de créer une identité unique que les clients reconnaissent et en qui ils ont confiance.</p>
+              <h3>Propri t  de la Marque</h3>
+              <p>Construisez une marque que vous poss dez enti rement. La marque priv e vous permet de cr er une identit  unique que les clients reconnaissent et en qui ils ont confiance.</p>
             </div>
             <div className="why-card">
               <div className="why-icon"><FaChartLine size={32} /></div>
-              <h3>Croissance à Long Terme</h3>
-              <p>Créez la fidélité à la marque et des clients fidèles. Quand vous possédez votre marque, les clients reviennent spécifiquement à vous.</p>
+              <h3>Croissance   Long Terme</h3>
+              <p>Cr ez la fid lit    la marque et des clients fid les. Quand vous poss dez votre marque, les clients reviennent sp cifiquement   vous.</p>
             </div>
             <div className="why-card">
               <div className="why-icon"><FaStar size={32} /></div>
               <h3>Positionnement Premium</h3>
-              <p>Positionnez vos produits à un niveau premium. Votre propre marque transmet qualité et exclusivité.</p>
+              <p>Positionnez vos produits   un niveau premium. Votre propre marque transmet qualit  et exclusivit .</p>
             </div>
           </div>
         </div>
@@ -956,20 +958,20 @@ export default function PrivateLabelServiceFrenchPage() {
 
       <section className="services-section">
         <div className="container">
-          <h2 className="section-title">Nos <span>Services de Marque Privée</span> Complets</h2>
-          <p className="section-subtitle">Choisissez exactement ce dont vous avez besoin pour concrétiser votre vision de marque</p>
+          <h2 className="section-title">Nos <span>Services de Marque Priv e</span> Complets</h2>
+          <p className="section-subtitle">Choisissez exactement ce dont vous avez besoin pour concr tiser votre vision de marque</p>
           
           <div className="services-grid">
             <div className="service-item">
               <div className="service-icon"><FaTag size={36} /></div>
               <div className="service-content">
-                <h3>Étiquettes Tissées Personnalisées</h3>
-                <p>Étiquettes tissées de haute qualité avec votre nom de marque, logo et instructions d'entretien.</p>
+                <h3>Etiquettes Tiss es Personnalis es</h3>
+                <p>Etiquettes tiss es de haute qualit  avec votre nom de marque, logo et instructions d'entretien.</p>
                 <ul className="service-features">
-                  <li><FaCheck size={14} /> Satin tissé premium</li>
+                  <li><FaCheck size={14} /> Satin tiss  premium</li>
                   <li><FaCheck size={14} /> Plusieurs options de couleurs</li>
-                  <li><FaCheck size={14} /> Tailles et formes personnalisées</li>
-                  <li><FaCheck size={14} /> Étiquettes d'entretien intégrées</li>
+                  <li><FaCheck size={14} /> Tailles et formes personnalis es</li>
+                  <li><FaCheck size={14} /> Etiquettes d'entretien int gr es</li>
                 </ul>
               </div>
             </div>
@@ -977,12 +979,12 @@ export default function PrivateLabelServiceFrenchPage() {
             <div className="service-item">
               <div className="service-icon"><FaTags size={36} /></div>
               <div className="service-content">
-                <h3>Étiquettes de Prix Personnalisées</h3>
-                <p>Étiquettes professionnelles qui communiquent l'histoire de votre marque et les informations produit.</p>
+                <h3>Etiquettes de Prix Personnalis es</h3>
+                <p>Etiquettes professionnelles qui communiquent l'histoire de votre marque et les informations produit.</p>
                 <ul className="service-features">
                   <li><FaCheck size={14} /> Options de papier premium</li>
                   <li><FaCheck size={14} /> Gaufrage et estampage</li>
-                  <li><FaCheck size={14} /> Formes et tailles personnalisées</li>
+                  <li><FaCheck size={14} /> Formes et tailles personnalis es</li>
                   <li><FaCheck size={14} /> Attaches en ficelle ou ruban</li>
                 </ul>
               </div>
@@ -991,13 +993,13 @@ export default function PrivateLabelServiceFrenchPage() {
             <div className="service-item">
               <div className="service-icon"><FaBox size={36} /></div>
               <div className="service-content">
-                <h3>Emballage Personnalisé</h3>
-                <p>Créez une expérience de déballage complète avec un emballage personnalisé qui reflète votre marque.</p>
+                <h3>Emballage Personnalis </h3>
+                <p>Cr ez une exp rience de d ballage compl te avec un emballage personnalis  qui refl te votre marque.</p>
                 <ul className="service-features">
-                  <li><FaCheck size={14} /> Sacs poly imprimés personnalisés</li>
-                  <li><FaCheck size={14} /> Boîtes et envois personnalisés</li>
+                  <li><FaCheck size={14} /> Sacs poly imprim s personnalis s</li>
+                  <li><FaCheck size={14} /> Bo tes et envois personnalis s</li>
                   <li><FaCheck size={14} /> Papier de soie et autocollants</li>
-                  <li><FaCheck size={14} /> Options écologiques disponibles</li>
+                  <li><FaCheck size={14} /> Options  cologiques disponibles</li>
                 </ul>
               </div>
             </div>
@@ -1006,12 +1008,12 @@ export default function PrivateLabelServiceFrenchPage() {
               <div className="service-icon"><FaPalette size={36} /></div>
               <div className="service-content">
                 <h3>Pack Complet de Marque</h3>
-                <p>La solution ultime pour les bâtisseurs de marque sérieux. Nous coordonnons tous les éléments pour créer une identité cohérente.</p>
+                <p>La solution ultime pour les b tisseurs de marque s rieux. Nous coordonnons tous les  l ments pour cr er une identit  coh rente.</p>
                 <ul className="service-features">
-                  <li><FaCheck size={14} /> Design coordonné sur tous les articles</li>
+                  <li><FaCheck size={14} /> Design coordonn  sur tous les articles</li>
                   <li><FaCheck size={14} /> Tarification avantageuse</li>
-                  <li><FaCheck size={14} /> Consultation de marque dédiée</li>
-                  <li><FaCheck size={14} /> Qualité constante</li>
+                  <li><FaCheck size={14} /> Consultation de marque d di e</li>
+                  <li><FaCheck size={14} /> Qualit  constante</li>
                 </ul>
               </div>
             </div>
@@ -1021,29 +1023,29 @@ export default function PrivateLabelServiceFrenchPage() {
 
       <section className="process-section">
         <div className="container">
-          <h2 className="section-title">Processus <span>Simple en 4 Étapes</span></h2>
-          <p className="section-subtitle">Commencer avec votre marque privée est facile et fluide</p>
+          <h2 className="section-title">Processus <span>Simple en 4 Etapes</span></h2>
+          <p className="section-subtitle">Commencer avec votre marque priv e est facile et fluide</p>
           
           <div className="process-steps">
             <div className="process-step">
               <div className="step-number">1</div>
               <h3>Partagez Votre Vision</h3>
-              <p>Contactez-nous avec votre concept de marque, logo et préférences de design.</p>
+              <p>Contactez-nous avec votre concept de marque, logo et pr f rences de design.</p>
             </div>
             <div className="process-step">
               <div className="step-number">2</div>
-              <h3>Sélectionnez Vos Produits</h3>
+              <h3>S lectionnez Vos Produits</h3>
               <p>Choisissez parmi notre catalogue de 5000+ articles turcs premium.</p>
             </div>
             <div className="process-step">
               <div className="step-number">3</div>
               <h3>Design & Approbation</h3>
-              <p>Nous créons des maquettes numériques pour votre examen et approbation.</p>
+              <p>Nous cr ons des maquettes num riques pour votre examen et approbation.</p>
             </div>
             <div className="process-step">
               <div className="step-number">4</div>
-              <h3>Production & Expédition</h3>
-              <p>Vos produits personnalisés sont préparés et expédiés avec suivi.</p>
+              <h3>Production & Exp dition</h3>
+              <p>Vos produits personnalis s sont pr par s et exp di s avec suivi.</p>
             </div>
           </div>
         </div>
@@ -1053,21 +1055,21 @@ export default function PrivateLabelServiceFrenchPage() {
         <div className="container">
           <div className="brand-content">
             <h2>Construisez une Marque <span>Qui Dure</span></h2>
-            <p>Dans l'industrie de la mode en évolution rapide, les marques avec des identités fortes et des suivis fidèles sont celles qui prospèrent. Notre service de marque privée vous donne la base pour construire exactement cela - une marque que les clients reconnaissent, en qui ils ont confiance et à laquelle ils reviennent saison après saison.</p>
-            <p>Avec votre propre marque, vous ne vendez pas seulement des produits ; vous construisez une valeur. Chaque vente renforce la reconnaissance de votre marque, et chaque client satisfait devient un ambassadeur de votre identité unique.</p>
+            <p>Dans l'industrie de la mode en  volution rapide, les marques avec des identit s fortes et des suivis fid les sont celles qui prosp rent. Notre service de marque priv e vous donne la base pour construire exactement cela - une marque que les clients reconnaissent, en qui ils ont confiance et   laquelle ils reviennent saison apr s saison.</p>
+            <p>Avec votre propre marque, vous ne vendez pas seulement des produits ; vous construisez une valeur. Chaque vente renforce la reconnaissance de votre marque, et chaque client satisfait devient un ambassadeur de votre identit  unique.</p>
             
             <div className="brand-stats">
               <div className="brand-stat">
                 <div className="number">78%</div>
-                <div className="label">des consommateurs préfèrent les produits de marque</div>
+                <div className="label">des consommateurs pr f rent les produits de marque</div>
               </div>
               <div className="brand-stat">
                 <div className="number">3.5x</div>
-                <div className="label">augmentation de la fidélisation client</div>
+                <div className="label">augmentation de la fid lisation client</div>
               </div>
               <div className="brand-stat">
                 <div className="number">40%+</div>
-                <div className="label">marges bénéficiaires plus élevées</div>
+                <div className="label">marges b n ficiaires plus  lev es</div>
               </div>
             </div>
           </div>
@@ -1076,20 +1078,20 @@ export default function PrivateLabelServiceFrenchPage() {
 
       <section className="faq-section">
         <div className="container">
-          <h2 className="section-title">Questions <span>Fréquemment Posées</span></h2>
-          <p className="section-subtitle">Tout ce que vous devez savoir sur notre service de marque privée</p>
+          <h2 className="section-title">Questions <span>Fr quemment Pos es</span></h2>
+          <p className="section-subtitle">Tout ce que vous devez savoir sur notre service de marque priv e</p>
           
           <div className="faq-grid">
             <div className="faq-item">
               <div className="faq-question" onClick={() => toggleFaq(0)}>
                 <div className="faq-question-left">
                   <FaQuestionCircle size={22} />
-                  <h3>Quelle est la quantité minimum de commande?</h3>
+                  <h3>Quelle est la quantit  minimum de commande?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 0 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 0 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 0 ? 'open' : ''}`}>
-                Nous offrons des options flexibles pour les entreprises de toutes tailles. Contactez-nous pour discuter de vos besoins spécifiques.
+                Nous offrons des options flexibles pour les entreprises de toutes tailles. Contactez-nous pour discuter de vos besoins sp cifiques.
               </div>
             </div>
             
@@ -1097,12 +1099,12 @@ export default function PrivateLabelServiceFrenchPage() {
               <div className="faq-question" onClick={() => toggleFaq(1)}>
                 <div className="faq-question-left">
                   <FaQuestionCircle size={22} />
-                  <h3>Puis-je mélanger différents produits?</h3>
+                  <h3>Puis-je m langer diff rents produits?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 1 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 1 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 1 ? 'open' : ''}`}>
-                Absolument! Vous pouvez choisir n'importe quelle combinaison de notre catalogue - abayas, hijabs, robes, vêtements de prière, et plus.
+                Absolument! Vous pouvez choisir n'importe quelle combinaison de notre catalogue - abayas, hijabs, robes, v tements de pri re, et plus.
               </div>
             </div>
             
@@ -1112,10 +1114,10 @@ export default function PrivateLabelServiceFrenchPage() {
                   <FaQuestionCircle size={22} />
                   <h3>Combien de temps prend le processus?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 2 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 2 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 2 ? 'open' : ''}`}>
-                La production prend généralement 2-3 semaines, avec une livraison de 3-7 jours ouvrables dans le monde.
+                La production prend g n ralement 2-3 semaines, avec une livraison de 3-7 jours ouvrables dans le monde.
               </div>
             </div>
             
@@ -1125,10 +1127,10 @@ export default function PrivateLabelServiceFrenchPage() {
                   <FaQuestionCircle size={22} />
                   <h3>Pouvez-vous aider avec le design?</h3>
                 </div>
-                <span className={`faq-icon ${openFaq === 3 ? 'open' : ''}`}>▼</span>
+                <span className={`faq-icon ${openFaq === 3 ? 'open' : ''}`}>?</span>
               </div>
               <div className={`faq-answer ${openFaq === 3 ? 'open' : ''}`}>
-                Oui! Notre équipe peut fournir des conseils de design pour garantir des normes professionnelles.
+                Oui! Notre  quipe peut fournir des conseils de design pour garantir des normes professionnelles.
               </div>
             </div>
           </div>
@@ -1138,8 +1140,8 @@ export default function PrivateLabelServiceFrenchPage() {
       <section className="cta-section">
         <div className="container">
           <div className="cta-content">
-            <h2>Prêt à Construire Votre Marque?</h2>
-            <p>Faites le premier pas vers la création de votre propre ligne de mode modeste personnalisée. Contactez-nous dès aujourd'hui.</p>
+            <h2>Pr t   Construire Votre Marque?</h2>
+            <p>Faites le premier pas vers la cr ation de votre propre ligne de mode modeste personnalis e. Contactez-nous d s aujourd'hui.</p>
             <div className="cta-buttons">
               <a href="https://wa.me/905519522448" className="cta-btn-whatsapp" target="_blank" rel="noopener noreferrer">
                 <FaWhatsapp size={20} /> WhatsApp
@@ -1158,15 +1160,15 @@ export default function PrivateLabelServiceFrenchPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Service",
-            "name": "Service Marque Privée",
-            "description": "Créez votre propre marque de mode modeste avec étiquettes personnalisées et emballage",
+            "name": "Service Marque Priv e",
+            "description": "Cr ez votre propre marque de mode modeste avec  tiquettes personnalis es et emballage",
             "provider": {
               "@type": "Organization",
               "name": "Hijab Fashion Mall",
               "url": "https://hijabfashionmall.com"
             },
             "areaServed": "Worldwide",
-            "serviceType": "Marque Privée"
+            "serviceType": "Marque Priv e"
           })
         }}
       />

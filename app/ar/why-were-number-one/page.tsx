@@ -1,3 +1,5 @@
+'use client'
+
 // app/ar/why-were-number-one/page.tsx
 'use client'
 

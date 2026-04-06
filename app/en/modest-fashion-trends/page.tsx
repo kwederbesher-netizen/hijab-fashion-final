@@ -1,4 +1,6 @@
-﻿// app/en/modest-fashion-trends/page.tsx
+﻿'use client'
+
+// app/en/modest-fashion-trends/page.tsx
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -719,7 +721,7 @@ export default function ModestFashionTrendsPage() {
 
             {/* Table of Contents */}
             <div className="toc">
-              <h3>📋 Table of Contents</h3>
+              <h3>?? Table of Contents</h3>
               <ul>
                 <li><a href="#introduction"><FaChevronRight size={10} /> Introduction</a></li>
                 <li><a href="#market-size"><FaChevronRight size={10} /> Market Size & Growth Forecast</a></li>
@@ -942,7 +944,7 @@ export default function ModestFashionTrendsPage() {
             <p>Successful modest fashion retailers are those who seamlessly blend online and offline experiences. Physical stores offer the try-on experience and personal service, while e-commerce provides convenience and reach.</p>
 
             <h3>5. Community Building</h3>
-            <p>Modest fashion is about more than clothing—it's about identity and belonging. Retailers who build communities through social media, events, and genuine engagement create loyal customer bases.</p>
+            <p>Modest fashion is about more than clothing it's about identity and belonging. Retailers who build communities through social media, events, and genuine engagement create loyal customer bases.</p>
 
             <h2 id="challenges">Challenges & Considerations</h2>
             <p>The modest fashion industry also faces unique challenges:</p>
@@ -967,14 +969,14 @@ export default function ModestFashionTrendsPage() {
             </ul>
 
             <h2 id="conclusion">Conclusion: A Movement, Not Just a Market</h2>
-            <p>The rise of modest fashion represents more than just market growth—it's a cultural shift toward greater diversity, inclusion, and authenticity in the fashion industry. For consumers, it offers the ability to express both personal style and deeply held values. For retailers, it offers the opportunity to be part of a meaningful movement while building sustainable, profitable businesses.</p>
+            <p>The rise of modest fashion represents more than just market growth it's a cultural shift toward greater diversity, inclusion, and authenticity in the fashion industry. For consumers, it offers the ability to express both personal style and deeply held values. For retailers, it offers the opportunity to be part of a meaningful movement while building sustainable, profitable businesses.</p>
 
             <p>As we move through 2026, the modest fashion industry will continue to evolve, innovate, and expand. The brands that will succeed are those that truly understand their customers, deliver quality and authenticity, and build genuine communities around shared values.</p>
 
             <div className="highlight-box">
-              <h4>🤝 Your Partner in Modest Fashion Success</h4>
+              <h4>?? Your Partner in Modest Fashion Success</h4>
               <p>At <strong>Hijab Fashion Mall</strong>, we've been at the forefront of the modest fashion industry, helping retailers worldwide build successful businesses. Our extensive collection of premium Turkish hijab wear, combined with comprehensive <strong>private label services</strong>, provides everything you need to create your distinctive brand in this growing market.</p>
-              <p>Whether you're starting your modest fashion journey or looking to expand an existing business, we're here to be your trusted partner. With high-quality products, flexible ordering, and dedicated support, we help you focus on what matters most—building your brand and serving your customers.</p>
+              <p>Whether you're starting your modest fashion journey or looking to expand an existing business, we're here to be your trusted partner. With high-quality products, flexible ordering, and dedicated support, we help you focus on what matters most building your brand and serving your customers.</p>
             </div>
 
             {/* CTA Section within article */}
