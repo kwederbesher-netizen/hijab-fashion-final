@@ -1,8 +1,7 @@
 // app/en/privacy-policy/page.tsx
-'use client'
-
 import Link from 'next/link'
 import Head from 'next/head'
+import { FaArrowLeft } from 'react-icons/fa'
 
 export default function PrivacyPolicyPageEn() {
   return (
@@ -11,7 +10,18 @@ export default function PrivacyPolicyPageEn() {
         <title>Privacy Policy - Hijab Fashion Mall | Wholesale Turkish Modest Wear</title>
         <meta name="description" content="Learn how Hijab Fashion Mall collects, uses, and protects your personal information. Our privacy policy for wholesale customers and website visitors." />
         <meta name="keywords" content="privacy policy, data protection, personal information, wholesale privacy, hijab fashion privacy" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/en/privacy-policy" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/privacy-policy" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/privacy-policy" />
+        <meta property="og:title" content="Privacy Policy - Hijab Fashion Mall" />
+        <meta property="og:description" content="Learn how Hijab Fashion Mall collects, uses, and protects your personal information." />
+        <meta property="og:url" content="https://hijabfashionmall.com/en/privacy-policy" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Privacy Policy - Hijab Fashion Mall" />
+        <meta name="twitter:description" content="Learn how Hijab Fashion Mall protects your personal information." />
       </Head>
 
       <style>{`
@@ -44,6 +54,37 @@ export default function PrivacyPolicyPageEn() {
           padding: 0 20px;
         }
 
+        /* Breadcrumb Bar */
+        .breadcrumb-bar {
+          padding: 20px 0;
+          background: #f5f5f5;
+          border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb-list {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .breadcrumb-item a {
+          color: #555;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .breadcrumb-item a:hover {
+          color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+          font-size: 14px;
+          color: #000;
+          font-weight: 600;
+        }
+
+        /* Page Header */
         .page-header {
           background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
           padding: 60px 0;
@@ -65,22 +106,7 @@ export default function PrivacyPolicyPageEn() {
           margin: 0 auto;
         }
 
-        .page-header .breadcrumb {
-          font-size: 14px;
-          color: var(--medium-gray);
-          margin-bottom: 20px;
-        }
-
-        .page-header .breadcrumb a {
-          color: var(--primary);
-          text-decoration: none;
-        }
-
-        .page-header .breadcrumb span {
-          color: var(--medium-gray);
-          margin: 0 5px;
-        }
-
+        /* Privacy Content */
         .privacy-content {
           padding: 60px 0;
           background: var(--white);
@@ -149,7 +175,7 @@ export default function PrivacyPolicyPageEn() {
         .info-box {
           background: var(--light-gray);
           padding: 25px;
-          borderRadius: 15px;
+          border-radius: 15px;
           margin: 25px 0;
           border-left: 4px solid var(--primary);
         }
@@ -189,23 +215,14 @@ export default function PrivacyPolicyPageEn() {
       `}</style>
 
       {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
+      <div className="breadcrumb-bar">
         <div className="container">
-          <ul style={{
-            listStyle: 'none',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px'
-          }}>
-            <li style={{ fontSize: '14px', color: '#555' }}>
-              <Link href="/en" style={{ color: '#555', textDecoration: 'none' }}>Home</Link>
+          <ul className="breadcrumb-list">
+            <li className="breadcrumb-item">
+              <Link href="/en">Home</Link>
             </li>
-            <li style={{ fontSize: '14px', color: '#555' }}>/</li>
-            <li style={{ fontSize: '14px', color: '#000', fontWeight: 600 }}>Privacy Policy</li>
+            <li className="breadcrumb-item">/</li>
+            <li className="breadcrumb-item active">Privacy Policy</li>
           </ul>
         </div>
       </div>
@@ -336,7 +353,7 @@ export default function PrivacyPolicyPageEn() {
             </div>
 
             <Link href="/en" className="btn-back">
-              <i className="fas fa-arrow-left"></i> Back to Home
+              <FaArrowLeft size={14} /> Back to Home
             </Link>
           </div>
         </div>

@@ -1,3 +1,4 @@
+// app/ar/catalog/page.tsx
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -38,7 +39,7 @@ export default function CatalogPageAr() {
     maxPrice: 10000
   })
 
-  // حالة لأعداد الفلاتر
+  // Filter counts state
   const [filterCounts, setFilterCounts] = useState({
     categories: {} as Record<string, number>,
     rss: 0,
@@ -50,71 +51,27 @@ export default function CatalogPageAr() {
   const searchTimeout = useRef<NodeJS.Timeout | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  // تعيين قيمة البحث في حقل الإدخال إذا كانت موجودة في URL
+  // Set search input value if search exists in URL
   useEffect(() => {
     if (initialSearch && searchInputRef.current) {
       searchInputRef.current.value = initialSearch
     }
-    // إذا كان هناك بحث في URL، قم بتحديث الصفحة
     if (initialSearch) {
-      console.log('🔍 البحث عن:', initialSearch)
+      console.log('🔍 Searching for:', initialSearch)
     }
   }, [initialSearch])
 
-  // دالة ترجمة التصنيفات (من إنجليزي إلى عربي)
-  const translateCategory = useCallback((categoryEn: string) => {
-    const categories: { [key: string]: string } = {
-      'Abayas': 'عبايات',
-      'Hijabs': 'حجاب',
-      'Modest Dresses': 'فساتين محجبات',
-      'Modest Evening Dresses': 'فساتين سهرة محجبات',
-      'Modest Pants Sets': 'طقم بنطلون محجبات',
-      'Modest Skirt Sets': 'طقم تنورة محجبات',
-      'Modest Sportswear': 'ملابس رياضية محجبات',
-      'Prayer Clothes': 'ملابس صلاة',
-      'Prayer Outfits': 'ملابس صلاة',
-      'Pray Clothes': 'ملابس صلاة',
-      'Pray clothes': 'ملابس صلاة',
-      'pray clothes': 'ملابس صلاة',
-      'Jilbab': 'ملابس صلاة',
-      'Islamic Prayer Wear': 'ملابس صلاة',
-      'Prayer Dress': 'ملابس صلاة',
-      'Modest Sets': 'طقم بنطلون محجبات',
-      'Modest Set': 'طقم بنطلون محجبات',
-      'Burkini Modest Swimwear': 'بوركيني ملابس سباحة محجبات',
-      'Tunics': 'تونيك',
-      'Modest Coats': 'سترات محجبات',
-      'Modest Jackets': 'معاطف محجبات',
-      'Trenchcoats': 'معاطف طويلة',
-      'Modest Wool': 'ملابس صوف محجبات',
-      'Kaftan': 'قفطان'
-    }
-    return categories[categoryEn] || categoryEn
+  // Get category name for display (Arabic)
+  const getCategoryDisplayName = useCallback((categoryAr: string): string => {
+    return categoryAr
   }, [])
 
-  // دالة عكسية للحصول على الاسم الإنجليزي للتصنيف
-  const getCategoryEn = useCallback((categoryAr: string): string => {
-    const categories: { [key: string]: string[] } = {
-      'عبايات': ['Abayas'],
-      'حجاب': ['Hijabs'],
-      'فساتين محجبات': ['Modest Dresses'],
-      'فساتين سهرة محجبات': ['Modest Evening Dresses'],
-      'طقم بنطلون محجبات': ['Modest Pants Sets', 'Modest Sets', 'Modest Set'],
-      'طقم تنورة محجبات': ['Modest Skirt Sets'],
-      'ملابس رياضية محجبات': ['Modest Sportswear'],
-      'ملابس صلاة': ['Prayer Clothes', 'Prayer Outfits', 'Jilbab', 'Islamic Prayer Wear', 'Prayer Dress', 'Pray Clothes', 'Pray clothes', 'pray clothes'],
-      'بوركيني ملابس سباحة محجبات': ['Burkini Modest Swimwear'],
-      'تونيك': ['Tunics'],
-      'سترات محجبات': ['Modest Coats'],
-      'معاطف محجبات': ['Modest Jackets'],
-      'معاطف طويلة': ['Trenchcoats'],
-      'ملابس صوف محجبات': ['Modest Wool'],
-      'قفطان': ['Kaftan']
-    }
-    return categories[categoryAr]?.[0] || categoryAr
+  // Get Arabic category name from display name
+  const getCategoryAr = useCallback((categoryDisplay: string): string => {
+    return categoryDisplay
   }, [])
 
-  // جلب أعداد الفلاتر من API
+  // Fetch filter counts from API
   const fetchFilterCounts = useCallback(async () => {
     try {
       const res = await fetch('/api/products/counts')
@@ -128,11 +85,11 @@ export default function CatalogPageAr() {
         })
       }
     } catch (error) {
-      console.error('خطأ في جلب أعداد الفلاتر:', error)
+      console.error('Error fetching filter counts:', error)
     }
   }, [])
 
-  // جلب المنتجات من API الجديد
+  // Fetch products from API
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true)
@@ -143,13 +100,12 @@ export default function CatalogPageAr() {
       
       if (activeFilters.search) {
         params.append('search', activeFilters.search)
-        console.log('🔍 جاري البحث عن:', activeFilters.search)
+        console.log('🔍 Searching for:', activeFilters.search)
       }
       
       if (activeFilters.categories.length > 0) {
-        const categoryAr = activeFilters.categories[0]
-        const categoryEn = getCategoryEn(categoryAr)
-        params.append('category', categoryEn)
+        const categoryAr = getCategoryAr(activeFilters.categories[0])
+        params.append('category', categoryAr)
       }
       
       if (activeFilters.rssFilter) {
@@ -179,21 +135,21 @@ export default function CatalogPageAr() {
         setProducts(data.result)
         setTotalPages(data.totalPages)
         setTotalProducts(data.total)
-        console.log('✅ تم تحميل المنتجات:', data.result.length, 'من', data.total)
+        console.log('✅ Products loaded:', data.result.length, 'of', data.total)
       }
     } catch (error) {
-      console.error('خطأ في تحميل المنتجات:', error)
+      console.error('Error loading products:', error)
     } finally {
       setLoading(false)
     }
-  }, [currentPage, activeFilters, getCategoryEn])
+  }, [currentPage, activeFilters, getCategoryAr])
 
-  // تحميل المنتجات عند تغيير الصفحة أو الفلاتر
+  // Load products when page or filters change
   useEffect(() => {
     fetchProducts()
   }, [fetchProducts])
 
-  // تحميل أعداد الفلاتر عند التحميل الأول
+  // Load filter counts on initial load
   useEffect(() => {
     fetchFilterCounts()
   }, [fetchFilterCounts])
@@ -208,7 +164,7 @@ export default function CatalogPageAr() {
           setCart(parsedCart)
           cartStringRef.current = JSON.stringify(parsedCart)
         } catch (e) {
-          console.error('خطأ في تحميل السلة:', e)
+          console.error('Error loading cart:', e)
         }
       }
       cartInitialized.current = true
@@ -233,7 +189,7 @@ export default function CatalogPageAr() {
             cartStringRef.current = newCartString
           }
         } catch (e) {
-          console.error('خطأ في تحميل السلة:', e)
+          console.error('Error loading cart:', e)
         }
       }
       
@@ -266,30 +222,61 @@ export default function CatalogPageAr() {
     }
   }, [cart])
 
-  // ===== حساب التصنيفات للعرض =====
+  // Categories list in Arabic
   const categories = useMemo(() => {
     return [
       'عبايات',
       'حجاب',
-      'طقم تنورة محجبات',
       'فساتين محجبات',
-      'بوركيني ملابس سباحة محجبات',
-      'ملابس رياضية محجبات',
+      'طقم تنورة محجبات',
       'فساتين سهرة محجبات',
       'طقم بنطلون محجبات',
+      'ملابس رياضية محجبات',
+      'ملابس صلاة',
+      'بوركيني',
       'تونيك',
       'سترات محجبات',
       'معاطف محجبات',
       'معاطف طويلة',
       'ملابس صوف محجبات',
-      'قفطان',
-      'ملابس صلاة'
+      'قفطان'
     ]
   }, [])
 
-  // دالة جلب عدد المنتجات لكل تصنيف
-  const getCategoryCount = useCallback((categoryAr: string): number => {
-    if (categoryAr === 'ملابس صلاة') {
+  // Get category count with Arabic to English mapping
+  const getCategoryCount = useCallback((categoryDisplay: string): number => {
+    // خريطة تحويل الأسماء العربية إلى الإنجليزية (مطابقة لـ API)
+    const nameMapping: Record<string, string> = {
+      'عبايات': 'Abayas',
+      'حجاب': 'Hijabs',
+      'فساتين محجبات': 'Modest Dresses',
+      'طقم تنورة محجبات': 'Modest Skirt Sets',
+      'فساتين سهرة محجبات': 'Modest Evening Dresses',
+      'طقم بنطلون محجبات': 'Modest Pants Sets',
+      'ملابس رياضية محجبات': 'Modest Sportswear',
+      'ملابس صلاة': 'Prayer Clothes',
+      'بوركيني': 'Burkini Modest Swimwear',
+      'تونيك': 'Tunics',
+      'سترات محجبات': 'Modest Jackets',
+      'معاطف محجبات': 'Modest Coats',
+      'معاطف طويلة': 'Trenchcoats',
+      'ملابس صوف محجبات': 'Modest Wool',
+      'قفطان': 'Kaftan'
+    }
+    
+    // 1. محاولة الترجمة من العربي إلى الإنجليزي
+    const englishName = nameMapping[categoryDisplay]
+    if (englishName && filterCounts.categories[englishName] !== undefined) {
+      return filterCounts.categories[englishName]
+    }
+    
+    // 2. محاولة المطابقة المباشرة (إذا كان الاسم إنجليزياً)
+    if (filterCounts.categories[categoryDisplay] !== undefined) {
+      return filterCounts.categories[categoryDisplay]
+    }
+    
+    // 3. معالجة خاصة لملابس الصلاة (تجميع مصطلحات متعددة)
+    if (categoryDisplay === 'ملابس صلاة') {
       const prayerTerms = ['Prayer Clothes', 'Prayer Outfits', 'Jilbab', 'Islamic Prayer Wear', 'Prayer Dress', 'Pray Clothes', 'Pray clothes', 'pray clothes']
       let total = 0
       for (const term of prayerTerms) {
@@ -297,7 +284,9 @@ export default function CatalogPageAr() {
       }
       return total
     }
-    if (categoryAr === 'طقم بنطلون محجبات') {
+    
+    // 4. معالجة خاصة لأطقم البنطلون
+    if (categoryDisplay === 'طقم بنطلون محجبات') {
       const pantsTerms = ['Modest Pants Sets', 'Modest Sets', 'Modest Set']
       let total = 0
       for (const term of pantsTerms) {
@@ -305,22 +294,10 @@ export default function CatalogPageAr() {
       }
       return total
     }
-    const newCategoriesMap: { [key: string]: string } = {
-      'تونيك': 'Tunics',
-      'سترات محجبات': 'Modest Coats',
-      'معاطف محجبات': 'Modest Jackets',
-      'معاطف طويلة': 'Trenchcoats',
-      'ملابس صوف محجبات': 'Modest Wool',
-      'قفطان': 'Kaftan'
-    }
     
-    if (newCategoriesMap[categoryAr]) {
-      return filterCounts.categories[newCategoriesMap[categoryAr]] || 0
-    }
-    
-    const categoryEn = getCategoryEn(categoryAr)
-    return filterCounts.categories[categoryEn] || 0
-  }, [filterCounts.categories, getCategoryEn])
+    // 5. إذا لم يتم العثور على شيء
+    return 0
+  }, [filterCounts.categories])
 
   // Back to top button visibility
   useEffect(() => {
@@ -335,13 +312,14 @@ export default function CatalogPageAr() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     
     const currentCart = JSON.parse(localStorage.getItem('cart') || '[]')
-    const isRSS = product.product_code?.toLowerCase().includes('rss') || 
-                  product['rss/not rss message_en']?.includes('✅')
+    const isRSS = product['rss/not rss message_en']?.includes('single piece') || 
+                  product['rss/not rss message_ar']?.includes('قطعة واحدة')
     const packetSize = product.pcs_per_packet ? parseInt(product.pcs_per_packet) : 1
     const requestedQuantity = 1
     
@@ -428,7 +406,12 @@ export default function CatalogPageAr() {
       'Petrol Blue': '#1F4F5F', 'Mauve': '#E0B0FF', 'Taupe': '#483C32',
       'Olive Green': '#708238', 'Charcoal': '#36454F', 'Dusty Rose': '#DCAE96',
       'Sky Blue': '#87CEEB', 'Light Brown': '#C4A484', 'Yellow': '#FFFF00',
-      'Dark Beige': '#C9A87C', 'Rose': '#FF007F'
+      'Dark Beige': '#C9A87C', 'Rose': '#FF007F',
+      'أسود': '#000000', 'أبيض': '#FFFFFF', 'أزرق داكن': '#000080',
+      'رمادي': '#808080', 'بورجوندي': '#800020', 'أحمر': '#FF0000',
+      'أخضر': '#008000', 'أزرق': '#0000FF', 'بني': '#8B4513',
+      'بيج': '#F5F5DC', 'زيتوني': '#808000', 'بنفسجي': '#800080',
+      'وردي': '#FFC0CB', 'برتقالي': '#FFA500', 'رمادي فاتح': '#D3D3D3'
     }
     return colors[color] || '#CCCCCC'
   }, [])
@@ -442,6 +425,40 @@ export default function CatalogPageAr() {
       return `/ar/product/${product._id || 'product'}`
     }
   }, [])
+
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: '25px',
+      marginBottom: '50px'
+    }}>
+      {Array(8).fill(0).map((_, i) => (
+        <div key={i} style={{
+          background: 'white',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          boxShadow: '0 5px 20px rgba(0,0,0,0.05)',
+          border: '1px solid #f0f0f0'
+        }}>
+          <div style={{
+            height: '280px',
+            background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+            backgroundSize: '200% 100%',
+            animation: 'pulse 1.5s infinite'
+          }} />
+          <div style={{ padding: '20px', textAlign: 'center' }}>
+            <div style={{ height: '12px', background: '#f0f0f0', marginBottom: '8px', borderRadius: '6px', width: '60%', margin: '0 auto 8px' }} />
+            <div style={{ height: '16px', background: '#f0f0f0', marginBottom: '8px', borderRadius: '6px', width: '80%', margin: '0 auto 8px' }} />
+            <div style={{ height: '12px', background: '#f0f0f0', marginBottom: '12px', borderRadius: '6px', width: '50%', margin: '0 auto 12px' }} />
+            <div style={{ height: '20px', background: '#f0f0f0', marginBottom: '15px', borderRadius: '6px', width: '40%', margin: '0 auto 15px' }} />
+            <div style={{ height: '44px', background: '#f0f0f0', borderRadius: '50px', width: '100%' }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 
   if (loading && products.length === 0) return (
     <div style={{ 
@@ -466,6 +483,10 @@ export default function CatalogPageAr() {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
+        @keyframes pulse {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
       `}</style>
       <p style={{ marginTop: '20px', color: '#555', fontSize: '16px' }}>جاري تحميل المنتجات...</p>
     </div>
@@ -476,122 +497,29 @@ export default function CatalogPageAr() {
 
   return (
     <>
-      {/* Global CSS to fix mobile white space */}
-      <style>{`
-        /* إصلاح الفراغ الأبيض على اليمين في الجوال */
-        html, body {
-          overflow-x: hidden !important;
-          width: 100% !important;
-          position: relative !important;
-          margin: 0 !important;
-          padding: 0 !important;
-        }
-        
-        body {
-          overflow-x: hidden !important;
-        }
-        
-        * {
-          max-width: 100vw !important;
-          box-sizing: border-box !important;
-        }
-        
-        /* منع أي عنصر من التسبب في overflow */
-        .container,
-        [class*="container"],
-        [style*="max-width"] {
-          overflow-x: hidden !important;
-        }
-        
-        img, video, iframe, svg {
-          max-width: 100% !important;
-          height: auto !important;
-        }
-        
-        /* إصلاح الـ grid والهوامش في الجوال */
-        @media (max-width: 768px) {
-          [style*="grid-template-columns"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-          
-          [style*="margin-left"],
-          [style*="margin-right"] {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-          }
-          
-          [style*="padding-left"],
-          [style*="padding-right"] {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-          
-          .container {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-        }
-        
-        @media (max-width: 992px) {
-          div[style*="grid-template-columns: 300px 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-          
-          aside {
-            position: static !important;
-            margin-bottom: 20px;
-          }
-          
-          div[style*="grid-template-columns: repeat(4, 1fr)"] {
-            grid-template-columns: repeat(3, 1fr) !important;
-          }
-          
-          ul[style*="grid-template-columns: repeat(2, 1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: repeat(4, 1fr)"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        
-        @media (max-width: 576px) {
-          div[style*="grid-template-columns: repeat(4, 1fr)"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
       <Head>
-        <title>الكتالوج - أكثر من {totalProducts}+ منتج من ملابس المحجبات التركية | حجاب فاشون مول</title>
-        <meta name="description" content={`تصفح أكبر كتالوج لملابس المحجبات التركية بالجملة. عبايات، فساتين محجبات، حجاب، أطقم، ملابس صلاة، بوركيني. أكثر من ${totalProducts}+ منتج بأسعار الجملة مع شحن عالمي سريع.`} />
-        <meta name="keywords" content="كتالوج حجاب تركي, جملة ملابس محجبات, عبايات تركية, فساتين محجبات, حجاب تركي بالجملة, أطقم محجبات, ملابس صلاة تركية, بوركيني, ملابس رياضية محجبات" />
+        <title>كتالوج - {totalProducts}+ منتجات ملابس المحجبات التركية | حجاب فاشون مول</title>
+        <meta name="description" content={`تصفح كتالوجنا الشامل لـ ${totalProducts}+ منتج من الأزياء المحتشمة التركية بالجملة. عبايات، حجاب، فساتين، طقم تنورة، ملابس صلاة، بوركيني. شحن عالمي.`} />
+        <meta name="keywords" content="كتالوج أزياء محتشمة, جملة حجاب تركي, كتالوج عبايات, فساتين محجبات جملة, كتالوج حجاب, ملابس رياضية محجبات, ملابس صلاة جملة" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://hijabfashionmall.com/ar/catalog" />
-        <link rel="alternate" href="https://hijabfashionmall.com/en/catalog" hrefLang="en" />
         <link rel="alternate" href="https://hijabfashionmall.com/ar/catalog" hrefLang="ar" />
+        <link rel="alternate" href="https://hijabfashionmall.com/en/catalog" hrefLang="en" />
         
-        <meta property="og:title" content="الكتالوج - ملابس محجبات تركية بالجملة | حجاب فاشون مول" />
-        <meta property="og:description" content={`أكثر من ${totalProducts}+ منتج من ملابس المحجبات التركية الفاخرة. عبايات، فساتين، حجاب، أطقم، ملابس صلاة، بوركيني.`} />
+        <meta property="og:title" content="كتالوج - ملابس المحجبات التركية بالجملة | حجاب فاشون مول" />
+        <meta property="og:description" content={`${totalProducts}+ منتج من الأزياء المحتشمة التركية الفاخرة. عبايات، فساتين، حجاب، طقم تنورة، ملابس صلاة، بوركيني.`} />
         <meta property="og:url" content="https://hijabfashionmall.com/ar/catalog" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://hijabfashionmall.com/images/og-catalog.jpg" />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/og-catalog-ar.jpg" />
       </Head>
 
-      {/* Back to Top Button */}
+      {/* Back to Top Button - Fixed with SVG arrow */}
       <button
         onClick={scrollToTop}
         style={{
           position: 'fixed',
           bottom: '30px',
-          right: '30px',
+          left: '30px',
           width: '50px',
           height: '50px',
           borderRadius: '50%',
@@ -611,7 +539,10 @@ export default function CatalogPageAr() {
         onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
         onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
       >
-        <i className="fas fa-arrow-up"></i>
+        {/* SVG Arrow instead of Font Awesome */}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
       </button>
 
       {/* Catalog Header */}
@@ -635,7 +566,7 @@ export default function CatalogPageAr() {
           zIndex: 0,
           pointerEvents: 'none'
         }}>
-          كتالوج
+          الكتالوج
         </div>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
           <div style={{ fontSize: '14px', color: '#555', marginBottom: '20px' }}>
@@ -650,11 +581,11 @@ export default function CatalogPageAr() {
             fontWeight: 800,
             lineHeight: '1.2'
           }}>
-            كتالوج <span style={{ color: '#ff5a00' }}>ملابس المحجبات</span>
+            كتالوج الأزياء <span style={{ color: '#ff5a00' }}>المحتشمة</span>
           </h1>
           <p style={{ fontSize: '18px', color: '#555', maxWidth: '800px', margin: '0 auto' }}>
-            اكتشف مجموعتنا الواسعة من <strong>أكثر من {totalProducts || '5000+'} منتج</strong> من أفخر الملابس التركية للمحجبات. 
-            عبايات، فساتين، أطقم، حجاب، ملابس صلاة، بوركيني والمزيد بأسعار الجملة.
+            اكتشف مجموعتنا الواسعة من <strong>{totalProducts || '5000+'} منتج</strong> من الأزياء المحتشمة التركية الفاخرة.
+            عبايات، فساتين، طقم تنورة، حجاب، ملابس صلاة، بوركيني والمزيد بأسعار الجملة.
           </p>
           <div style={{
             display: 'flex',
@@ -664,15 +595,21 @@ export default function CatalogPageAr() {
             flexWrap: 'wrap'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '20px' }}></i>
-              <span style={{ color: '#555' }}>شحن عالمي سريع</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+              </svg>
+              <span style={{ color: '#555' }}>شحن سريع لجميع أنحاء العالم</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '20px' }}></i>
-              <span style={{ color: '#555' }}>بدون حد أدنى للطلب</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+              </svg>
+              <span style={{ color: '#555' }}>لا يوجد حد أدنى للطلب</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '20px' }}></i>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+              </svg>
               <span style={{ color: '#555' }}>صناعة تركية 100%</span>
             </div>
           </div>
@@ -707,7 +644,10 @@ export default function CatalogPageAr() {
                 alignItems: 'center',
                 gap: '10px'
               }}>
-                <i className="fas fa-search" style={{ color: '#ff5a00' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none"/>
+                  <path d="M21 21l-4.35-4.35" stroke="currentColor"/>
+                </svg>
                 بحث
               </h3>
               <input 
@@ -721,7 +661,7 @@ export default function CatalogPageAr() {
                   padding: '14px 16px',
                   border: '2px solid #f0f0f0',
                   borderRadius: '12px',
-                  fontFamily: 'Tajawal, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '15px',
                   transition: 'all 0.3s',
                   outline: 'none'
@@ -742,7 +682,9 @@ export default function CatalogPageAr() {
                 alignItems: 'center',
                 gap: '10px'
               }}>
-                <i className="fas fa-star" style={{ color: '#ff5a00' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="currentColor"/>
+                </svg>
                 فلاتر خاصة
               </h3>
               <div 
@@ -774,10 +716,12 @@ export default function CatalogPageAr() {
                     justifyContent: 'center',
                     color: 'white'
                   }}>
-                    <i className="fas fa-check-circle"></i>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                    </svg>
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, color: '#000' }}>قطع فردية (RSS)</div>
+                    <div style={{ fontWeight: 600, color: '#000' }}>قطعة واحدة (RSS)</div>
                     <div style={{ fontSize: '12px', color: '#666' }}>يمكن شراؤها كقطعة واحدة</div>
                   </div>
                 </div>
@@ -818,7 +762,9 @@ export default function CatalogPageAr() {
                     justifyContent: 'center',
                     color: 'white'
                   }}>
-                    <i className="fas fa-arrow-up"></i>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 5v14M5 12h14" stroke="currentColor"/>
+                    </svg>
                   </div>
                   <div>
                     <div style={{ fontWeight: 600, color: '#000' }}>مقاسات كبيرة</div>
@@ -847,7 +793,10 @@ export default function CatalogPageAr() {
                 alignItems: 'center',
                 gap: '10px'
               }}>
-                <i className="fas fa-tags" style={{ color: '#ff5a00' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" fill="none"/>
+                  <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor"/>
+                </svg>
                 التصنيفات
               </h3>
               <div style={{ maxHeight: '350px', overflowY: 'auto', paddingLeft: '5px' }}>
@@ -947,12 +896,12 @@ export default function CatalogPageAr() {
                   e.currentTarget.style.borderColor = '#f0f0f0'
                 }}
               >
-                إعادة ضبط
+                إعادة تعيين الكل
               </button>
             </div>
           </aside>
 
-          {/* Main Content - 4 أعمدة */}
+          {/* Main Content - 4 columns */}
           <main>
             {/* Toolbar */}
             <div style={{
@@ -986,7 +935,7 @@ export default function CatalogPageAr() {
                   padding: '12px 20px',
                   border: '2px solid #f0f0f0',
                   borderRadius: '12px',
-                  fontFamily: 'Tajawal, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '15px',
                   cursor: 'pointer',
                   outline: 'none',
@@ -995,15 +944,15 @@ export default function CatalogPageAr() {
                 }}
               >
                 <option value="default">ترتيب حسب: الافتراضي</option>
-                <option value="price-asc">السعر: من الأقل للأعلى</option>
-                <option value="price-desc">السعر: من الأعلى للأقل</option>
-                <option value="name-asc">الاسم: أ إلى ي</option>
-                <option value="name-desc">الاسم: ي إلى أ</option>
-                <option value="newest">الأحدث</option>
+                <option value="price-asc">السعر: من الأقل إلى الأعلى</option>
+                <option value="price-desc">السعر: من الأعلى إلى الأقل</option>
+                <option value="name-asc">الاسم: من أ إلى ي</option>
+                <option value="name-desc">الاسم: من ي إلى أ</option>
+                <option value="newest">الأحدث أولاً</option>
               </select>
             </div>
 
-            {/* Products Grid - 4 أعمدة */}
+            {/* Products Grid - 4 columns */}
             {products.length === 0 ? (
               <div style={{
                 textAlign: 'center',
@@ -1013,9 +962,12 @@ export default function CatalogPageAr() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
                 border: '1px solid #f0f0f0'
               }}>
-                <i className="fas fa-search" style={{ fontSize: '60px', color: '#ddd', marginBottom: '20px' }}></i>
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="1.5">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none"/>
+                  <path d="M21 21l-4.35-4.35" stroke="currentColor"/>
+                </svg>
                 <h3 style={{ fontSize: '24px', color: '#000', marginBottom: '10px', fontWeight: 600 }}>لا توجد منتجات</h3>
-                <p style={{ color: '#666', marginBottom: '25px', fontSize: '16px' }}>لم نتمكن من العثور على منتجات تطابق معايير البحث.</p>
+                <p style={{ color: '#666', marginBottom: '25px', fontSize: '16px' }}>لم نتمكن من العثور على أي منتجات تطابق معايير البحث الخاصة بك.</p>
                 <button 
                   onClick={resetFilters}
                   style={{
@@ -1037,221 +989,236 @@ export default function CatalogPageAr() {
               </div>
             ) : (
               <>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
-                  gap: '25px',
-                  marginBottom: '50px'
-                }}>
-                  {products.map((p: any) => {
-                    const message = p['rss/not rss message_en'] || p['rss/not rss message_ar'] || ''
-                    const code = p.product_code || ''
-                    const hasRSSInCode = code.toLowerCase().includes('rss')
-                    const isRSS = message.includes('✅') || hasRSSInCode
-                    
-                    const plusSizes = p['plus sizes'] || p.plus_sizes || p.plusSizes || ''
-                    const hasPlus = 
-                      plusSizes === 'Yes' || 
-                      plusSizes === 'YES' || 
-                      plusSizes === 'yes' || 
-                      plusSizes === 'true' || 
-                      plusSizes === '1' ||
-                      String(plusSizes).toLowerCase() === 'yes'
+                {loading && products.length > 0 ? (
+                  <LoadingSkeleton />
+                ) : (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '25px',
+                    marginBottom: '50px'
+                  }}>
+                    {products.map((p: any) => {
+                      const message = p['rss/not rss message_en'] || p['rss/not rss message_ar'] || ''
+                      const code = p.product_code || ''
+                      const hasRSSInCode = code.toLowerCase().includes('rss')
+                      const isRSS = message.includes('single piece') || message.includes('قطعة واحدة') || message.includes('✅') || hasRSSInCode
+                      
+                      const plusSizes = p['plus sizes'] || p.plus_sizes || p.plusSizes || ''
+                      const hasPlus = 
+                        plusSizes === 'Yes' || 
+                        plusSizes === 'YES' || 
+                        plusSizes === 'yes' || 
+                        plusSizes === 'true' || 
+                        plusSizes === '1' ||
+                        String(plusSizes).toLowerCase() === 'yes'
 
-                    const badges = []
-                    if (p.is_new === 'Yes') badges.push(
-                      <span key="new" style={{
-                        background: '#4caf50',
-                        color: 'white',
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        letterSpacing: '0.5px'
-                      }}>جديد</span>
-                    )
-                    if (p.is_bestseller === 'Yes') badges.push(
-                      <span key="bestseller" style={{
-                        background: '#ff5a00',
-                        color: 'white',
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        letterSpacing: '0.5px'
-                      }}>الأكثر مبيعاً</span>
-                    )
-                    if (hasPlus) badges.push(
-                      <span key="plus" style={{
-                        background: '#2196f3',
-                        color: 'white',
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        letterSpacing: '0.5px'
-                      }}>مقاسات كبيرة</span>
-                    )
+                      const badges = []
+                      if (p.is_new === 'Yes') badges.push(
+                        <span key="new" style={{
+                          background: '#4caf50',
+                          color: 'white',
+                          padding: '4px 12px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          letterSpacing: '0.5px'
+                        }}>جديد</span>
+                      )
+                      if (p.is_bestseller === 'Yes') badges.push(
+                        <span key="bestseller" style={{
+                          background: '#ff5a00',
+                          color: 'white',
+                          padding: '4px 12px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          letterSpacing: '0.5px'
+                        }}>الأكثر مبيعاً</span>
+                      )
+                      if (hasPlus) badges.push(
+                        <span key="plus" style={{
+                          background: '#2196f3',
+                          color: 'white',
+                          padding: '4px 12px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          letterSpacing: '0.5px'
+                        }}>مقاسات كبيرة</span>
+                      )
 
-                    return (
-                      <Link 
-                        href={getProductUrl(p)} 
-                        key={p._id}
-                        style={{
-                          background: 'white',
-                          borderRadius: '16px',
-                          overflow: 'hidden',
-                          boxShadow: '0 5px 20px rgba(0,0,0,0.05)',
-                          transition: 'all 0.3s',
-                          textDecoration: 'none',
-                          color: 'inherit',
-                          border: '1px solid #f0f0f0',
-                          display: 'block'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-8px)'
-                          e.currentTarget.style.boxShadow = '0 15px 30px rgba(255,90,0,0.15)'
-                          e.currentTarget.style.borderColor = '#ff5a00'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)'
-                          e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)'
-                          e.currentTarget.style.borderColor = '#f0f0f0'
-                        }}
-                      >
-                        <div style={{
-                          position: 'relative',
-                          height: '280px',
-                          overflow: 'hidden',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          background: 'linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%)'
-                        }}>
-                          <img 
-                            src={p.imageUrl || '/images/default.webp'} 
-                            alt={p.name_ar || p.name_en || ''}
-                            style={{ 
-                              maxWidth: '90%', 
-                              maxHeight: '90%', 
-                              objectFit: 'contain', 
-                              transition: 'transform 0.5s'
-                            }}
-                            loading="lazy"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = '/images/default.webp'
-                            }}
-                          />
-                          {badges.length > 0 && (
-                            <div style={{
-                              position: 'absolute',
-                              top: '15px',
-                              right: '15px',
-                              display: 'flex',
-                              gap: '6px',
-                              flexDirection: 'column'
-                            }}>{badges}</div>
-                          )}
-                        </div>
-                        <div style={{ padding: '20px', textAlign: 'center' }}>
-                          <div style={{ 
-                            fontSize: '12px', 
-                            color: '#ff5a00', 
-                            marginBottom: '8px',
-                            fontWeight: 500,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
-                          }}>
-                            {translateCategory(p.category_main_en || '')}
-                          </div>
-                          <h3 style={{ 
-                            fontSize: '15px', 
-                            fontWeight: 600, 
-                            color: '#000', 
-                            marginBottom: '8px',
-                            lineHeight: '1.4'
-                          }}>
-                            {p.name_ar || p.name_en || ''}
-                          </h3>
-                          <div style={{ 
-                            fontSize: '12px', 
-                            color: '#999', 
-                            marginBottom: '12px',
-                            fontFamily: 'monospace'
-                          }}>
-                            {p.product_code || ''}
-                          </div>
-                          
-                          {p.color_en && (
-                            <div style={{ marginBottom: '12px' }}>
-                              <div style={{ 
-                                width: '24px', 
-                                height: '24px', 
-                                borderRadius: '50%', 
-                                background: getColorCode(p.color_en),
-                                margin: '0 auto',
-                                border: '2px solid #fff',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                              }} title={p.color_en} />
-                            </div>
-                          )}
-                          
+                      return (
+                        <Link 
+                          href={getProductUrl(p)} 
+                          key={p._id}
+                          style={{
+                            background: 'white',
+                            borderRadius: '16px',
+                            overflow: 'hidden',
+                            boxShadow: '0 5px 20px rgba(0,0,0,0.05)',
+                            transition: 'all 0.3s',
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            border: '1px solid #f0f0f0',
+                            display: 'block'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-8px)'
+                            e.currentTarget.style.boxShadow = '0 15px 30px rgba(255,90,0,0.15)'
+                            e.currentTarget.style.borderColor = '#ff5a00'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)'
+                            e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)'
+                            e.currentTarget.style.borderColor = '#f0f0f0'
+                          }}
+                        >
                           <div style={{
-                            fontSize: '12px',
-                            color: isRSS ? '#4caf50' : '#2196f3',
-                            marginBottom: '15px',
+                            position: 'relative',
+                            height: '280px',
+                            overflow: 'hidden',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '5px',
-                            padding: '5px 10px',
-                            background: isRSS ? 'rgba(76,175,80,0.1)' : 'rgba(33,150,243,0.1)',
-                            borderRadius: '30px',
-                            width: 'fit-content',
-                            margin: '0 auto 15px'
+                            background: 'linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%)'
                           }}>
-                            <i className={`fas ${isRSS ? 'fa-check-circle' : 'fa-box'}`}></i>
-                            <span>{p['rss/not rss message_ar'] || (isRSS ? 'قطعة فردية' : 'كرتون')}</span>
+                            <img 
+                              src={p.imageUrl || '/images/default.webp'} 
+                              alt={p.name_ar || p.name_en || ''}
+                              style={{ 
+                                maxWidth: '90%', 
+                                maxHeight: '90%', 
+                                objectFit: 'contain', 
+                                transition: 'transform 0.5s'
+                              }}
+                              loading="lazy"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/images/default.webp'
+                              }}
+                            />
+                            {badges.length > 0 && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '15px',
+                                right: '15px',
+                                display: 'flex',
+                                gap: '6px',
+                                flexDirection: 'column'
+                              }}>{badges}</div>
+                            )}
                           </div>
-                          
-                          <div style={{
-                            fontSize: '22px',
-                            fontWeight: 700,
-                            color: '#ff5a00',
-                            marginBottom: '15px'
-                          }}>
-                            {formatPrice(p.price_usd)}
-                          </div>
-                          
-                          <button 
-                            onClick={(e) => addToCart(p, e)}
-                            style={{
-                              width: '100%',
-                              background: '#ff5a00',
-                              color: 'white',
-                              border: 'none',
-                              padding: '12px',
-                              borderRadius: '50px',
-                              cursor: 'pointer',
-                              fontSize: '14px',
-                              fontWeight: 600,
-                              transition: 'all 0.3s',
+                          <div style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ 
+                              fontSize: '12px', 
+                              color: '#ff5a00', 
+                              marginBottom: '8px',
+                              fontWeight: 500,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px'
+                            }}>
+                              {p.category_main_ar || p.category_main_en || ''}
+                            </div>
+                            <h3 style={{ 
+                              fontSize: '15px', 
+                              fontWeight: 600, 
+                              color: '#000', 
+                              marginBottom: '8px',
+                              lineHeight: '1.4'
+                            }}>
+                              {p.name_ar || p.name_en || ''}
+                            </h3>
+                            <div style={{ 
+                              fontSize: '12px', 
+                              color: '#999', 
+                              marginBottom: '12px',
+                              fontFamily: 'monospace'
+                            }}>
+                              {p.product_code || ''}
+                            </div>
+                            
+                            {p.color_ar && (
+                              <div style={{ marginBottom: '12px' }}>
+                                <div style={{ 
+                                  width: '24px', 
+                                  height: '24px', 
+                                  borderRadius: '50%', 
+                                  background: getColorCode(p.color_ar),
+                                  margin: '0 auto',
+                                  border: '2px solid #fff',
+                                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                                }} title={p.color_ar} />
+                              </div>
+                            )}
+                            
+                            <div style={{
+                              fontSize: '12px',
+                              color: isRSS ? '#4caf50' : '#2196f3',
+                              marginBottom: '15px',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              gap: '8px'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
-                            onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
-                          >
-                            <i className="fas fa-shopping-cart"></i>
-                            أضف للاستفسار
-                          </button>
-                        </div>
-                      </Link>
-                    )
-                  })}
-                </div>
+                              gap: '5px',
+                              padding: '5px 10px',
+                              background: isRSS ? 'rgba(76,175,80,0.1)' : 'rgba(33,150,243,0.1)',
+                              borderRadius: '30px',
+                              width: 'fit-content',
+                              margin: '0 auto 15px'
+                            }}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                {isRSS ? (
+                                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                                ) : (
+                                  <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" fill="none"/>
+                                )}
+                              </svg>
+                              <span>{isRSS ? 'قطعة واحدة' : 'كرتون'}</span>
+                            </div>
+                            
+                            {/* Price - Fixed font size (reduced from 22px to 18px) */}
+                            <div style={{
+                              fontSize: '18px',
+                              fontWeight: 700,
+                              color: '#ff5a00',
+                              marginBottom: '15px'
+                            }}>
+                              {formatPrice(p.price_usd)}
+                            </div>
+                            
+                            <button 
+                              onClick={(e) => addToCart(p, e)}
+                              style={{
+                                width: '100%',
+                                background: '#ff5a00',
+                                color: 'white',
+                                border: 'none',
+                                padding: '12px',
+                                borderRadius: '50px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                transition: 'all 0.3s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
+                              onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="9" cy="21" r="1" stroke="currentColor"/>
+                                <circle cx="20" cy="21" r="1" stroke="currentColor"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" fill="none"/>
+                              </svg>
+                              إضافة إلى طلب الشراء
+                            </button>
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
 
                 {/* Pagination */}
                 {totalPages > 1 && (
@@ -1279,7 +1246,9 @@ export default function CatalogPageAr() {
                         transition: 'all 0.3s'
                       }}
                     >
-                      <i className="fas fa-chevron-right"></i>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M15 18l-6-6 6-6" stroke="currentColor"/>
+                      </svg>
                     </button>
                     
                     {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -1336,7 +1305,9 @@ export default function CatalogPageAr() {
                         transition: 'all 0.3s'
                       }}
                     >
-                      <i className="fas fa-chevron-left"></i>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M9 18l6-6-6-6" stroke="currentColor"/>
+                      </svg>
                     </button>
                   </div>
                 )}
@@ -1362,7 +1333,7 @@ export default function CatalogPageAr() {
               fontWeight: 700,
               textAlign: 'center'
             }}>
-              كتالوج ملابس المحجبات التركية بالجملة
+              كتالوج الأزياء المحتشمة التركية بالجملة
             </h2>
             <p style={{
               fontSize: '16px',
@@ -1371,11 +1342,11 @@ export default function CatalogPageAr() {
               marginBottom: '25px',
               textAlign: 'justify'
             }}>
-              مرحباً بك في كتالوج <strong>حجاب فاشون مول</strong>، وجهتك الأولى لشراء <strong>ملابس المحجبات التركية</strong> بالجملة. 
-              نقدم لك تشكيلة واسعة تضم أكثر من <strong>{totalProducts || '5000+'} منتج</strong> من أفخر وأجود أنواع <strong>العبايات التركية</strong>، 
-              <strong>فساتين محجبات</strong> عصرية، <strong>أطقم تنانير محجبات</strong>، <strong>أطقم بناطيل محجبات</strong>، 
-              <strong>حجاب تركي</strong> فاخر بمختلف الأقمشة (شيفون، حرير، قطن)، <strong>ملابس صلاة</strong> مريحة، 
-              <strong>بوركيني وملابس سباحة محجبات</strong> عصرية، و<strong>ملابس رياضية محجبات</strong> عالية الجودة.
+              مرحباً بكم في كتالوج <strong>حجاب فاشون مول</strong>، وجهتكم الأولى لملابس المحجبات التركية بالجملة.
+              نقدم لكم تشكيلة واسعة تضم <strong>{totalProducts || '5000+'} منتج</strong> من أرقى وأجود <strong>العبايات التركية</strong>،
+              <strong>الفساتين المحتشمة</strong>، <strong>طقم تنورة</strong>، <strong>طقم بنطلون</strong>،
+              <strong>الحجاب التركي</strong> بأقمشة فاخرة (شيفون، حرير، قطن)، <strong>ملابس الصلاة</strong> المريحة،
+              <strong>البوركيني وملابس السباحة المحتشمة</strong> الأنيقة، و<strong>الملابس الرياضية المحتشمة</strong> عالية الجودة.
             </p>
             
             <h3 style={{
@@ -1384,7 +1355,7 @@ export default function CatalogPageAr() {
               margin: '30px 0 15px',
               fontWeight: 600
             }}>
-              مميزات التسوق من كتالوجنا
+              لماذا التسوق من كتالوجنا
             </h3>
             
             <ul style={{
@@ -1396,28 +1367,40 @@ export default function CatalogPageAr() {
               padding: 0
             }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>صناعة تركية أصلية 100%</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>أسعار جملة تنافسية</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
-                <span style={{ color: '#555' }}>شحن عالمي سريع (3-7 أيام)</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
+                <span style={{ color: '#555' }}>شحن سريع لجميع أنحاء العالم (3-7 أيام)</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
-                <span style={{ color: '#555' }}>بدون حد أدنى للطلب</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
+                <span style={{ color: '#555' }}>لا يوجد حد أدنى للطلب</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>تحديث يومي للمنتجات</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
-                <span style={{ color: '#555' }}>خدمة عملاء على مدار الساعة</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
+                <span style={{ color: '#555' }}>دعم العملاء 24/7</span>
               </li>
             </ul>
             
@@ -1427,14 +1410,52 @@ export default function CatalogPageAr() {
               lineHeight: '1.8',
               textAlign: 'justify'
             }}>
-              سواء كنت تبحث عن <strong>عبايات تركية فاخرة</strong> للمناسبات الخاصة، <strong>فساتين محجبات</strong> للعمل أو الخروجات اليومية، 
-              <strong>أطقم تنانير محجبات</strong> عصرية، أو <strong>حجاب تركي</strong> بأجود الأقمشة، فإن كتالوجنا يلبي جميع احتياجاتك. 
-              نحن نخدم آلاف تجار التجزئة حول العالم في <strong>أمريكا، كندا، بريطانيا، أوروبا، الخليج، وأستراليا</strong>. 
-              استعرض مجموعتنا الآن وابدأ رحلة نجاحك في عالم الأزياء المحتشمة.
+              سواء كنت تبحث عن <strong>عبايات تركية فاخرة</strong> للمناسبات الخاصة، أو <strong>فساتين محتشمة</strong> للعمل أو الارتداء اليومي،
+              أو <strong>طقم تنورة</strong> أنيقة، أو <strong>حجاب تركي</strong> بأقمشة فاخرة، فإن كتالوجنا يلبي جميع احتياجاتك.
+              نخدم آلاف تجار التجزئة في جميع أنحاء العالم في <strong>الولايات المتحدة، كندا، المملكة المتحدة، أوروبا، دول الخليج، وأستراليا</strong>.
+              تصفح مجموعتنا الآن وابدأ رحلتك في عالم الأزياء المحتشمة.
             </p>
           </div>
         </div>
       </section>
+
+      <style>{`
+        @media (max-width: 992px) {
+          div[style*="grid-template-columns: 300px 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+          
+          aside {
+            position: static !important;
+            margin-bottom: 20px;
+          }
+          
+          div[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
+          
+          ul[style*="grid-template-columns: repeat(2, 1fr)"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          div[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        
+        @media (max-width: 576px) {
+          div[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </>
   )
 }

@@ -1,17 +1,32 @@
 // app/ar/terms-conditions/page.tsx
-'use client'
-
 import Link from 'next/link'
 import Head from 'next/head'
+import { FaArrowLeft } from 'react-icons/fa'
 
 export default function TermsConditionsPageAr() {
   return (
     <>
       <Head>
-        <title>الشروط والأحكام - حجاب فاشون مول | جملة ملابس محجبات تركية</title>
-        <meta name="description" content="اطلع على الشروط والأحكام الخاصة بالطلب بالجملة من حجاب فاشون مول. تعرف على سياسات الأسعار والشحن والدفع والضمان للطلبات الدولية." />
-        <meta name="keywords" content="شروط وأحكام, جملة ملابس محجبات, سياسة الشحن, طرق الدفع, ضمان الجودة" />
+        <title>الشروط والأحكام - Hijab Fashion Mall | جملة الأزياء المحتشمة التركية</title>
+        <meta name="description" content="اقرأ الشروط والأحكام الخاصة بالجملة لطلب الأزياء المحتشمة التركية. تعرف على التسعير والشحن وطرق الدفع وسياسات الجملة الدولية." />
+        <meta name="keywords" content="الشروط والأحكام, شروط الجملة, شروط جملة الحجاب, شروط الأزياء المحتشمة, جملة تركيا" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/ar/terms-conditions" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/terms-conditions" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/terms-conditions" />
+        <link rel="alternate" hrefLang="fr" href="https://hijabfashionmall.com/fr/terms-conditions" />
+        <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/terms-conditions" />
+        <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/terms-conditions" />
+        <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/terms-conditions" />
+        <meta property="og:title" content="الشروط والأحكام - Hijab Fashion Mall" />
+        <meta property="og:description" content="اقرأ الشروط والأحكام الخاصة بالجملة لطلب الأزياء المحتشمة التركية. تعرف على التسعير والشحن وطرق الدفع." />
+        <meta property="og:url" content="https://hijabfashionmall.com/ar/terms-conditions" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/og-terms.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="الشروط والأحكام - Hijab Fashion Mall" />
+        <meta name="twitter:description" content="اقرأ الشروط والأحكام الخاصة بالجملة لطلب الأزياء المحتشمة التركية." />
       </Head>
 
       <style>{`
@@ -22,9 +37,9 @@ export default function TermsConditionsPageAr() {
         }
 
         body {
-          font-family: 'Tajawal', sans-serif;
+          font-family: 'Poppins', 'Cairo', sans-serif;
           color: #333;
-          line-height: 1.7;
+          line-height: 1.6;
           background: #fff;
         }
 
@@ -42,6 +57,35 @@ export default function TermsConditionsPageAr() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 20px;
+        }
+
+        .breadcrumb-bar {
+          padding: 20px 0;
+          background: #f5f5f5;
+          border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb-list {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .breadcrumb-item a {
+          color: #555;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .breadcrumb-item a:hover {
+          color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+          font-size: 14px;
+          color: #000;
+          font-weight: 600;
         }
 
         .page-header {
@@ -65,22 +109,6 @@ export default function TermsConditionsPageAr() {
           margin: 0 auto;
         }
 
-        .page-header .breadcrumb {
-          font-size: 14px;
-          color: var(--medium-gray);
-          margin-bottom: 20px;
-        }
-
-        .page-header .breadcrumb a {
-          color: var(--primary);
-          text-decoration: none;
-        }
-
-        .page-header .breadcrumb span {
-          color: var(--medium-gray);
-          margin: 0 5px;
-        }
-
         .terms-content {
           padding: 60px 0;
           background: var(--white);
@@ -94,7 +122,6 @@ export default function TermsConditionsPageAr() {
           padding: 40px;
           box-shadow: 0 10px 30px rgba(0,0,0,0.05);
           border: 1px solid #f0f0f0;
-          text-align: right;
         }
 
         .terms-section {
@@ -155,6 +182,15 @@ export default function TermsConditionsPageAr() {
           border-right: 4px solid var(--primary);
         }
 
+        .info-box a {
+          color: var(--primary);
+          text-decoration: none;
+        }
+
+        .info-box a:hover {
+          text-decoration: underline;
+        }
+
         .btn-back {
           display: inline-flex;
           align-items: center;
@@ -174,6 +210,15 @@ export default function TermsConditionsPageAr() {
           transform: translateY(-2px);
         }
 
+        .inline-link {
+          color: var(--primary);
+          text-decoration: none;
+        }
+
+        .inline-link:hover {
+          text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
           .page-header h1 {
             font-size: 32px;
@@ -190,23 +235,14 @@ export default function TermsConditionsPageAr() {
       `}</style>
 
       {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
+      <div className="breadcrumb-bar">
         <div className="container">
-          <ul style={{
-            listStyle: 'none',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px'
-          }}>
-            <li style={{ fontSize: '14px', color: '#555' }}>
-              <Link href="/ar" style={{ color: '#555', textDecoration: 'none' }}>الرئيسية</Link>
+          <ul className="breadcrumb-list">
+            <li className="breadcrumb-item">
+              <Link href="/ar">الرئيسية</Link>
             </li>
-            <li style={{ fontSize: '14px', color: '#555' }}>/</li>
-            <li style={{ fontSize: '14px', color: '#000', fontWeight: 600 }}>الشروط والأحكام</li>
+            <li className="breadcrumb-item">/</li>
+            <li className="breadcrumb-item active">الشروط والأحكام</li>
           </ul>
         </div>
       </div>
@@ -215,7 +251,7 @@ export default function TermsConditionsPageAr() {
       <section className="page-header">
         <div className="container">
           <h1>الشروط والأحكام</h1>
-          <p>شروط التعامل بالجملة لشركائنا الدوليين</p>
+          <p>شروط تجارة الجملة لشركائنا الدوليين</p>
         </div>
       </section>
 
@@ -226,42 +262,42 @@ export default function TermsConditionsPageAr() {
             
             <div className="terms-section">
               <h2>١. معلومات عامة</h2>
-              <p>مرحباً بك في حجاب فاشون مول. تحكم هذه الشروط والأحكام استخدامك لموقعنا الإلكتروني وخدمات الشراء بالجملة. بتقديم طلب معنا، فإنك توافق على الالتزام بهذه الشروط. يرجى قراءتها بعناية قبل إتمام أي عملية شراء.</p>
-              <p>حجاب فاشون مول هو مورد جملة متخصص في ملابس المحجبات التركية، يخدم تجار التجزئة والمتاجر حول العالم. منصتنا تربط المشترين الدوليين بالمصنعين الأتراك المتميزين.</p>
+              <p>مرحبًا بكم في Hijab Fashion Mall. تحكم هذه الشروط والأحكام استخدامك لموقعنا وخدمات الشراء بالجملة. بتقديم طلب معنا، فإنك توافق على الالتزام بهذه الشروط. يرجى قراءتها بعناية قبل المتابعة في أي عملية شراء.</p>
+              <p>Hijab Fashion Mall هو مورد جملة متخصص في الأزياء المحتشمة التركية، ويخدم تجار التجزئة والمتاجر في جميع أنحاء العالم. منصتنا تربط المشترين الدوليين بمصنعين أتراك متميزين.</p>
             </div>
 
             <div className="terms-section">
               <h2>٢. طلبات الجملة</h2>
-              <p>جميع الطلبات المقدمة عبر موقعنا تعتبر استفسارات جملة. منتجاتنا مخصصة لإعادة البيع بالتجزئة ما لم يُنص على خلاف ذلك. بصفتنا مورد جملة، لا نقدم أسعار التجزئة أو أسعار القطع الفردية للمنتجات غير المصنفة كـ RSS.</p>
+              <p>تعتبر جميع الطلبات المقدمة عبر موقعنا استفسارات جملة. منتجاتنا مخصصة لإعادة البيع بالتجزئة ما لم يُنص على خلاف ذلك. كمورد جملة، لا نقدم تسعير التجزئة أو تسعير القطعة الواحدة للعناصر غير الموسومة بـ RSS.</p>
               <ul>
-                <li><strong>منتجات RSS:</strong> يمكن طلب المنتجات المصنفة كـ "RSS" كقطع فردية</li>
-                <li><strong>منتجات الكرتون:</strong> منتجات تباع بكرتونات بأحجام محددة</li>
-                <li><strong>مزج الطلبات:</strong> يمكنك مزج منتجات مختلفة في طلب واحد بدون حد أدنى للكمية</li>
+                <li><strong>عناصر RSS:</strong> يمكن طلب المنتجات الموسومة بـ "RSS" كقطع فردية</li>
+                <li><strong>عناصر الكرتون:</strong> المنتجات المباعة في كرتون بأحجام محددة</li>
+                <li><strong>الطلبات المختلطة:</strong> يمكنك دمج منتجات مختلفة في طلب واحد بدون حد أدنى للكمية</li>
               </ul>
             </div>
 
             <div className="terms-section">
-              <h2>٣. الأسعار والدفع</h2>
-              <p>جميع الأسعار المعروضة على موقعنا بالدولار الأمريكي (USD) وتمثل أسعار الجملة. نحتفظ بالحق في تعديل الأسعار دون إشعار مسبق بناءً على ظروف السوق وأسعار الصرف وتسعير المصنع.</p>
+              <h2>٣. التسعير والمدفوعات</h2>
+              <p>جميع الأسعار المعروضة على موقعنا بالدولار الأمريكي وتمثل أسعار الجملة. نحتفظ بالحق في تعديل الأسعار دون إشعار مسبق بناءً على ظروف السوق وأسعار الصرف وتسعير الشركة المصنعة.</p>
               <ul>
                 <li><strong>طرق الدفع المقبولة:</strong> التحويل البنكي، ويسترن يونيون، وبطاقات الائتمان الرئيسية</li>
                 <li><strong>شروط الدفع:</strong> تتم معالجة الطلبات بعد تأكيد الدفع</li>
-                <li><strong>تحويل العملات:</strong> قد تختلف الرسوم النهائية حسب أسعار صرف البنك الذي تتعامل معه</li>
-                <li><strong>الفواتير:</strong> يتم تقديم فاتورة أولية قبل الدفع، وفاتورة نهائية عند الشحن</li>
+                <li><strong>تحويل العملة:</strong> قد تختلف الرسوم النهائية بناءً على أسعار صرف البنك الذي تتعامل معه</li>
+                <li><strong>الفواتير:</strong> يتم توفير فواتير أولية قبل الدفع، والفواتير النهائية عند الشحن</li>
               </ul>
             </div>
 
             <div className="terms-section">
-              <h2>٤. الشحن والتوصيل</h2>
-              <p>نقدم خدمة شحن عالمي إلى أكثر من ٥٠ دولة عبر شركائنا الموثوقين. تختلف تكاليف الشحن وأوقات التسليم حسب الوجهة.</p>
+              <h2>٤. الشحن والتسليم</h2>
+              <p>نقدم شحنًا عالميًا إلى أكثر من ٥٠ دولة عبر شركائنا الموثوقين في النقل. تختلف تكاليف الشحن وأوقات التسليم حسب الوجهة.</p>
               <ul>
                 <li><strong>وقت المعالجة:</strong> ١-٣ أيام عمل بعد تأكيد الدفع</li>
-                <li><strong>وقت التوصيل:</strong> ٣-٧ أيام عمل لمعظم الوجهات الدولية</li>
+                <li><strong>وقت التسليم:</strong> ٣-٧ أيام عمل لمعظم الوجهات الدولية</li>
                 <li><strong>التتبع:</strong> يتم توفير رقم تتبع لجميع الشحنات</li>
-                <li><strong>الجمارك والرسوم:</strong> رسوم الاستيراد والضرائب تقع على عاتق المشتري</li>
+                <li><strong>الجمارك والرسوم:</strong> رسوم الاستيراد والضرائب هي مسؤولية المشتري</li>
               </ul>
               <div className="info-box">
-                <p><strong>📦 ملاحظة مهمة حول الشحن:</strong> أوقات التسليم تقديرية وقد تختلف بسبب التخليص الجمركي أو العطلات المحلية أو ظروف غير متوقعة. نحن غير مسؤولين عن التأخير الناتج عن شركات الشحن أو السلطات الجمركية.</p>
+                <p><strong>📦 ملاحظة مهمة حول الشحن:</strong> أوقات التسليم هي تقديرات وقد تختلف بسبب التخليص الجمركي أو العطلات المحلية أو الظروف غير المتوقعة. نحن لسنا مسؤولين عن التأخير الناجم عن شركات النقل أو السلطات الجمركية.</p>
               </div>
             </div>
 
@@ -269,39 +305,39 @@ export default function TermsConditionsPageAr() {
               <h2>٥. معلومات المنتج</h2>
               <p>نسعى جاهدين لتقديم أوصاف وصور ومواصفات دقيقة للمنتج. ومع ذلك، يرجى ملاحظة:</p>
               <ul>
-                <li>قد تظهر الألوان بشكل مختلف قليلاً بسبب إعدادات الشاشة</li>
-                <li>المقاسات تعتمد على معايير التصنيع التركية؛ يرجى مراجعة أدلة المقاسات قبل الطلب</li>
-                <li>يتم توفير تركيبة الأقمشة في وصف المنتج</li>
+                <li>قد تظهر الألوان مختلفة قليلاً بسبب إعدادات الشاشة</li>
+                <li>المقاسات مبنية على معايير التصنيع التركية؛ يرجى مراجعة أدلة المقاسات قبل الطلب</li>
+                <li>تكوينات الأقمشة محددة في أوصاف المنتج</li>
                 <li>توفر المخزون عرضة للتغيير دون إشعار</li>
               </ul>
             </div>
 
             <div className="terms-section">
-              <h2>٦. الاسترجاع والمنتجات التالفة</h2>
-              <p>بصفتنا مورد جملة، لا نقبل استرجاع المنتجات بسبب تغير الرأي أو عدم الرغبة. ومع ذلك، نضمن جودة منتجاتنا بشكل كامل:</p>
+              <h2>٦. الإرجاع والتلف</h2>
+              <p>كمورد جملة، لا نقبل الإرجاع بسبب تغيير الرأي أو التفضيل. ومع ذلك، نضمن جودة منتجاتنا بشكل كامل:</p>
               <ul>
-                <li>عيوب التصنيع مشمولة بالتعويض الكامل</li>
-                <li>تلف الشحن مشمول مع الوثائق المناسبة</li>
-                <li>يجب تقديم المطالبات خلال ٧ أيام من التسليم مع صور واضحة</li>
-                <li>يتم تقديم التعويض كرصيد أو استبدال أو استرداد حسب مراجعة الحالة</li>
+                <li>عيوب التصنيع مغطاة بتعويض كامل</li>
+                <li>أضرار النقل مغطاة بالتوثيق المناسب</li>
+                <li>يجب تقديم المطالبات في غضون ٧ أيام من التسليم مع صور واضحة</li>
+                <li>يتم تقديم التعويض كرصيد أو استبدال أو استرداد بناءً على مراجعة الحالة</li>
               </ul>
-              <p>يرجى الرجوع إلى <Link href="/ar/refund-policy" style={{ color: 'var(--primary)' }}>سياسة الاسترجاع والاستبدال</Link> للحصول على معلومات مفصلة.</p>
+              <p>يرجى الرجوع إلى <Link href="/ar/refund-policy" className="inline-link">سياسة الاسترداد والإرجاع</Link> للحصول على معلومات مفصلة.</p>
             </div>
 
             <div className="terms-section">
               <h2>٧. الملكية الفكرية</h2>
-              <p>جميع المحتويات على هذا الموقع، بما في ذلك الصور والنصوص والشعارات والتصاميم، هي ملك لحجاب فاشون مول ومحمية بموجب حقوق النشر. يمنع الاستخدام أو النسخ أو التوزيع غير المصرح به دون موافقتنا الخطية.</p>
+              <p>جميع المحتويات على هذا الموقع، بما في ذلك الصور والنصوص والشعارات والتصاميم، هي ملك لـ Hijab Fashion Mall ومحمية بموجب قوانين حقوق النشر. يحظر الاستخدام أو النسخ أو التوزيع غير المصرح به دون موافقتنا الخطية.</p>
             </div>
 
             <div className="terms-section">
               <h2>٨. سياسة الخصوصية</h2>
-              <p>نحن نحترم خصوصيتك وملتزمون بحماية معلوماتك الشخصية. تُستخدم بياناتك فقط لمعالجة الطلبات والتواصل وتحسين خدماتنا. لا نشارك معلوماتك مع أطراف ثالثة إلا عند الضرورة للشحن ومعالجة الدفع.</p>
-              <p>لمزيد من التفاصيل، يرجى مراجعة <Link href="/ar/privacy-policy" style={{ color: 'var(--primary)' }}>سياسة الخصوصية</Link> الخاصة بنا.</p>
+              <p>نحن نحترم خصوصيتك ونلتزم بحماية معلوماتك الشخصية. تُستخدم بياناتك فقط لمعالجة الطلبات والتواصل وتحسين خدماتنا. لا نشارك معلوماتك مع أطراف ثالثة إلا عند الضرورة لأغراض الشحن ومعالجة المدفوعات.</p>
+              <p>لمزيد من التفاصيل، يرجى مراجعة <Link href="/ar/privacy-policy" className="inline-link">سياسة الخصوصية</Link> الخاصة بنا.</p>
             </div>
 
             <div className="terms-section">
-              <h2>٩. حدود المسؤولية</h2>
-              <p>لا يتحمل حجاب فاشون مول المسؤولية عن أي أضرار غير مباشرة أو عرضية أو تبعية ناتجة عن استخدام منتجاتنا أو خدماتنا. تقتصر مسؤوليتنا على سعر شراء المنتجات المعنية.</p>
+              <h2>٩. تحديد المسؤولية</h2>
+              <p>لا تكون Hijab Fashion Mall مسؤولة عن أي أضرار غير مباشرة أو عرضية أو تبعية ناتجة عن استخدام منتجاتنا أو خدماتنا. مسؤوليتنا محدودة بسعر شراء المنتجات المعنية.</p>
             </div>
 
             <div className="terms-section">
@@ -310,21 +346,21 @@ export default function TermsConditionsPageAr() {
             </div>
 
             <div className="terms-section">
-              <h2>١١. تعديل الشروط</h2>
-              <p>نحتفظ بالحق في تحديث أو تعديل هذه الشروط والأحكام في أي وقت دون إشعار مسبق. تصبح التغييرات سارية المفعول فور نشرها على هذه الصفحة. استمرارك في استخدام خدماتنا يعتبر قبولاً لأي تعديلات.</p>
+              <h2>١١. تعديلات الشروط</h2>
+              <p>نحتفظ بالحق في تحديث أو تعديل هذه الشروط والأحكام في أي وقت دون إشعار مسبق. ستصبح التغييرات سارية المفعول فور نشرها على هذه الصفحة. يشكل استمرارك في استخدام خدماتنا قبولًا لأي تعديلات.</p>
             </div>
 
             <div className="terms-section">
-              <h2>١٢. تواصل معنا</h2>
-              <p>إذا كان لديك أي أسئلة حول هذه الشروط والأحكام، يرجى التواصل معنا:</p>
+              <h2>١٢. اتصل بنا</h2>
+              <p>إذا كان لديك أي أسئلة حول هذه الشروط والأحكام، يرجى الاتصال بنا:</p>
               <ul>
-                <li><strong>واتساب:</strong> +90 551 952 24 48 (دعم 24/7)</li>
-                <li><strong>نموذج الاتصال:</strong> متوفر على موقعنا</li>
+                <li><strong>واتساب:</strong> +90 551 952 24 48 (دعم ٢٤/٧)</li>
+                <li><strong>نموذج الاتصال:</strong> متاح على موقعنا</li>
               </ul>
             </div>
 
             <Link href="/ar" className="btn-back">
-              <i className="fas fa-arrow-right"></i> العودة للرئيسية
+              <FaArrowLeft size={14} /> العودة إلى الرئيسية
             </Link>
           </div>
         </div>

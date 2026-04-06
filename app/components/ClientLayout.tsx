@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
-// ✅ استيراد react-icons بدلاً من Font Awesome
 import { 
   FaWhatsapp, 
   FaTelegramPlane, 
@@ -18,13 +17,6 @@ import {
   FaFacebookF,
   FaInstagram,
   FaYoutube,
-  FaGlobeAmericas,
-  FaGlobeEurope,
-  FaGlobeAsia,
-  FaMapMarkedAlt,
-  FaPlane,
-  FaBox,
-  FaClock,
   FaCheckCircle,
   FaLock,
   FaTruck,
@@ -44,10 +36,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   
-  // استخدام Hook العملات
   const { currency, setCurrency, loading: currencyLoading } = useCurrency()
 
-  // دالة البحث
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
@@ -55,7 +45,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
   }
 
-  // Load cart from localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem('cart')
     if (savedCart) {
@@ -79,7 +68,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
   }, [])
 
-  // Listen for openCart event
   useEffect(() => {
     const handleOpenCart = () => {
       const savedCart = localStorage.getItem('cart')
@@ -103,7 +91,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
   }, [])
 
-  // Back to top button
   useEffect(() => {
     const handleScroll = () => {
       const backToTopBtn = document.getElementById('backToTop')
@@ -119,14 +106,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Calculate total pieces
   const getTotalPieces = () => {
     return cart.reduce((total, item) => {
       return total + (item.quantity || 1)
     }, 0)
   }
 
-  // Remove from cart
   const removeFromCart = (index: number) => {
     const newCart = [...cart]
     newCart.splice(index, 1)
@@ -140,7 +125,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     window.dispatchEvent(event)
   }
 
-  // Send to WhatsApp - بدون أسعار
   const sendToWhatsApp = () => {
     if (cart.length === 0) {
       alert('⚠️ Cart is empty - Add products first')
@@ -172,7 +156,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     window.open(`https://wa.me/905519522448?text=${encodeURIComponent(message)}`, '_blank')
   }
 
-  // Download PDF - بدون أسعار
   const downloadPDF = () => {
     if (cart.length === 0) {
       alert('⚠️ Cart is empty - Add products first')
@@ -214,9 +197,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <>
-      {/* Global CSS to fix mobile white space */}
       <style>{`
-        /* إصلاح الفراغ الأبيض على اليمين في الجوال */
+        /* Reset and base styles */
         html, body {
           overflow-x: hidden !important;
           width: 100% !important;
@@ -234,7 +216,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           box-sizing: border-box !important;
         }
         
-        /* منع أي عنصر من التسبب في overflow */
         .container,
         [class*="container"],
         [style*="max-width"] {
@@ -246,7 +227,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           height: auto !important;
         }
         
-        /* إخفاء أشرطة التمرير في القائمة الرئيسية */
         .desktop-nav {
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
@@ -255,74 +235,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         
         .desktop-nav::-webkit-scrollbar {
           display: none !important;
-        }
-        
-        /* إصلاح الـ grid والهوامش في الجوال */
-        @media (max-width: 768px) {
-          [style*="grid-template-columns"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-          
-          [style*="margin-left"],
-          [style*="margin-right"] {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-          }
-          
-          [style*="padding-left"],
-          [style*="padding-right"] {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-          
-          .container {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-          
-          /* ضمان ظهور شريط البحث في الجوال */
-          .main-header .search-bar {
-            display: block !important;
-            width: 100% !important;
-            margin: 10px 0 !important;
-          }
-        }
-        
-        @media (max-width: 992px) {
-          .desktop-nav {
-            gap: 15px !important;
-          }
-          .desktop-nav a {
-            font-size: 13px !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .main-header .container {
-            flex-wrap: wrap;
-            justify-content: center !important;
-          }
-          .main-header .logo {
-            order: 1;
-            width: auto;
-          }
-          .main-header .top-actions {
-            order: 2;
-          }
-          /* شريط البحث يظهر في الصف الثالث */
-          .main-header .search-bar {
-            order: 3;
-            max-width: 100%;
-            margin: 10px 0 !important;
-            width: 100%;
-            display: block !important;
-          }
-          .mobile-menu-btn {
-            display: block !important;
-          }
-          .desktop-nav {
-            display: none !important;
-          }
         }
         
         #backToTop.show {
@@ -352,14 +264,121 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           transform: translateY(-3px);
         }
         
-        .country-list a:hover {
-          background: #ff5a00 !important;
-          color: white !important;
-          transform: translateY(-2px);
-        }
-        
         .footer-policies a:hover {
           color: #ff5a00 !important;
+        }
+
+        /* ========== Hide hamburger button on desktop ========== */
+        @media (min-width: 769px) {
+          .main-header .mobile-menu-btn {
+            display: none !important;
+          }
+        }
+
+        /* ========== DESKTOP STYLES ========== */
+        .main-header .search-row {
+          display: none !important;
+        }
+        
+        .main-header .header-row-top .search-bar {
+          display: block !important;
+        }
+
+        /* ========== MOBILE STYLES ========== */
+        @media (max-width: 768px) {
+          .main-header .header-row-top .search-bar {
+            display: none !important;
+          }
+          
+          .main-header .top-actions .cart-icon-desktop {
+            display: none !important;
+          }
+          
+          .main-header .search-row {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 20px 15px 20px;
+            width: 100%;
+          }
+          
+          .main-header .search-row .search-bar {
+            display: block !important;
+            flex: 1;
+            margin: 0 !important;
+          }
+          
+          .main-header .search-row .mobile-cart-icon {
+            display: flex !important;
+          }
+          
+          .main-header .header-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+          }
+          
+          .main-header .mobile-menu-btn {
+            display: block !important;
+            flex-shrink: 0;
+          }
+          
+          .main-header .logo {
+            flex-shrink: 1;
+            margin-right: auto;
+            margin-left: 5px;
+          }
+          
+          .main-header .logo h1 {
+            font-size: 20px !important;
+          }
+          
+          .main-header .logo h1 span {
+            font-size: 13px !important;
+          }
+          
+          .main-header .top-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-shrink: 0;
+          }
+          
+          .main-header .lang-currency {
+            padding: 3px 6px;
+          }
+          
+          .main-header .lang-currency select {
+            font-size: 9px;
+            width: auto;
+            min-width: 45px;
+          }
+          
+          .main-header .desktop-nav {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .main-header .logo h1 {
+            font-size: 18px !important;
+          }
+          
+          .main-header .logo h1 span {
+            font-size: 11px !important;
+          }
+          
+          .main-header .lang-currency select {
+            font-size: 8px;
+            min-width: 40px;
+          }
+          
+          .main-header .top-actions {
+            gap: 4px;
+          }
         }
       `}</style>
 
@@ -667,7 +686,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </div>
       </div>
 
-      {/* Main Header - صف علوي: Logo | Search Bar | Actions */}
+      {/* Main Header */}
       <header className="main-header" style={{
         background: 'white',
         boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
@@ -675,17 +694,35 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         top: 0,
         zIndex: 1000
       }}>
-        {/* الصف العلوي - Logo, Search Bar, Actions */}
-        <div className="container" style={{
+        {/* الصف العلوي: همبرجر + لوجو + عملات + سلة (لجميع الشاشات) */}
+        <div className="header-row-top" style={{
           maxWidth: '1200px',
           margin: '0 auto',
           padding: '15px 20px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          flexWrap: 'wrap',
           gap: '20px'
         }}>
+          {/* Hamburger Menu Button - يظهر في الجوال فقط */}
+          <button 
+            className="mobile-menu-btn" 
+            onClick={() => setIsMobileNavOpen(true)}
+            style={{
+              fontSize: '24px',
+              cursor: 'pointer',
+              color: '#000',
+              background: 'none',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            aria-label="Open menu"
+          >
+            <FaBars size={24} />
+          </button>
+
           {/* Logo */}
           <div className="logo" style={{ flexShrink: 0 }}>
             <Link href="/en" style={{ textDecoration: 'none', color: 'inherit' }} aria-label="Hijab Fashion Mall - Home">
@@ -710,17 +747,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               </h1>
             </Link>
           </div>
-          
-          {/* ✅ Search Bar - كبير في المنتصف */}
+
+          {/* Search Bar - يظهر في الديسك توب فقط (في الصف العلوي) */}
           <div className="search-bar" style={{
             flex: 1,
             maxWidth: '500px',
             margin: '0 20px'
           }}>
             <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }} role="search" aria-label="Site search">
-              <label htmlFor="searchInput" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
-                Search products by name, code, or color
-              </label>
               <input
                 id="searchInput"
                 ref={searchInputRef}
@@ -770,8 +804,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               </button>
             </form>
           </div>
-          
-          {/* Top Actions */}
+
+          {/* Top Actions (Language + Currency + Cart) */}
           <div className="top-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center', flexShrink: 0 }}>
             <div className="lang-currency" style={{
               display: 'flex',
@@ -863,37 +897,142 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <option value="DZD">🇩🇿 DZD</option>
               </select>
             </div>
+            
+            {/* ✅ السلة في الديسك توب - داخل top-actions */}
             <button 
-              className="cart-icon" 
+              className="cart-icon-desktop" 
               onClick={() => setIsCartOpen(true)}
-              style={{ position: 'relative', cursor: 'pointer', fontSize: '22px', color: '#000', background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{
+                position: 'relative',
+                cursor: 'pointer',
+                fontSize: '22px',
+                color: '#000',
+                background: 'none',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
               aria-label={`Shopping cart with ${cartCount} items`}
             >
               <FaShoppingCart size={22} />
-              <span 
-                className="cart-count" 
-                id="cartCount"
-                style={{
-                  position: 'absolute',
-                  top: '-8px',
-                  right: '-8px',
-                  background: '#ff5a00',
-                  color: 'white',
-                  borderRadius: '50%',
-                  width: '18px',
-                  height: '18px',
-                  fontSize: '11px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 600
-                }}
-              >{cartCount}</span>
+              <span className="cart-count" style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                background: '#ff5a00',
+                color: 'white',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                fontSize: '11px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 600
+              }}>{cartCount}</span>
             </button>
           </div>
         </div>
-        
-        {/* ✅ الصف السفلي - القائمة الرئيسية (جميع التصنيفات مباشرة) */}
+
+        {/* الصف الثاني: شريط البحث + أيقونة السلة (يظهر في الجوال فقط) */}
+        <div className="search-row" style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 20px 15px 20px',
+          display: 'none'
+        }}>
+          <div className="search-bar" style={{
+            width: '100%'
+          }}>
+            <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }} role="search" aria-label="Site search">
+              <input
+                type="text"
+                placeholder="Search products... (name, code, color)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                style={{
+                  width: '100%',
+                  padding: '14px 55px 14px 20px',
+                  border: isSearchFocused ? '2px solid #ff5a00' : '2px solid #eaeaea',
+                  borderRadius: '50px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontSize: '15px',
+                  outline: 'none',
+                  transition: 'all 0.3s',
+                  background: '#fafafa'
+                }}
+              />
+              <button
+                type="submit"
+                style={{
+                  position: 'absolute',
+                  right: '8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: '#ff5a00',
+                  color: 'white',
+                  border: 'none',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '16px',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
+                aria-label="Search"
+              >
+                <FaSearch size={18} />
+              </button>
+            </form>
+          </div>
+          
+          {/* ✅ السلة في الجوال - داخل search-row */}
+          <button 
+            className="mobile-cart-icon" 
+            onClick={() => setIsCartOpen(true)}
+            style={{
+              position: 'relative',
+              cursor: 'pointer',
+              fontSize: '22px',
+              color: '#000',
+              background: 'none',
+              border: 'none',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              marginLeft: '10px'
+            }}
+            aria-label={`Shopping cart with ${cartCount} items`}
+          >
+            <FaShoppingCart size={22} />
+            <span className="cart-count" style={{
+              position: 'absolute',
+              top: '-8px',
+              right: '-10px',
+              background: '#ff5a00',
+              color: 'white',
+              borderRadius: '50%',
+              width: '18px',
+              height: '18px',
+              fontSize: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 600
+            }}>{cartCount}</span>
+          </button>
+        </div>
+
+        {/* Desktop Navigation */}
         <div style={{
           background: '#f8f8f8',
           borderTop: '1px solid #eee',
@@ -957,27 +1096,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </nav>
           </div>
         </div>
-        
-        {/* Mobile Menu Button */}
-        <button 
-          className="mobile-menu-btn" 
-          onClick={() => setIsMobileNavOpen(true)}
-          style={{
-            display: 'none',
-            fontSize: '24px',
-            cursor: 'pointer',
-            color: '#000',
-            background: 'none',
-            border: 'none',
-            position: 'absolute',
-            top: '20px',
-            left: '20px',
-            zIndex: 1001
-          }}
-          aria-label="Open menu"
-        >
-          <FaBars size={24} />
-        </button>
       </header>
 
       {/* Main Content */}
@@ -1025,7 +1143,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
           <div className="footer-trust" style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
             alignItems: 'center',
             flexWrap: 'wrap',
             gap: '20px',
@@ -1038,98 +1156,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaTruck style={{ color: '#ff5a00' }} /> Fast Shipping</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaLock style={{ color: '#ff5a00' }} /> Secure Payment</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaCheckCircle style={{ color: '#ff5a00' }} /> 100% Original</span>
-            </div>
-            <div className="footer-social" style={{ display: 'flex', gap: '15px' }}>
-              <a href="https://facebook.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook (opens in new tab)"><FaFacebookF /></a>
-              <a href="https://instagram.com/hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram (opens in new tab)"><FaInstagram /></a>
-              <a href="https://youtube.com/@hijabfashionmall" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to our YouTube channel (opens in new tab)"><FaYoutube /></a>
-            </div>
-          </div>
-
-          {/* Country Guides Section */}
-          <div className="footer-country-guides" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '25px',
-            marginBottom: '40px',
-            paddingBottom: '30px',
-            borderBottom: '1px solid rgba(255,255,255,0.1)'
-          }}>
-            {/* Americas & Oceania */}
-            <div className="country-section">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaGlobeAmericas /> Americas & Oceania</h4>
-              <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                <a href="/en/wholesale-usa" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>USA</a>
-                <a href="/en/wholesale-canada" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Canada</a>
-                <a href="/en/wholesale-australia" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Australia</a>
-                <a href="/en/wholesale-newzealand" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>New Zealand</a>
-                <a href="/en/wholesale-brazil" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Brazil</a>
-                <a href="/en/wholesale-argentina" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Argentina</a>
-                <a href="/en/wholesale-mexico" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Mexico</a>
-                <a href="/en/wholesale-chile" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Chile</a>
-              </div>
-            </div>
-            
-            {/* Europe */}
-            <div className="country-section">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaGlobeEurope /> Europe</h4>
-              <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                <a href="/en/wholesale-uk" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>UK</a>
-                <a href="/en/wholesale-germany" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Germany</a>
-                <a href="/en/wholesale-france" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>France</a>
-                <a href="/en/wholesale-italy" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Italy</a>
-                <a href="/en/wholesale-spain" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Spain</a>
-                <a href="/en/wholesale-netherlands" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Netherlands</a>
-                <a href="/en/wholesale-belgium" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Belgium</a>
-                <a href="/en/wholesale-sweden" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Sweden</a>
-                <a href="/en/wholesale-denmark" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Denmark</a>
-                <a href="/en/wholesale-norway" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Norway</a>
-                <a href="/en/wholesale-finland" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Finland</a>
-                <a href="/en/wholesale-switzerland" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Switzerland</a>
-                <a href="/en/wholesale-austria" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Austria</a>
-                <a href="/en/wholesale-ireland" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Ireland</a>
-              </div>
-            </div>
-            
-            {/* Middle East & Africa */}
-            <div className="country-section">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaGlobeAsia /> Middle East & Africa</h4>
-              <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                <a href="/en/wholesale-saudiarabia" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Saudi Arabia</a>
-                <a href="/en/wholesale-uae" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>UAE</a>
-                <a href="/en/wholesale-kuwait" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Kuwait</a>
-                <a href="/en/wholesale-qatar" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Qatar</a>
-                <a href="/en/wholesale-bahrain" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Bahrain</a>
-                <a href="/en/wholesale-oman" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Oman</a>
-                <a href="/en/wholesale-lebanon" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Lebanon</a>
-                <a href="/en/wholesale-syria" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Syria</a>
-                <a href="/en/wholesale-iraq" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Iraq</a>
-                <a href="/en/wholesale-jordan" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Jordan</a>
-                <a href="/en/wholesale-egypt" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Egypt</a>
-                <a href="/en/wholesale-algeria" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Algeria</a>
-                <a href="/en/wholesale-libya" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Libya</a>
-                <a href="/en/wholesale-morocco" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Morocco</a>
-                <a href="/en/wholesale-tunisia" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>Tunisia</a>
-              </div>
-            </div>
-            
-            {/* Map Section */}
-            <div className="country-section map-section">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaMapMarkedAlt /> Worldwide Shipping</h4>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', lineHeight: '1.6', marginBottom: '15px' }}>
-                We ship to 50+ countries worldwide. Fast & reliable delivery.
-              </p>
-              <div className="shipping-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <FaPlane style={{ color: '#ff5a00' }} /> Express
-                </span>
-                <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <FaBox style={{ color: '#ff5a00' }} /> Door-to-door
-                </span>
-                <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <FaClock style={{ color: '#ff5a00' }} /> 3-7 days
-                </span>
-              </div>
             </div>
           </div>
 

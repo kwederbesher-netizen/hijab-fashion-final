@@ -35,6 +35,11 @@ export const metadata: Metadata = {
     languages: {
       'en': 'https://www.hijabfashionmall.com/en',
       'ar': 'https://www.hijabfashionmall.com/ar',
+      'fr': 'https://www.hijabfashionmall.com/fr',
+      'de': 'https://www.hijabfashionmall.com/de',
+      'it': 'https://www.hijabfashionmall.com/it',
+      'es': 'https://www.hijabfashionmall.com/es',
+      'tr': 'https://www.hijabfashionmall.com/tr',
     },
   },
   openGraph: {
@@ -78,7 +83,7 @@ export default function RootLayout({
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-G2DPGVT9BY'
   
   return (
-    <html lang="en" dir="ltr">
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -87,7 +92,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         
         {/* ✅ Font Awesome - تمت إزالته (مستبدل بـ react-icons) */}
-        {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /> */}
         
         {/* ✅ Google Analytics - تحميل بعد تحميل المحتوى (lazyOnload) */}
         <Script

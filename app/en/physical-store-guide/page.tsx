@@ -1,102 +1,99 @@
 ﻿// app/en/physical-store-guide/page.tsx
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { 
+  FaCalendarAlt, 
+  FaClock, 
+  FaChevronRight, 
+  FaWhatsapp, 
+  FaFacebookF, 
+  FaTwitter, 
+  FaLinkedinIn, 
+  FaTelegramPlane, 
+  FaPinterest,
+  FaCheckCircle,
+  FaCheck,
+  FaStore,
+  FaMapMarkerAlt,
+  FaUsers,
+  FaChartLine,
+  FaTags,
+  FaRegCreditCard,
+  FaLightbulb,
+  FaShoppingBag,
+  FaBoxes,
+  FaGavel,
+  FaUserTie,
+  FaMobileAlt,
+  FaBullhorn,
+  FaRibbon,
+  FaHandshake
+} from 'react-icons/fa'
 
 export default function PhysicalStoreGuideEnglishPage() {
-  const [cart, setCart] = useState<any[]>([])
-  const cartInitialized = useRef(false)
-  const processingEvent = useRef(false)
-  const cartStringRef = useRef('')
+  // State for mobile menu
+  const [isTocOpen, setIsTocOpen] = useState(false)
 
-  // Load cart from localStorage - only once
+  // Handle smooth scroll for anchor links
   useEffect(() => {
-    if (!cartInitialized.current) {
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart)
-          setCart(parsedCart)
-          cartStringRef.current = JSON.stringify(parsedCart)
-        } catch (e) {
-          console.error('Error loading cart:', e)
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      const anchor = target.closest('a')
+      if (anchor && anchor.hash && anchor.hash.startsWith('#')) {
+        e.preventDefault()
+        const element = document.querySelector(anchor.hash)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+          window.history.pushState(null, '', anchor.hash)
         }
       }
-      cartInitialized.current = true
     }
+
+    document.addEventListener('click', handleAnchorClick)
+    return () => document.removeEventListener('click', handleAnchorClick)
   }, [])
-
-  // Handle cart updates from events
-  useEffect(() => {
-    const handleCartUpdate = () => {
-      // Prevent multiple simultaneous updates
-      if (processingEvent.current) return
-      
-      processingEvent.current = true
-      
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart)
-          const newCartString = JSON.stringify(parsedCart)
-          
-          // Only update if cart actually changed
-          if (newCartString !== cartStringRef.current) {
-            setCart(parsedCart)
-            cartStringRef.current = newCartString
-          }
-        } catch (e) {
-          console.error('Error loading cart:', e)
-        }
-      }
-      
-      // Reset processing flag after a short delay
-      setTimeout(() => {
-        processingEvent.current = false
-      }, 100)
-    }
-
-    window.addEventListener('cartUpdated', handleCartUpdate)
-    
-    return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate)
-    }
-  }, [])
-
-  // Save cart to localStorage
-  useEffect(() => {
-    if (cartInitialized.current) {
-      const newCartString = JSON.stringify(cart)
-      
-      // Only save and dispatch if cart actually changed
-      if (newCartString !== cartStringRef.current) {
-        localStorage.setItem('cart', newCartString)
-        cartStringRef.current = newCartString
-        
-        // Update cart count in header using event
-        const event = new CustomEvent('cartUpdated', { detail: cart.length })
-        window.dispatchEvent(event)
-      }
-    }
-  }, [cart])
 
   return (
     <>
+      <Head>
+        <title>How to Open a Physical Clothing Store in 2026 | Complete Guide | Hijab Fashion Mall</title>
+        <meta name="description" content="A comprehensive step-by-step guide to launching and growing a successful fashion boutique in 2026. Learn about location, private label, store design, marketing, and more." />
+        <meta name="keywords" content="physical clothing store, open retail store, fashion boutique, brick and mortar store, retail business, clothing store guide 2026, boutique opening, private label clothing, store design" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://hijabfashionmall.com/en/physical-store-guide" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/physical-store-guide" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/physical-store-guide" />
+        <link rel="alternate" hrefLang="fr" href="https://hijabfashionmall.com/fr/physical-store-guide" />
+        <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/physical-store-guide" />
+        <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/physical-store-guide" />
+        <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/physical-store-guide" />
+        <link rel="alternate" hrefLang="x-default" href="https://hijabfashionmall.com/en/physical-store-guide" />
+        <meta property="og:title" content="How to Open a Physical Clothing Store in 2026 | Complete Guide" />
+        <meta property="og:description" content="A comprehensive step-by-step guide to launching and growing a successful fashion boutique in 2026." />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/physical-clothing-store-guide.webp" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://hijabfashionmall.com/en/physical-store-guide" />
+        <meta property="og:type" content="article" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="How to Open a Physical Clothing Store in 2026 | Complete Guide" />
+        <meta name="twitter:description" content="A comprehensive step-by-step guide to launching and growing a successful fashion boutique in 2026." />
+        <meta name="twitter:image" content="https://hijabfashionmall.com/images/physical-clothing-store-guide.webp" />
+      </Head>
+
       <style>{`
-        /* All styles - fully responsive */
+        /* Modern CSS Reset & Variables */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', 'Tajawal', sans-serif;
-            color: #333;
-            line-height: 1.6;
-            background: #fff;
         }
 
         :root {
@@ -104,49 +101,82 @@ export default function PhysicalStoreGuideEnglishPage() {
             --primary-dark: #e04e00;
             --primary-light: #ff7b33;
             --primary-soft: #fff0e6;
+            --primary-bg: rgba(255, 90, 0, 0.08);
             --black: #000000;
-            --dark-gray: #222;
-            --medium-gray: #555;
-            --light-gray: #f5f5f5;
-            --white: #fff;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #555555;
+            --light-gray: #f8f9fa;
+            --border-gray: #e9ecef;
+            --white: #ffffff;
             --whatsapp: #25d366;
             --whatsapp-dark: #128C7E;
             --telegram: #0088cc;
             --telegram-dark: #006699;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 5px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+            --shadow-xl: 0 30px 60px rgba(0,0,0,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 30px;
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
+            color: var(--dark-gray);
+            line-height: 1.6;
+            background: var(--white);
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
-        /* ===== Buttons ===== */
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+
+        /* Buttons */
         .btn, .btn-primary {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             background: var(--primary);
             color: var(--white);
-            padding: 14px 40px;
+            padding: 14px 32px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 90, 0, 0.2);
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(255, 90, 0, 0.25);
         }
 
         .btn:hover, .btn-primary:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 90, 0, 0.3);
+            box-shadow: 0 6px 20px rgba(255, 90, 0, 0.35);
         }
 
         .btn-outline {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             background: transparent;
             color: var(--primary);
-            padding: 14px 40px;
+            padding: 12px 28px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
@@ -161,31 +191,30 @@ export default function PhysicalStoreGuideEnglishPage() {
         }
 
         .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             background: var(--whatsapp);
             color: var(--white);
-            padding: 14px 40px;
+            padding: 14px 32px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
         }
 
         .btn-whatsapp:hover {
             background: var(--whatsapp-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
         }
 
-        /* ===== Page Header ===== */
+        /* Page Header */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-soft) 0%, #ffffff 100%);
-            padding: 60px 0 40px;
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--white) 100%);
+            padding: 80px 0 60px;
             text-align: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-gray);
             position: relative;
             overflow: hidden;
         }
@@ -193,13 +222,26 @@ export default function PhysicalStoreGuideEnglishPage() {
         .page-header::before {
             content: '2026';
             position: absolute;
-            top: 20%;
+            top: 15%;
             left: 5%;
-            font-size: 200px;
+            font-size: 220px;
             font-weight: 800;
             color: rgba(255, 90, 0, 0.03);
             z-index: 0;
             line-height: 1;
+            pointer-events: none;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,90,0,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         .page-header .container {
@@ -208,11 +250,10 @@ export default function PhysicalStoreGuideEnglishPage() {
         }
 
         .page-header h1 {
-            font-size: 48px;
+            font-size: 56px;
             color: var(--black);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             font-weight: 800;
-            line-height: 1.3;
         }
 
         .page-header h1 span {
@@ -224,73 +265,70 @@ export default function PhysicalStoreGuideEnglishPage() {
         .page-header h1 span::after {
             content: '';
             position: absolute;
-            bottom: 5px;
+            bottom: 8px;
             left: 0;
             width: 100%;
-            height: 8px;
-            background: rgba(255, 90, 0, 0.2);
+            height: 10px;
+            background: rgba(255, 90, 0, 0.15);
             z-index: -1;
         }
 
         .page-header p {
-            font-size: 18px;
+            font-size: 20px;
             color: var(--medium-gray);
             max-width: 800px;
             margin: 0 auto;
         }
 
-        .page-header .meta-info {
+        .meta-info {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 32px;
             color: var(--medium-gray);
             font-size: 15px;
-            margin-top: 20px;
+            margin-top: 24px;
             flex-wrap: wrap;
         }
 
-        .page-header .meta-info i {
+        .meta-info svg {
             color: var(--primary);
-            margin-right: 5px;
+            margin-right: 8px;
+            vertical-align: middle;
         }
 
-        .page-header .breadcrumb {
+        .breadcrumb {
             font-size: 14px;
             color: var(--medium-gray);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
-        .page-header .breadcrumb a {
+        .breadcrumb a {
             color: var(--primary);
             text-decoration: none;
-            margin: 0 5px;
+            transition: color 0.3s;
         }
 
-        .page-header .breadcrumb a:hover {
+        .breadcrumb a:hover {
             text-decoration: underline;
         }
 
-        .page-header .breadcrumb span {
-            margin: 0 5px;
-        }
-
-        /* ===== Article Content ===== */
+        /* Article Content */
         .article-content {
-            padding: 60px 0;
+            padding: 60px 0 80px;
             background: var(--white);
         }
 
         .article-wrapper {
-            max-width: 800px;
+            max-width: 860px;
             margin: 0 auto;
         }
 
         .featured-image {
             width: 100%;
-            border-radius: 20px;
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            margin-bottom: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 48px;
+            box-shadow: var(--shadow-xl);
         }
 
         .featured-image img {
@@ -300,9 +338,9 @@ export default function PhysicalStoreGuideEnglishPage() {
         }
 
         .article-content h2 {
-            font-size: 32px;
+            font-size: 36px;
             color: var(--black);
-            margin: 50px 0 20px;
+            margin: 56px 0 20px;
             font-weight: 700;
         }
 
@@ -311,36 +349,36 @@ export default function PhysicalStoreGuideEnglishPage() {
         }
 
         .article-content h3 {
-            font-size: 24px;
+            font-size: 26px;
             color: var(--black);
-            margin: 30px 0 15px;
+            margin: 32px 0 16px;
             font-weight: 600;
         }
 
         .article-content h4 {
-            font-size: 18px;
+            font-size: 20px;
             color: var(--primary);
-            margin: 25px 0 10px;
+            margin: 24px 0 12px;
             font-weight: 600;
         }
 
         .article-content p {
             color: var(--medium-gray);
             margin-bottom: 20px;
-            font-size: 16px;
+            font-size: 17px;
             line-height: 1.8;
         }
 
         .article-content p.lead {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 500;
             color: var(--dark-gray);
+            margin-bottom: 32px;
         }
 
         .article-content ul, .article-content ol {
-            margin: 20px 0 30px;
-            padding-left: 20px;
-            list-style-position: inside;
+            margin: 20px 0 28px;
+            padding-left: 24px;
         }
 
         .article-content li {
@@ -356,206 +394,186 @@ export default function PhysicalStoreGuideEnglishPage() {
 
         .article-content blockquote {
             background: var(--primary-soft);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 32px;
+            border-radius: var(--radius-md);
             margin: 40px 0;
-            border-left: 4px solid var(--primary);
+            border-left: 5px solid var(--primary);
             font-style: italic;
             font-size: 18px;
             color: var(--dark-gray);
         }
 
-        .article-content .highlight-box {
-            background: linear-gradient(135deg, var(--primary-soft) 0%, #ffffff 100%);
-            padding: 30px;
-            border-radius: 15px;
+        /* Cards & Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--white) 100%);
+            padding: 32px;
+            border-radius: var(--radius-md);
             margin: 40px 0;
-            border: 1px solid rgba(255,90,0,0.2);
+            border: 1px solid rgba(255,90,0,0.15);
         }
 
-        .article-content .highlight-box h4 {
+        .highlight-box h4 {
             color: var(--primary);
-            margin-bottom: 15px;
-            font-size: 20px;
+            margin-bottom: 16px;
+            font-size: 22px;
         }
 
-        .article-content .stats-grid {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin: 40px 0;
+            gap: 24px;
+            margin: 48px 0;
         }
 
-        .article-content .stat-item {
+        .stat-item {
             text-align: center;
-            padding: 20px;
+            padding: 28px 20px;
             background: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-gray);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .article-content .stat-number {
-            font-size: 36px;
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 42px;
             font-weight: 800;
             color: var(--primary);
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
-        .article-content .stat-label {
+        .stat-label {
             color: var(--medium-gray);
             font-size: 14px;
+            font-weight: 500;
         }
 
-        .article-content .checklist {
+        .checklist {
             list-style: none;
             padding: 0;
         }
 
-        .article-content .checklist li {
+        .checklist li {
             display: flex;
             align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 14px;
+            margin-bottom: 16px;
         }
 
-        .article-content .checklist li i {
+        .checklist svg {
             color: var(--primary);
             font-size: 20px;
             margin-top: 2px;
+            flex-shrink: 0;
         }
 
-        .article-content .tip-box {
-            background: #e8f5e9;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 30px 0;
-            border-left: 4px solid #4caf50;
+        .tip-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            padding: 28px;
+            border-radius: var(--radius-md);
+            margin: 32px 0;
+            border-left: 5px solid var(--success);
         }
 
-        .article-content .warning-box {
-            background: #fff3e0;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 30px 0;
-            border-left: 4px solid #ff9800;
+        .tip-box strong {
+            color: var(--success);
+            font-size: 16px;
         }
 
-        .article-content .location-card {
+        .warning-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            padding: 28px;
+            border-radius: var(--radius-md);
+            margin: 32px 0;
+            border-left: 5px solid #ff9800;
+        }
+
+        .warning-box strong {
+            color: #ff9800;
+        }
+
+        /* Location Cards */
+        .location-card {
             background: var(--white);
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: var(--radius-md);
+            padding: 24px;
             margin: 20px 0;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-        }
-
-        .article-content .location-card h4 {
-            color: var(--black);
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-
-        .article-content .location-card .type {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .article-content .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 20px 0;
-            justify-content: center;
-        }
-
-        .article-content .tag {
-            background: var(--light-gray);
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 14px;
-            color: var(--medium-gray);
-            border: 1px solid #eee;
-        }
-
-        .article-content .tag i {
-            color: var(--primary);
-            margin-right: 5px;
-        }
-
-        .share-section {
-            margin: 50px 0;
-            padding: 30px 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
-
-        .share-section h4 {
-            margin-bottom: 20px;
-            color: var(--black);
-            text-align: center;
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .share-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            text-decoration: none;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-gray);
             transition: transform 0.3s;
         }
 
-        .share-btn:hover {
-            transform: translateY(-3px);
+        .location-card:hover {
+            transform: translateX(5px);
         }
 
-        .share-btn.facebook {
-            background: #1877f2;
+        .location-card h4 {
+            color: var(--black);
+            margin-bottom: 8px;
+            font-size: 20px;
         }
 
-        .share-btn.twitter {
-            background: #1da1f2;
+        .location-card .type {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
         }
 
-        .share-btn.linkedin {
-            background: #0077b5;
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 24px 0;
+            justify-content: center;
         }
 
-        .share-btn.whatsapp {
-            background: var(--whatsapp);
+        .tag {
+            background: var(--light-gray);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--medium-gray);
+            border: 1px solid var(--border-gray);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
         }
 
-        .share-btn.pinterest {
-            background: #bd081c;
+        .tag:hover {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
-        .share-btn.telegram {
-            background: var(--telegram);
+        .tag svg {
+            color: var(--primary);
+            font-size: 12px;
         }
 
-        /* ===== Table of Contents ===== */
+        /* Table of Contents */
         .toc {
             background: var(--light-gray);
-            padding: 30px;
-            border-radius: 15px;
-            margin: 30px 0 50px;
+            padding: 32px;
+            border-radius: var(--radius-md);
+            margin: 32px 0 56px;
+            position: sticky;
+            top: 20px;
         }
 
         .toc h3 {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             color: var(--black);
             text-align: center;
+            font-size: 22px;
         }
 
         .toc ul {
@@ -563,75 +581,159 @@ export default function PhysicalStoreGuideEnglishPage() {
             padding: 0;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 12px;
+            margin: 0;
         }
 
         .toc li a {
             color: var(--medium-gray);
             text-decoration: none;
-            display: block;
-            padding: 8px 0;
-            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            transition: all 0.3s;
+            font-size: 15px;
         }
 
         .toc li a:hover {
             color: var(--primary);
+            transform: translateX(5px);
         }
 
-        .toc li a i {
+        .toc li svg {
             color: var(--primary);
-            margin-right: 8px;
             font-size: 12px;
         }
 
-        /* ===== CTA Box ===== */
+        /* Mobile TOC Button */
+        .toc-mobile-btn {
+            display: none;
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+        /* CTA Box */
         .cta-box {
-            background: var(--black);
+            background: linear-gradient(135deg, var(--dark-gray) 0%, #2d2d2d 100%);
             color: var(--white);
-            padding: 40px;
-            border-radius: 20px;
+            padding: 48px;
+            border-radius: var(--radius-lg);
             text-align: center;
-            margin: 50px 0;
+            margin: 56px 0;
         }
 
         .cta-box h3 {
             color: white;
-            font-size: 28px;
-            margin-bottom: 15px;
+            font-size: 32px;
+            margin-bottom: 16px;
         }
 
         .cta-box p {
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 25px;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 28px;
         }
 
-        .cta-box .btn-whatsapp {
-            background: var(--whatsapp);
-            color: white;
-            padding: 15px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-note {
+            margin-top: 20px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Share Section */
+        .share-section {
+            margin: 56px 0;
+            padding: 32px 0;
+            border-top: 1px solid var(--border-gray);
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .share-section h4 {
+            margin-bottom: 24px;
+            color: var(--black);
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .share-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .cta-box .btn-primary {
-            background: var(--primary);
-            color: white;
-            padding: 15px 35px;
-            border-radius: 50px;
+            justify-content: center;
+            color: var(--white);
             text-decoration: none;
-            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
         }
 
-        .cta-box .btn-primary:hover {
-            background: var(--primary-dark);
+        .share-btn:hover {
+            transform: translateY(-4px) scale(1.05);
         }
 
-        .cta-box .btn-whatsapp:hover {
-            background: var(--whatsapp-dark);
+        .share-btn.facebook { background: #1877f2; }
+        .share-btn.twitter { background: #1da1f2; }
+        .share-btn.linkedin { background: #0077b5; }
+        .share-btn.whatsapp { background: var(--whatsapp); }
+        .share-btn.pinterest { background: #bd081c; }
+        .share-btn.telegram { background: var(--telegram); }
+
+        /* Author Box */
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--light-gray);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .author-avatar {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .author-info h4 {
+            margin-bottom: 8px;
+            color: var(--black);
+        }
+
+        .author-info p {
+            margin-bottom: 0;
+            font-size: 14px;
         }
 
         /* Responsive */
@@ -640,19 +742,37 @@ export default function PhysicalStoreGuideEnglishPage() {
                 grid-template-columns: 1fr;
             }
             
-            .article-content .stats-grid {
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .page-header h1 {
+                font-size: 44px;
             }
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .page-header {
+                padding: 50px 0 40px;
+            }
+
             .page-header h1 {
-                font-size: 36px;
+                font-size: 32px;
             }
             
-            .page-header .meta-info {
+            .page-header p {
+                font-size: 16px;
+            }
+
+            .meta-info {
                 flex-direction: column;
-                gap: 10px;
+                gap: 12px;
+                align-items: center;
             }
             
             .article-content h2 {
@@ -662,19 +782,93 @@ export default function PhysicalStoreGuideEnglishPage() {
             .article-content h3 {
                 font-size: 22px;
             }
+
+            .article-content p.lead {
+                font-size: 18px;
+            }
             
-            .article-content .stats-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
             
-            .share-buttons {
-                flex-wrap: wrap;
+            .toc {
+                display: none;
+            }
+
+            .toc-mobile-btn {
+                display: block;
+            }
+
+            .toc-mobile.open {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                z-index: 1000;
+                overflow-y: auto;
+                padding: 20px;
+            }
+
+            .cta-box {
+                padding: 32px 24px;
+            }
+
+            .cta-box h3 {
+                font-size: 24px;
             }
             
             .cta-box .btn-whatsapp,
             .cta-box .btn-primary {
                 width: 100%;
+                justify-content: center;
             }
+
+            .share-buttons {
+                gap: 12px;
+            }
+
+            .share-btn {
+                width: 42px;
+                height: 42px;
+            }
+
+            .author-box {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .stat-number {
+                font-size: 32px;
+            }
+
+            .highlight-box, .tip-box, .warning-box {
+                padding: 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .article-wrapper > * {
+            animation: fadeInUp 0.5s ease forwards;
         }
       `}</style>
 
@@ -682,13 +876,18 @@ export default function PhysicalStoreGuideEnglishPage() {
       <section className="page-header">
         <div className="container">
           <div className="breadcrumb">
-            <Link href="/en">Home</Link> <span>&gt;</span> <Link href="/en/blogs">Blog</Link> <span>&gt;</span> <span>How to Open a Physical Clothing Store 2026</span>
+            <Link href="/en">🏠 Home</Link> 
+            <span> &gt; </span> 
+            <Link href="/en/blogs">📝 Blog</Link> 
+            <span> &gt; </span> 
+            <span>🏬 How to Open a Physical Clothing Store 2026</span>
           </div>
           <h1>How to Open a <span>Physical Clothing Store</span> in 2026</h1>
           <p>A comprehensive step-by-step guide to launching and growing a successful fashion boutique</p>
           <div className="meta-info">
-            <span><i className="far fa-calendar-alt"></i> March 15, 2026</span>
-            <span><i className="far fa-clock"></i> 16 min read</span>
+            <span><FaCalendarAlt size={14} /> March 15, 2026</span>
+            <span><FaClock size={14} /> 16 min read</span>
+            <span><FaStore size={14} /> Physical Retail Guide</span>
           </div>
         </div>
       </section>
@@ -697,41 +896,53 @@ export default function PhysicalStoreGuideEnglishPage() {
       <article className="article-content">
         <div className="container">
           <div className="article-wrapper">
+            {/* Featured Image */}
             <div className="featured-image">
               <Image 
                 src="/images/physical-clothing-store-guide.webp" 
                 alt="How to Open a Physical Clothing Store in 2026 - Complete Guide" 
                 width={800} 
                 height={450} 
-                loading="lazy"
+                priority
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/default.webp'
+                  const target = e.target as HTMLImageElement
+                  target.src = '/images/fallback-store-guide.webp'
                 }}
               />
             </div>
 
+            {/* Lead Paragraph */}
             <p className="lead">Despite the growth of e-commerce, physical stores are far from dead. In fact, brick-and-mortar retail is experiencing a renaissance as consumers crave tangible shopping experiences, personalized service, and the ability to see and touch products before buying. In 2026, opening a physical clothing store can be a powerful business move—if you do it right.</p>
 
+            {/* Mobile TOC Button */}
+            <button 
+              className="toc-mobile-btn" 
+              onClick={() => setIsTocOpen(!isTocOpen)}
+            >
+              📋 {isTocOpen ? 'Close' : 'Open'} Table of Contents
+            </button>
+
             {/* Table of Contents */}
-            <div className="toc">
+            <div className={`toc ${isTocOpen ? 'open' : ''}`}>
               <h3>📋 Table of Contents</h3>
               <ul>
-                <li><a href="#introduction"><i className="fas fa-chevron-right"></i> Introduction</a></li>
-                <li><a href="#retail-concept"><i className="fas fa-chevron-right"></i> 1. Develop Your Store Concept</a></li>
-                <li><a href="#business-plan"><i className="fas fa-chevron-right"></i> 2. Create a Comprehensive Business Plan</a></li>
-                <li><a href="#funding"><i className="fas fa-chevron-right"></i> 3. Secure Funding</a></li>
-                <li><a href="#location"><i className="fas fa-chevron-right"></i> 4. Choose the Perfect Location</a></li>
-                <li><a href="#store-design"><i className="fas fa-chevron-right"></i> 5. Design Your Store</a></li>
-                <li><a href="#sourcing"><i className="fas fa-chevron-right"></i> 6. Source Products with Private Label</a></li>
-                <li><a href="#legal"><i className="fas fa-chevron-right"></i> 7. Legal Requirements & Licenses</a></li>
-                <li><a href="#staff"><i className="fas fa-chevron-right"></i> 8. Hire and Train Staff</a></li>
-                <li><a href="#technology"><i className="fas fa-chevron-right"></i> 9. Retail Technology & POS Systems</a></li>
-                <li><a href="#marketing"><i className="fas fa-chevron-right"></i> 10. Market Your Store</a></li>
-                <li><a href="#grand-opening"><i className="fas fa-chevron-right"></i> 11. Grand Opening Checklist</a></li>
-                <li><a href="#conclusion"><i className="fas fa-chevron-right"></i> Conclusion & Next Steps</a></li>
+                <li><a href="#introduction"><FaChevronRight size={10} /> Introduction</a></li>
+                <li><a href="#retail-concept"><FaChevronRight size={10} /> 1. Develop Your Store Concept</a></li>
+                <li><a href="#business-plan"><FaChevronRight size={10} /> 2. Create a Business Plan</a></li>
+                <li><a href="#funding"><FaChevronRight size={10} /> 3. Secure Funding</a></li>
+                <li><a href="#location"><FaChevronRight size={10} /> 4. Choose the Perfect Location</a></li>
+                <li><a href="#store-design"><FaChevronRight size={10} /> 5. Design Your Store</a></li>
+                <li><a href="#sourcing"><FaChevronRight size={10} /> 6. Source Products with Private Label</a></li>
+                <li><a href="#legal"><FaChevronRight size={10} /> 7. Legal Requirements</a></li>
+                <li><a href="#staff"><FaChevronRight size={10} /> 8. Hire and Train Staff</a></li>
+                <li><a href="#technology"><FaChevronRight size={10} /> 9. Retail Technology</a></li>
+                <li><a href="#marketing"><FaChevronRight size={10} /> 10. Market Your Store</a></li>
+                <li><a href="#grand-opening"><FaChevronRight size={10} /> 11. Grand Opening</a></li>
+                <li><a href="#conclusion"><FaChevronRight size={10} /> Conclusion & Next Steps</a></li>
               </ul>
             </div>
 
+            {/* Introduction */}
             <h2 id="introduction">The Physical Retail Landscape in 2026</h2>
             <p>Physical retail is evolving, not dying. Successful stores in 2026 are those that offer experiences, not just transactions. They combine the tangibility of in-person shopping with the convenience of digital integration. For clothing stores, this means creating spaces where customers can truly connect with your brand and products.</p>
 
@@ -742,37 +953,43 @@ export default function PhysicalStoreGuideEnglishPage() {
               </div>
               <div className="stat-item">
                 <div className="stat-number">85%</div>
-                <div className="stat-label">of Retail Sales Still Happen In-Store</div>
+                <div className="stat-label">of Retail Sales Happen In-Store</div>
               </div>
               <div className="stat-item">
                 <div className="stat-number">$5T+</div>
-                <div className="stat-label">Global Physical Retail Market Size</div>
+                <div className="stat-label">Global Physical Retail Market</div>
               </div>
             </div>
 
+            {/* Section 1: Store Concept */}
             <h2 id="retail-concept">1. Develop Your Store Concept</h2>
             <p>Before signing a lease or buying inventory, you need a clear vision for your store. Your store concept defines everything from the products you sell to the customer experience you create.</p>
 
             <h3>Define Your Niche:</h3>
             <div className="tags">
-              <span className="tag"><i className="fas fa-check"></i> Modest Fashion Boutique</span>
-              <span className="tag"><i className="fas fa-check"></i> Sustainable Clothing Store</span>
-              <span className="tag"><i className="fas fa-check"></i> Plus Size Fashion</span>
-              <span className="tag"><i className="fas fa-check"></i> Luxury Designer Wear</span>
-              <span className="tag"><i className="fas fa-check"></i> Vintage & Secondhand</span>
-              <span className="tag"><i className="fas fa-check"></i> Children's Apparel</span>
-              <span className="tag"><i className="fas fa-check"></i> Specialized Activewear</span>
-              <span className="tag"><i className="fas fa-check"></i> Bridal & Special Occasion</span>
+              <span className="tag"><FaCheck size={12} /> Modest Fashion Boutique</span>
+              <span className="tag"><FaCheck size={12} /> Sustainable Clothing Store</span>
+              <span className="tag"><FaCheck size={12} /> Plus Size Fashion</span>
+              <span className="tag"><FaCheck size={12} /> Luxury Designer Wear</span>
+              <span className="tag"><FaCheck size={12} /> Vintage & Secondhand</span>
+              <span className="tag"><FaCheck size={12} /> Children's Apparel</span>
+              <span className="tag"><FaCheck size={12} /> Specialized Activewear</span>
+              <span className="tag"><FaCheck size={12} /> Bridal & Special Occasion</span>
             </div>
 
             <h4>Questions to Define Your Concept:</h4>
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> <strong>Who is your target customer?</strong> Create detailed customer personas including age, income, lifestyle, and shopping preferences.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>What makes your store unique?</strong> Identify your unique value proposition—why will customers choose your store over competitors?</li>
-              <li><i className="fas fa-check-circle"></i> <strong>What is your brand personality?</strong> Define how your store will feel—luxurious, warm, modern, minimalist, or eclectic.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>What is your price positioning?</strong> Will you be a discount store, mid-market, or luxury boutique?</li>
+              <li><FaCheckCircle size={18} /> <strong>Who is your target customer?</strong> Create detailed customer personas including age, income, lifestyle, and shopping preferences.</li>
+              <li><FaCheckCircle size={18} /> <strong>What makes your store unique?</strong> Identify your unique value proposition—why will customers choose your store over competitors?</li>
+              <li><FaCheckCircle size={18} /> <strong>What is your brand personality?</strong> Define how your store will feel—luxurious, warm, modern, minimalist, or eclectic.</li>
+              <li><FaCheckCircle size={18} /> <strong>What is your price positioning?</strong> Will you be a discount store, mid-market, or luxury boutique?</li>
             </ul>
 
+            <div className="tip-box">
+              <strong>💡 Pro Tip:</strong> The most successful boutiques in 2026 have a clear "why." Don't try to be everything to everyone. Focus on serving a specific customer exceptionally well.
+            </div>
+
+            {/* Section 2: Business Plan */}
             <h2 id="business-plan">2. Create a Comprehensive Business Plan</h2>
             <p>A strong business plan is essential for securing funding and guiding your decisions. It should include:</p>
 
@@ -787,10 +1004,7 @@ export default function PhysicalStoreGuideEnglishPage() {
               <li><strong>Funding Request:</strong> How much capital you need and how it will be used</li>
             </ul>
 
-            <div className="tip-box">
-              <strong>💡 Pro Tip:</strong> Be realistic with your financial projections. Retail experts recommend having at least 6-12 months of operating expenses in reserve before opening.
-            </div>
-
+            {/* Section 3: Funding */}
             <h2 id="funding">3. Secure Funding</h2>
             <p>Opening a physical store requires significant capital. Common funding sources include:</p>
 
@@ -810,37 +1024,42 @@ export default function PhysicalStoreGuideEnglishPage() {
               <li><strong>POS & Technology:</strong> $2,000 - $5,000</li>
               <li><strong>Licenses & Permits:</strong> $500 - $2,000</li>
               <li><strong>Marketing & Grand Opening:</strong> $3,000 - $10,000</li>
-              <li><strong>Working Capital:</strong> $10,000 - $30,000</li>
+              <li><strong>Working Capital (6 months):</strong> $20,000 - $50,000</li>
             </ul>
 
+            <div className="warning-box">
+              <strong>⚠️ Important Financial Advice:</strong> Retail experts recommend having at least 6-12 months of operating expenses in reserve before opening. Many new businesses take time to become profitable.
+            </div>
+
+            {/* Section 4: Location */}
             <h2 id="location">4. Choose the Perfect Location</h2>
             <p>Location can make or break a retail store. Consider these factors:</p>
 
             <h3>Types of Retail Locations:</h3>
             
             <div className="location-card">
-              <h4>Shopping Malls</h4>
+              <h4><FaMapMarkerAlt size={16} style={{color: 'var(--primary)', marginRight: '8px'}} /> Shopping Malls</h4>
               <div className="type">High traffic, established customer base</div>
               <p><strong>Pros:</strong> Built-in foot traffic, security, marketing support<br />
               <strong>Cons:</strong> High rent, strict rules, limited hours</p>
             </div>
 
             <div className="location-card">
-              <h4>Storefronts / Main Street</h4>
+              <h4><FaStore size={16} style={{color: 'var(--primary)', marginRight: '8px'}} /> Storefronts / Main Street</h4>
               <div className="type">Visible locations, easy access</div>
               <p><strong>Pros:</strong> Brand visibility, flexible hours, character<br />
               <strong>Cons:</strong> Weather dependent, parking challenges</p>
             </div>
 
             <div className="location-card">
-              <h4>Shopping Centers / Plazas</h4>
+              <h4><FaShoppingBag size={16} style={{color: 'var(--primary)', marginRight: '8px'}} /> Shopping Centers / Plazas</h4>
               <div className="type">Anchor stores drive traffic</div>
               <p><strong>Pros:</strong> Ample parking, complementary businesses<br />
               <strong>Cons:</strong> Less character, competition from big box stores</p>
             </div>
 
             <div className="location-card">
-              <h4>Pop-Up / Temporary Spaces</h4>
+              <h4><FaRibbon size={16} style={{color: 'var(--primary)', marginRight: '8px'}} /> Pop-Up / Temporary Spaces</h4>
               <div className="type">Short-term, flexible arrangements</div>
               <p><strong>Pros:</strong> Low commitment, test the market, creates buzz<br />
               <strong>Cons:</strong> Temporary, may need to relocate</p>
@@ -848,54 +1067,59 @@ export default function PhysicalStoreGuideEnglishPage() {
 
             <h4>Location Evaluation Checklist:</h4>
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> Foot traffic count (pedestrian and vehicle)</li>
-              <li><i className="fas fa-check-circle"></i> Surrounding area demographics</li>
-              <li><i className="fas fa-check-circle"></i> Visibility from main roads</li>
-              <li><i className="fas fa-check-circle"></i> Accessibility and parking availability</li>
-              <li><i className="fas fa-check-circle"></i> Proximity to complementary businesses</li>
-              <li><i className="fas fa-check-circle"></i> Competition in the area</li>
-              <li><i className="fas fa-check-circle"></i> Lease terms and conditions</li>
-              <li><i className="fas fa-check-circle"></i> Renovation possibilities and restrictions</li>
+              <li><FaCheckCircle size={18} /> Foot traffic count (pedestrian and vehicle)</li>
+              <li><FaCheckCircle size={18} /> Surrounding area demographics</li>
+              <li><FaCheckCircle size={18} /> Visibility from main roads</li>
+              <li><FaCheckCircle size={18} /> Accessibility and parking availability</li>
+              <li><FaCheckCircle size={18} /> Proximity to complementary businesses</li>
+              <li><FaCheckCircle size={18} /> Competition in the area</li>
+              <li><FaCheckCircle size={18} /> Lease terms and conditions</li>
+              <li><FaCheckCircle size={18} /> Renovation possibilities and restrictions</li>
             </ul>
 
+            {/* Section 5: Store Design */}
             <h2 id="store-design">5. Design Your Store</h2>
             <p>Your store's design should reflect your brand and encourage shopping. Key elements include:</p>
 
             <h3>Store Layout Types:</h3>
             <ul>
-              <li><strong>Grid Layout:</strong> Rows of fixtures, common in grocery stores, efficient for restocking</li>
+              <li><strong>Grid Layout:</strong> Rows of fixtures, efficient for restocking, common in grocery stores</li>
               <li><strong>Loop Layout:</strong> Circular path guiding customers through the store</li>
-              <li><strong>Free-Flow Layout:</strong> Asymmetrical arrangement, encourages browsing, good for boutiques</li>
+              <li><strong>Free-Flow Layout:</strong> Asymmetrical arrangement, encourages browsing, perfect for boutiques</li>
               <li><strong>Boutique Layout:</strong> Separate sections for different categories, creates intimate spaces</li>
             </ul>
 
             <h3>Essential Store Elements:</h3>
             <ul>
-              <li><strong>Lighting:</strong> Layered lighting (ambient, task, accent) to highlight products and create atmosphere</li>
-              <li><strong>Fixtures:</strong> Racks, shelves, mannequins, and display tables that match your aesthetic</li>
-              <li><strong>Fitting Rooms:</strong> Well-lit, spacious, with mirrors and hooks—often the deciding factor in purchases</li>
-              <li><strong>Checkout Area:</strong> Efficient, organized, with impulse items nearby</li>
-              <li><strong>Signage:</strong> Clear department signs, pricing, and promotional displays</li>
-              <li><strong>Seating Areas:</strong> Comfortable spots for waiting companions</li>
+              <li><strong><FaLightbulb size={14} style={{color: 'var(--primary)'}} /> Lighting:</strong> Layered lighting (ambient, task, accent) to highlight products and create atmosphere</li>
+              <li><strong><FaBoxes size={14} style={{color: 'var(--primary)'}} /> Fixtures:</strong> Racks, shelves, mannequins, and display tables that match your aesthetic</li>
+              <li><strong><FaUsers size={14} style={{color: 'var(--primary)'}} /> Fitting Rooms:</strong> Well-lit, spacious, with mirrors and hooks—often the deciding factor in purchases</li>
+              <li><strong><FaRegCreditCard size={14} style={{color: 'var(--primary)'}} /> Checkout Area:</strong> Efficient, organized, with impulse items nearby</li>
+              <li><strong><FaTags size={14} style={{color: 'var(--primary)'}} /> Signage:</strong> Clear department signs, pricing, and promotional displays</li>
+              <li><strong><FaUsers size={14} style={{color: 'var(--primary)'}} /> Seating Areas:</strong> Comfortable spots for waiting companions</li>
             </ul>
 
             <div className="tip-box">
               <strong>💡 Pro Tip:</strong> The "power wall" (the wall customers see when entering) should feature your best or highest-margin products. Place essentials in the back to encourage full store browsing.
             </div>
 
+            {/* Section 6: Sourcing with Private Label */}
             <h2 id="sourcing">6. Source Products with Private Label</h2>
             <p>Your product selection defines your store's identity. In 2026, successful retailers are moving beyond generic wholesale toward building their own brands through <strong>private label partnerships</strong>.</p>
 
             <h3>Why Private Label is Essential for Physical Stores:</h3>
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> <strong>Brand Distinction:</strong> Stand out from competitors with exclusive products customers can't find elsewhere.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Higher Profit Margins:</strong> Private label products typically yield 50-60% margins compared to 30-40% for branded products.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Customer Loyalty:</strong> Shoppers return for your brand, not just a generic product.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Consistent Quality:</strong> Maintain quality standards across all your products.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Market Positioning:</strong> Position your store as a destination for unique, high-quality pieces.</li>
+              <li><FaCheckCircle size={18} /> <strong>Brand Distinction:</strong> Stand out from competitors with exclusive products customers can't find elsewhere.</li>
+              <li><FaCheckCircle size={18} /> <strong>Higher Profit Margins:</strong> Private label products typically yield 50-60% margins compared to 30-40% for branded products.</li>
+              <li><FaCheckCircle size={18} /> <strong>Customer Loyalty:</strong> Shoppers return for your brand, not just a generic product.</li>
+              <li><FaCheckCircle size={18} /> <strong>Consistent Quality:</strong> Maintain quality standards across all your products.</li>
+              <li><FaCheckCircle size={18} /> <strong>Market Positioning:</strong> Position your store as a destination for unique, high-quality pieces.</li>
             </ul>
 
-            <p>Through private label partnerships, you can create a complete brand experience with custom-woven labels, professional hang tags, and branded packaging that elevates your products and creates a cohesive in-store presentation.</p>
+            <div className="highlight-box">
+              <h4>🏷️ What is Private Label?</h4>
+              <p>Private label means you partner with a manufacturer to create products that carry your own brand name. You get to add custom labels, hang tags, and packaging that feature your logo and brand identity. This transforms generic products into exclusive merchandise that customers can only find at your store.</p>
+            </div>
 
             <h4>What to Look for in a Wholesale Partner:</h4>
             <ul>
@@ -914,67 +1138,69 @@ export default function PhysicalStoreGuideEnglishPage() {
               <li><strong>Statement Pieces (10%):</strong> Unique items that create buzz and excitement</li>
             </ul>
 
+            {/* Section 7: Legal Requirements */}
             <h2 id="legal">7. Legal Requirements & Licenses</h2>
             <p>Ensure you're operating legally with these essentials:</p>
 
-            <ul>
-              <li><strong>Business License:</strong> Required from your city or county</li>
-              <li><strong>Seller's Permit:</strong> To collect sales tax</li>
-              <li><strong>Employer Identification Number (EIN):</strong> For hiring employees</li>
-              <li><strong>Signage Permits:</strong> For exterior signage</li>
-              <li><strong>Health Department Permits:</strong> If selling food/beverages</li>
-              <li><strong>Fire Department Inspection:</strong> Ensuring safety code compliance</li>
-              <li><strong>Certificate of Occupancy:</strong> Confirms your space is approved for retail</li>
-              <li><strong>Insurance:</strong> General liability, property, workers' compensation</li>
+            <ul className="checklist">
+              <li><FaGavel size={16} style={{color: 'var(--primary)'}} /> <strong>Business License:</strong> Required from your city or county</li>
+              <li><FaGavel size={16} style={{color: 'var(--primary)'}} /> <strong>Seller's Permit:</strong> To collect sales tax</li>
+              <li><FaGavel size={16} style={{color: 'var(--primary)'}} /> <strong>Employer Identification Number (EIN):</strong> For hiring employees</li>
+              <li><FaGavel size={16} style={{color: 'var(--primary)'}} /> <strong>Signage Permits:</strong> For exterior signage</li>
+              <li><FaGavel size={16} style={{color: 'var(--primary)'}} /> <strong>Fire Department Inspection:</strong> Ensuring safety code compliance</li>
+              <li><FaGavel size={16} style={{color: 'var(--primary)'}} /> <strong>Certificate of Occupancy:</strong> Confirms your space is approved for retail</li>
+              <li><FaGavel size={16} style={{color: 'var(--primary)'}} /> <strong>Insurance:</strong> General liability, property, workers' compensation</li>
             </ul>
 
             <div className="warning-box">
               <strong>⚠️ Important:</strong> Requirements vary by location. Consult with a local attorney or Small Business Development Center to ensure compliance.
             </div>
 
+            {/* Section 8: Staff */}
             <h2 id="staff">8. Hire and Train Staff</h2>
             <p>Your employees represent your brand to every customer. Invest in hiring and training.</p>
 
             <h3>Key Roles for a Clothing Store:</h3>
             <ul>
-              <li><strong>Store Manager:</strong> Oversees operations, staff, and inventory</li>
-              <li><strong>Sales Associates:</strong> Customer service and sales</li>
-              <li><strong>Visual Merchandiser:</strong> Creates appealing displays</li>
-              <li><strong>Buyer/Inventory Specialist:</strong> Manages stock levels and ordering</li>
+              <li><strong><FaUserTie size={14} style={{color: 'var(--primary)'}} /> Store Manager:</strong> Oversees operations, staff, and inventory</li>
+              <li><strong><FaUsers size={14} style={{color: 'var(--primary)'}} /> Sales Associates:</strong> Customer service and sales</li>
+              <li><strong><FaStore size={14} style={{color: 'var(--primary)'}} /> Visual Merchandiser:</strong> Creates appealing displays</li>
+              <li><strong><FaBoxes size={14} style={{color: 'var(--primary)'}} /> Buyer/Inventory Specialist:</strong> Manages stock levels and ordering</li>
             </ul>
 
             <h3>Training Essentials:</h3>
-            <ul>
-              <li><strong>Product Knowledge:</strong> Fabrics, sizing, styling options</li>
-              <li><strong>Customer Service:</strong> Greeting, assisting, handling complaints</li>
-              <li><strong>Sales Techniques:</strong> Upselling, cross-selling, closing sales</li>
-              <li><strong>POS System:</strong> Transactions, returns, inventory lookup</li>
-              <li><strong>Brand Values:</strong> Your mission and customer experience standards</li>
+            <ul className="checklist">
+              <li><FaCheckCircle size={18} /> <strong>Product Knowledge:</strong> Fabrics, sizing, styling options</li>
+              <li><FaCheckCircle size={18} /> <strong>Customer Service:</strong> Greeting, assisting, handling complaints</li>
+              <li><FaCheckCircle size={18} /> <strong>Sales Techniques:</strong> Upselling, cross-selling, closing sales</li>
+              <li><FaCheckCircle size={18} /> <strong>POS System:</strong> Transactions, returns, inventory lookup</li>
+              <li><FaCheckCircle size={18} /> <strong>Brand Values:</strong> Your mission and customer experience standards</li>
             </ul>
 
+            {/* Section 9: Technology */}
             <h2 id="technology">9. Retail Technology & POS Systems</h2>
             <p>Modern physical stores need modern technology:</p>
 
             <h3>Essential Technology:</h3>
             <ul>
-              <li><strong>Point of Sale (POS) System:</strong> Square, Shopify POS, Lightspeed, or Clover</li>
-              <li><strong>Inventory Management:</strong> Real-time tracking across channels</li>
-              <li><strong>Customer Relationship Management (CRM):</strong> Track preferences and purchase history</li>
-              <li><strong>E-commerce Integration:</strong> If you're also selling online</li>
-              <li><strong>Analytics:</strong> Foot traffic, conversion rates, average ticket size</li>
-              <li><strong>Wi-Fi:</strong> Customer convenience and data collection</li>
+              <li><strong><FaMobileAlt size={14} style={{color: 'var(--primary)'}} /> Point of Sale (POS) System:</strong> Square, Shopify POS, Lightspeed, or Clover</li>
+              <li><strong><FaBoxes size={14} style={{color: 'var(--primary)'}} /> Inventory Management:</strong> Real-time tracking across channels</li>
+              <li><strong><FaUsers size={14} style={{color: 'var(--primary)'}} /> Customer Relationship Management (CRM):</strong> Track preferences and purchase history</li>
+              <li><strong><FaShoppingBag size={14} style={{color: 'var(--primary)'}} /> E-commerce Integration:</strong> If you're also selling online</li>
+              <li><strong><FaChartLine size={14} style={{color: 'var(--primary)'}} /> Analytics:</strong> Foot traffic, conversion rates, average ticket size</li>
             </ul>
 
+            {/* Section 10: Marketing */}
             <h2 id="marketing">10. Market Your Store</h2>
             <p>Build buzz before you open and maintain momentum after.</p>
 
             <h3>Pre-Opening Marketing:</h3>
             <ul>
-              <li><strong>Social Media Teasing:</strong> Behind-the-scenes content, countdown</li>
-              <li><strong>Local Media Outreach:</strong> Press releases to local newspapers and blogs</li>
-              <li><strong>Influencer Previews:</strong> Invite local influencers for sneak peeks</li>
-              <li><strong>Email List Building:</strong> Collect emails through landing page</li>
-              <li><strong>"Coming Soon" Signage:</strong> On your storefront</li>
+              <li><strong><FaBullhorn size={14} style={{color: 'var(--primary)'}} /> Social Media Teasing:</strong> Behind-the-scenes content, countdown</li>
+              <li><strong><FaBullhorn size={14} style={{color: 'var(--primary)'}} /> Local Media Outreach:</strong> Press releases to local newspapers and blogs</li>
+              <li><strong><FaBullhorn size={14} style={{color: 'var(--primary)'}} /> Influencer Previews:</strong> Invite local influencers for sneak peeks</li>
+              <li><strong><FaBullhorn size={14} style={{color: 'var(--primary)'}} /> Email List Building:</strong> Collect emails through landing page</li>
+              <li><strong><FaBullhorn size={14} style={{color: 'var(--primary)'}} /> "Coming Soon" Signage:</strong> On your storefront</li>
             </ul>
 
             <h3>Ongoing Marketing Strategies:</h3>
@@ -1003,22 +1229,24 @@ export default function PhysicalStoreGuideEnglishPage() {
               </div>
             </div>
 
+            {/* Section 11: Grand Opening */}
             <h2 id="grand-opening">11. Grand Opening Checklist</h2>
             <p>Make your launch unforgettable:</p>
 
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> <strong>Inventory:</strong> Fully stocked with all opening products</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Staff:</strong> Trained and scheduled</li>
-              <li><i className="fas fa-check-circle"></i> <strong>POS System:</strong> Tested and working efficiently</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Store Design:</strong> Clean, well-merchandised, welcoming</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Promotions:</strong> Opening discounts or giveaways</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Refreshments:</strong> Snacks and drinks for shoppers</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Entertainment:</strong> Music, maybe a DJ for evening events</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Photo Opportunities:</strong> Instagram-worthy moments</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Email Capture:</strong> Sign-up sheets or tablet</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Goodie Bags:</strong> For first customers or VIPs</li>
+              <li><FaCheckCircle size={18} /> <strong>Inventory:</strong> Fully stocked with all opening products</li>
+              <li><FaCheckCircle size={18} /> <strong>Staff:</strong> Trained and scheduled</li>
+              <li><FaCheckCircle size={18} /> <strong>POS System:</strong> Tested and working efficiently</li>
+              <li><FaCheckCircle size={18} /> <strong>Store Design:</strong> Clean, well-merchandised, welcoming</li>
+              <li><FaCheckCircle size={18} /> <strong>Promotions:</strong> Opening discounts or giveaways</li>
+              <li><FaCheckCircle size={18} /> <strong>Refreshments:</strong> Snacks and drinks for shoppers</li>
+              <li><FaCheckCircle size={18} /> <strong>Entertainment:</strong> Music, maybe a DJ for evening events</li>
+              <li><FaCheckCircle size={18} /> <strong>Photo Opportunities:</strong> Instagram-worthy moments</li>
+              <li><FaCheckCircle size={18} /> <strong>Email Capture:</strong> Sign-up sheets or tablet</li>
+              <li><FaCheckCircle size={18} /> <strong>Goodie Bags:</strong> For first customers or VIPs</li>
             </ul>
 
+            {/* Conclusion */}
             <h2 id="conclusion">Conclusion: Your Success Partner</h2>
             <p>Opening a physical clothing store in 2026 is an exciting venture with tremendous potential. The key to success lies in thoughtful planning, strong brand identity, quality products, and exceptional customer experience. Remember that every successful boutique started with one step—and that step is deciding to start.</p>
 
@@ -1030,48 +1258,83 @@ export default function PhysicalStoreGuideEnglishPage() {
               <p>With our premium Turkish products and flexible wholesale options, we provide the foundation for your store's success. Whether you're just starting out or looking to expand, we're committed to being your trusted partner every step of the way.</p>
             </div>
 
-            {/* CTA Section within article */}
+            {/* Author Box */}
+            <div className="author-box">
+              <div className="author-avatar">
+                <FaStore size={32} />
+              </div>
+              <div className="author-info">
+                <h4>Hijab Fashion Mall Team</h4>
+                <p>Retail experts with over 10 years of experience in the fashion industry. We help entrepreneurs build successful clothing stores through quality products and private label solutions.</p>
+              </div>
+            </div>
+
+            {/* CTA Section */}
             <div className="cta-box">
               <h3>Ready to Open Your Dream Store?</h3>
               <p>Contact us to learn more about private label services and how we can help you create a successful physical clothing store with products that truly represent your brand.</p>
-              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <a href="https://wa.me/905519522448" className="btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-whatsapp"></i> Chat on WhatsApp
+              <div className="cta-buttons">
+                <a 
+                  href="https://wa.me/905519522448" 
+                  className="btn-whatsapp" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <FaWhatsapp size={18} /> Chat on WhatsApp
                 </a>
                 <Link href="/en/contact" className="btn-primary">
                   Contact Us
                 </Link>
               </div>
-              <p style={{ marginTop: '20px', fontSize: '14px', color: 'rgba(255,255,255,0.6)' }}>We're here to answer all your questions about opening your physical clothing store.</p>
+              <p className="cta-note">We're here to answer all your questions about opening your physical clothing store.</p>
             </div>
 
+            {/* Share Section */}
             <div className="share-section">
               <h4>Share This Guide</h4>
               <div className="share-buttons">
-                <a href="#" className="share-btn facebook" onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-facebook-f"></i></a>
-                <a href="#" className="share-btn twitter" onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('How to Open a Physical Clothing Store in 2026 - Complete Guide')+'&url='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-twitter"></i></a>
-                <a href="#" className="share-btn linkedin" onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-linkedin-in"></i></a>
-                <a href="#" className="share-btn whatsapp" onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://wa.me/?text='+encodeURIComponent('How to Open a Physical Clothing Store in 2026 - Complete Guide: '+window.location.href), '_blank')
-                }}><i className="fab fa-whatsapp"></i></a>
-                <a href="#" className="share-btn telegram" onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://t.me/share/url?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent('How to Open a Physical Clothing Store in 2026'), '_blank')
-                }}><i className="fab fa-telegram-plane"></i></a>
-                <a href="#" className="share-btn pinterest" onClick={(e) => {
-                  e.preventDefault()
-                  window.open('https://pinterest.com/pin/create/button/?url='+encodeURIComponent(window.location.href)+'&media='+encodeURIComponent('/images/physical-store-guide.webp')+'&description='+encodeURIComponent('How to Open a Physical Clothing Store in 2026'), '_blank')
-                }}><i className="fab fa-pinterest-p"></i></a>
+                <button 
+                  className="share-btn facebook" 
+                  onClick={() => window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href), '_blank')}
+                  aria-label="Share on Facebook"
+                >
+                  <FaFacebookF size={18} />
+                </button>
+                <button 
+                  className="share-btn twitter" 
+                  onClick={() => window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('How to Open a Physical Clothing Store in 2026 - Complete Guide')+'&url='+encodeURIComponent(window.location.href), '_blank')}
+                  aria-label="Share on Twitter"
+                >
+                  <FaTwitter size={18} />
+                </button>
+                <button 
+                  className="share-btn linkedin" 
+                  onClick={() => window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href), '_blank')}
+                  aria-label="Share on LinkedIn"
+                >
+                  <FaLinkedinIn size={18} />
+                </button>
+                <button 
+                  className="share-btn whatsapp" 
+                  onClick={() => window.open('https://wa.me/?text='+encodeURIComponent('How to Open a Physical Clothing Store in 2026 - Complete Guide: '+window.location.href), '_blank')}
+                  aria-label="Share on WhatsApp"
+                >
+                  <FaWhatsapp size={18} />
+                </button>
+                <button 
+                  className="share-btn telegram" 
+                  onClick={() => window.open('https://t.me/share/url?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent('How to Open a Physical Clothing Store in 2026'), '_blank')}
+                  aria-label="Share on Telegram"
+                >
+                  <FaTelegramPlane size={18} />
+                </button>
+                <button 
+                  className="share-btn pinterest" 
+                  onClick={() => window.open('https://pinterest.com/pin/create/button/?url='+encodeURIComponent(window.location.href)+'&media='+encodeURIComponent('/images/physical-store-guide.webp')+'&description='+encodeURIComponent('How to Open a Physical Clothing Store in 2026'), '_blank')}
+                  aria-label="Share on Pinterest"
+                >
+                  <FaPinterest size={18} />
+                </button>
               </div>
             </div>
           </div>

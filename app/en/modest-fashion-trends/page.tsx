@@ -1,89 +1,58 @@
 ﻿// app/en/modest-fashion-trends/page.tsx
-'use client'
-
-import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
+import { 
+  FaCalendarAlt, 
+  FaWhatsapp, 
+  FaChevronRight, 
+  FaFacebookF, 
+  FaTwitter, 
+  FaLinkedinIn, 
+  FaTelegramPlane, 
+  FaPinterest, 
+  FaCheckCircle,
+  FaClock,
+  FaGlobe,
+  FaChartLine,
+  FaUsers,
+  FaMobileAlt,
+  FaHandshake,
+  FaLeaf,
+  FaShoppingBag,
+  FaTshirt,
+  FaPalette,
+  FaRuler,
+  FaStore,
+  FaComments,
+  FaBullhorn
+} from 'react-icons/fa'
 
 export default function ModestFashionTrendsPage() {
-  const [cart, setCart] = useState<any[]>([])
-  const cartInitialized = useRef(false)
-  const processingEvent = useRef(false)
-
-  // Load cart from localStorage - once only
-  useEffect(() => {
-    if (!cartInitialized.current) {
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart)
-          setCart(parsedCart)
-        } catch (e) {
-          console.error('Error loading cart:', e)
-        }
-      }
-      cartInitialized.current = true
-    }
-  }, [])
-
-  // Handle cart updates from events
-  useEffect(() => {
-    const handleCartUpdate = (event: CustomEvent) => {
-      if (processingEvent.current) return
-      
-      processingEvent.current = true
-      
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart)
-          setCart(prevCart => {
-            if (JSON.stringify(prevCart) === JSON.stringify(parsedCart)) {
-              return prevCart
-            }
-            return parsedCart
-          })
-        } catch (e) {
-          console.error('Error loading cart:', e)
-        }
-      }
-      
-      setTimeout(() => {
-        processingEvent.current = false
-      }, 100)
-    }
-
-    window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
-    
-    return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener)
-    }
-  }, [])
-
-  // Save cart to localStorage and update cart count
-  useEffect(() => {
-    if (cartInitialized.current) {
-      localStorage.setItem('cart', JSON.stringify(cart))
-      
-      const event = new CustomEvent('cartUpdated', { detail: cart.length })
-      window.dispatchEvent(event)
-      
-      const cartCountElements = document.querySelectorAll('.cart-count')
-      cartCountElements.forEach(element => {
-        if (element) {
-          element.textContent = cart.length.toString()
-        }
-      })
-      
-      const cartCountElement = document.getElementById('cartCount')
-      if (cartCountElement) {
-        cartCountElement.textContent = cart.length.toString()
-      }
-    }
-  }, [cart])
+  // No cart code here - cart is handled by ClientLayout
 
   return (
     <>
+      <Head>
+        <title>The Rise of Modest Fashion 2026 | Complete Market Guide | Hijab Fashion Mall</title>
+        <meta name="description" content="A comprehensive look at the $400B global modest fashion industry: market size, consumer trends, sustainability, and opportunities for retailers in 2026." />
+        <meta name="keywords" content="modest fashion 2026, hijab fashion trends, modest fashion market, halal fashion, sustainable modest wear, Islamic clothing industry, modest fashion brands, hijab trends" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="canonical" href="https://hijabfashionmall.com/en/modest-fashion-trends" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/modest-fashion-trends" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/modest-fashion-trends" />
+        <meta property="og:title" content="The Rise of Modest Fashion 2026 | Complete Market Guide" />
+        <meta property="og:description" content="A comprehensive look at the $400B global modest fashion industry: market size, consumer trends, and opportunities for retailers in 2026." />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/rise-modest-fashion.webp" />
+        <meta property="og:url" content="https://hijabfashionmall.com/en/modest-fashion-trends" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="The Rise of Modest Fashion 2026 | Complete Market Guide" />
+        <meta name="twitter:description" content="A comprehensive look at the $400B global modest fashion industry." />
+        <meta name="twitter:image" content="https://hijabfashionmall.com/images/rise-modest-fashion.webp" />
+      </Head>
+
       <style>{`
         /* All styles - English version */
         * {
@@ -240,7 +209,7 @@ export default function ModestFashionTrendsPage() {
             margin: 0 auto;
         }
 
-        .page-header .meta-info {
+        .meta-info {
             display: flex;
             justify-content: center;
             gap: 30px;
@@ -250,28 +219,29 @@ export default function ModestFashionTrendsPage() {
             flex-wrap: wrap;
         }
 
-        .page-header .meta-info i {
+        .meta-info svg {
             color: var(--primary);
             margin-right: 5px;
+            vertical-align: middle;
         }
 
-        .page-header .breadcrumb {
+        .breadcrumb {
             font-size: 14px;
             color: var(--medium-gray);
             margin-bottom: 20px;
         }
 
-        .page-header .breadcrumb a {
+        .breadcrumb a {
             color: var(--primary);
             text-decoration: none;
             margin: 0 5px;
         }
 
-        .page-header .breadcrumb a:hover {
+        .breadcrumb a:hover {
             text-decoration: underline;
         }
 
-        .page-header .breadcrumb span {
+        .breadcrumb span {
             margin: 0 5px;
         }
 
@@ -365,7 +335,7 @@ export default function ModestFashionTrendsPage() {
             color: var(--dark-gray);
         }
 
-        .article-content .highlight-box {
+        .highlight-box {
             background: linear-gradient(135deg, var(--primary-soft) 0%, #ffffff 100%);
             padding: 30px;
             border-radius: 15px;
@@ -373,20 +343,20 @@ export default function ModestFashionTrendsPage() {
             border: 1px solid rgba(255,90,0,0.2);
         }
 
-        .article-content .highlight-box h4 {
+        .highlight-box h4 {
             color: var(--primary);
             margin-bottom: 15px;
             font-size: 20px;
         }
 
-        .article-content .stats-grid {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin: 40px 0;
         }
 
-        .article-content .stat-item {
+        .stat-item {
             text-align: center;
             padding: 20px;
             background: var(--white);
@@ -395,37 +365,38 @@ export default function ModestFashionTrendsPage() {
             border: 1px solid #eee;
         }
 
-        .article-content .stat-number {
+        .stat-number {
             font-size: 36px;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 5px;
         }
 
-        .article-content .stat-label {
+        .stat-label {
             color: var(--medium-gray);
             font-size: 14px;
         }
 
-        .article-content .checklist {
+        .checklist {
             list-style: none;
             padding: 0;
         }
 
-        .article-content .checklist li {
+        .checklist li {
             display: flex;
             align-items: flex-start;
             gap: 15px;
             margin-bottom: 15px;
         }
 
-        .article-content .checklist li i {
+        .checklist svg {
             color: var(--primary);
             font-size: 20px;
             margin-top: 2px;
+            flex-shrink: 0;
         }
 
-        .article-content .tip-box {
+        .tip-box {
             background: #e8f5e9;
             padding: 25px;
             border-radius: 15px;
@@ -433,7 +404,7 @@ export default function ModestFashionTrendsPage() {
             border-left: 4px solid #4caf50;
         }
 
-        .article-content .warning-box {
+        .warning-box {
             background: #fff3e0;
             padding: 25px;
             border-radius: 15px;
@@ -441,7 +412,7 @@ export default function ModestFashionTrendsPage() {
             border-left: 4px solid #ff9800;
         }
 
-        .article-content .trend-card {
+        .trend-card {
             background: var(--white);
             border-radius: 10px;
             padding: 25px;
@@ -452,24 +423,23 @@ export default function ModestFashionTrendsPage() {
             text-align: center;
         }
 
-        .article-content .trend-card:hover {
+        .trend-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(255,90,0,0.1);
         }
 
-        .article-content .trend-card h4 {
+        .trend-card h4 {
             color: var(--black);
             margin-bottom: 10px;
             font-size: 20px;
         }
 
-        .article-content .trend-card .trend-icon {
+        .trend-icon {
             font-size: 40px;
-            color: var(--primary);
             margin-bottom: 15px;
         }
 
-        .article-content .region-stats {
+        .region-stats {
             display: flex;
             justify-content: space-between;
             margin: 15px 0;
@@ -477,17 +447,17 @@ export default function ModestFashionTrendsPage() {
             border-bottom: 1px dashed #eee;
         }
 
-        .article-content .region-name {
+        .region-name {
             font-weight: 600;
             color: var(--dark-gray);
         }
 
-        .article-content .region-value {
+        .region-value {
             color: var(--primary);
             font-weight: 600;
         }
 
-        .article-content .tags {
+        .tags {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
@@ -495,7 +465,7 @@ export default function ModestFashionTrendsPage() {
             justify-content: center;
         }
 
-        .article-content .tag {
+        .tag {
             background: var(--light-gray);
             padding: 8px 16px;
             border-radius: 50px;
@@ -504,7 +474,7 @@ export default function ModestFashionTrendsPage() {
             border: 1px solid #eee;
         }
 
-        .article-content .tag i {
+        .tag svg {
             color: var(--primary);
             margin-right: 5px;
         }
@@ -603,7 +573,7 @@ export default function ModestFashionTrendsPage() {
             color: var(--primary);
         }
 
-        .toc li a i {
+        .toc li svg {
             color: var(--primary);
             margin-right: 8px;
             font-size: 12px;
@@ -659,13 +629,26 @@ export default function ModestFashionTrendsPage() {
             background: var(--whatsapp-dark);
         }
 
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .toc ul {
                 grid-template-columns: 1fr;
             }
             
-            .article-content .stats-grid {
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -675,7 +658,7 @@ export default function ModestFashionTrendsPage() {
                 font-size: 36px;
             }
             
-            .page-header .meta-info {
+            .meta-info {
                 flex-direction: column;
                 gap: 10px;
             }
@@ -688,7 +671,7 @@ export default function ModestFashionTrendsPage() {
                 font-size: 22px;
             }
             
-            .article-content .stats-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -712,8 +695,8 @@ export default function ModestFashionTrendsPage() {
           <h1>The Rise of <span>Modest Fashion</span> in 2026</h1>
           <p>A comprehensive look at the global modest fashion industry: market size, consumer trends, and future opportunities</p>
           <div className="meta-info">
-            <span><i className="far fa-calendar-alt"></i> March 14, 2026</span>
-            <span><i className="far fa-clock"></i> 14 min read</span>
+            <span><FaCalendarAlt size={14} /> March 14, 2026</span>
+            <span><FaClock size={14} /> 14 min read</span>
           </div>
         </div>
       </section>
@@ -728,10 +711,7 @@ export default function ModestFashionTrendsPage() {
                 alt="The Rise of Modest Fashion 2026 - Global Market Trends" 
                 width={800} 
                 height={450} 
-                loading="lazy"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/default.webp'
-                }}
+                priority
               />
             </div>
 
@@ -741,19 +721,19 @@ export default function ModestFashionTrendsPage() {
             <div className="toc">
               <h3>📋 Table of Contents</h3>
               <ul>
-                <li><a href="#introduction"><i className="fas fa-chevron-right"></i> Introduction</a></li>
-                <li><a href="#market-size"><i className="fas fa-chevron-right"></i> Market Size & Growth Forecast</a></li>
-                <li><a href="#drivers"><i className="fas fa-chevron-right"></i> Key Growth Drivers</a></li>
-                <li><a href="#consumer"><i className="fas fa-chevron-right"></i> The 2026 Modest Fashion Consumer</a></li>
-                <li><a href="#regions"><i className="fas fa-chevron-right"></i> Regional Market Analysis</a></li>
-                <li><a href="#trends"><i className="fas fa-chevron-right"></i> Top Fashion Trends 2026</a></li>
-                <li><a href="#sustainability"><i className="fas fa-chevron-right"></i> Sustainability in Modest Fashion</a></li>
-                <li><a href="#digital"><i className="fas fa-chevron-right"></i> Digital Transformation & Social Media</a></li>
-                <li><a href="#mainstream"><i className="fas fa-chevron-right"></i> Modest Fashion Goes Mainstream</a></li>
-                <li><a href="#opportunities"><i className="fas fa-chevron-right"></i> Opportunities for Retailers</a></li>
-                <li><a href="#challenges"><i className="fas fa-chevron-right"></i> Challenges & Considerations</a></li>
-                <li><a href="#future"><i className="fas fa-chevron-right"></i> The Future Outlook</a></li>
-                <li><a href="#conclusion"><i className="fas fa-chevron-right"></i> Conclusion</a></li>
+                <li><a href="#introduction"><FaChevronRight size={10} /> Introduction</a></li>
+                <li><a href="#market-size"><FaChevronRight size={10} /> Market Size & Growth Forecast</a></li>
+                <li><a href="#drivers"><FaChevronRight size={10} /> Key Growth Drivers</a></li>
+                <li><a href="#consumer"><FaChevronRight size={10} /> The 2026 Modest Fashion Consumer</a></li>
+                <li><a href="#regions"><FaChevronRight size={10} /> Regional Market Analysis</a></li>
+                <li><a href="#trends"><FaChevronRight size={10} /> Top Fashion Trends 2026</a></li>
+                <li><a href="#sustainability"><FaChevronRight size={10} /> Sustainability in Modest Fashion</a></li>
+                <li><a href="#digital"><FaChevronRight size={10} /> Digital Transformation & Social Media</a></li>
+                <li><a href="#mainstream"><FaChevronRight size={10} /> Modest Fashion Goes Mainstream</a></li>
+                <li><a href="#opportunities"><FaChevronRight size={10} /> Opportunities for Retailers</a></li>
+                <li><a href="#challenges"><FaChevronRight size={10} /> Challenges & Considerations</a></li>
+                <li><a href="#future"><FaChevronRight size={10} /> The Future Outlook</a></li>
+                <li><a href="#conclusion"><FaChevronRight size={10} /> Conclusion</a></li>
               </ul>
             </div>
 
@@ -780,25 +760,25 @@ export default function ModestFashionTrendsPage() {
             <h2 id="drivers">Key Growth Drivers</h2>
             
             <div className="trend-card">
-              <div className="trend-icon">🌍</div>
+              <div className="trend-icon"><FaGlobe size={40} color="#ff5a00" /></div>
               <h4>Global Muslim Population</h4>
               <p>With 1.9 billion Muslims worldwide and a median age of just 24, this demographic represents a massive and growing consumer base. Young Muslim women are fashion-forward, socially connected, and seeking styles that reflect both their faith and personal taste.</p>
             </div>
 
             <div className="trend-card">
-              <div className="trend-icon">💰</div>
+              <div className="trend-icon"><FaChartLine size={40} color="#ff5a00" /></div>
               <h4>Rising Disposable Income</h4>
               <p>Economic growth in Muslim-majority countries, particularly in the Gulf region, Southeast Asia, and parts of Africa, has created a new class of affluent consumers with significant purchasing power in the fashion sector.</p>
             </div>
 
             <div className="trend-card">
-              <div className="trend-icon">📱</div>
+              <div className="trend-icon"><FaMobileAlt size={40} color="#ff5a00" /></div>
               <h4>Digital Connectivity</h4>
               <p>Social media platforms like Instagram, TikTok, and Pinterest have given rise to a new generation of modest fashion influencers who showcase diverse styling options and inspire millions of followers worldwide.</p>
             </div>
 
             <div className="trend-card">
-              <div className="trend-icon">🤝</div>
+              <div className="trend-icon"><FaHandshake size={40} color="#ff5a00" /></div>
               <h4>Mainstream Recognition</h4>
               <p>Major fashion houses and retailers have taken notice. From Dolce & Gabbana's hijab and abaya collections to Nike's Pro Hijab, mainstream brands are increasingly catering to modest consumers, validating the market's potential.</p>
             </div>
@@ -816,11 +796,11 @@ export default function ModestFashionTrendsPage() {
 
             <h3>Consumer Values:</h3>
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> <strong>Faith & Identity:</strong> Clothing as an expression of religious and cultural identity</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Quality Over Quantity:</strong> Preference for well-made, durable pieces</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Sustainability:</strong> Growing concern for ethical and eco-friendly production</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Versatility:</strong> Pieces that can be styled multiple ways for different occasions</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Authenticity:</strong> Desire for brands that truly understand modest consumers' needs</li>
+              <li><FaCheckCircle size={18} /> <strong>Faith & Identity:</strong> Clothing as an expression of religious and cultural identity</li>
+              <li><FaCheckCircle size={18} /> <strong>Quality Over Quantity:</strong> Preference for well-made, durable pieces</li>
+              <li><FaCheckCircle size={18} /> <strong>Sustainability:</strong> Growing concern for ethical and eco-friendly production</li>
+              <li><FaCheckCircle size={18} /> <strong>Versatility:</strong> Pieces that can be styled multiple ways for different occasions</li>
+              <li><FaCheckCircle size={18} /> <strong>Authenticity:</strong> Desire for brands that truly understand modest consumers' needs</li>
             </ul>
 
             <h2 id="regions">Regional Market Analysis</h2>
@@ -856,31 +836,37 @@ export default function ModestFashionTrendsPage() {
             <h2 id="trends">Top Fashion Trends 2026</h2>
 
             <div className="trend-card">
+              <div className="trend-icon"><FaLeaf size={40} color="#ff5a00" /></div>
               <h4>1. Sustainable Modest Fashion</h4>
               <p>Environmental consciousness is no longer optional. Consumers are demanding transparency in sourcing, ethical production, and sustainable materials. Brands that show genuine commitment to sustainability are gaining significant market share.</p>
             </div>
 
             <div className="trend-card">
+              <div className="trend-icon"><FaShoppingBag size={40} color="#ff5a00" /></div>
               <h4>2. Athleisure Meets Modesty</h4>
               <p>The athleisure trend continues to grow, with modest sportswear becoming increasingly sophisticated. Technical fabrics, stylish designs, and functionality are key drivers in this segment.</p>
             </div>
 
             <div className="trend-card">
+              <div className="trend-icon"><FaTshirt size={40} color="#ff5a00" /></div>
               <h4>3. Elevated Basics</h4>
               <p>High-quality, versatile basics that form the foundation of a modest wardrobe are in high demand. Think premium fabrics, perfect fits, and timeless designs that can be dressed up or down.</p>
             </div>
 
             <div className="trend-card">
+              <div className="trend-icon"><FaPalette size={40} color="#ff5a00" /></div>
               <h4>4. Fusion Fashion</h4>
               <p>Designs that blend traditional elements with contemporary silhouettes are gaining popularity. Think abayas with modern cuts, traditional embroidery on Western-style pieces, and cross-cultural collaborations.</p>
             </div>
 
             <div className="trend-card">
+              <div className="trend-icon"><FaChartLine size={40} color="#ff5a00" /></div>
               <h4>5. Color Revolution</h4>
               <p>While black remains a staple, modest fashion is embracing color. Earth tones, pastels, and jewel tones are appearing in collections, offering more variety for consumers to express their personal style.</p>
             </div>
 
             <div className="trend-card">
+              <div className="trend-icon"><FaRuler size={40} color="#ff5a00" /></div>
               <h4>6. Size Inclusivity</h4>
               <p>The modest fashion industry is increasingly recognizing the need for inclusive sizing. Brands that cater to all body types are building loyal customer bases.</p>
             </div>
@@ -944,12 +930,12 @@ export default function ModestFashionTrendsPage() {
             <h3>3. Niche Specialization</h3>
             <p>Within modest fashion, there are many sub-niches to explore:</p>
             <div className="tags">
-              <span className="tag">Luxury Abayas</span>
-              <span className="tag">Sustainable Modest Wear</span>
-              <span className="tag">Modest Sportswear</span>
-              <span className="tag">Modest Wedding Wear</span>
-              <span className="tag">Modest Children's Wear</span>
-              <span className="tag">Plus Size Modest Fashion</span>
+              <span className="tag"><FaShoppingBag size={12} /> Luxury Abayas</span>
+              <span className="tag"><FaLeaf size={12} /> Sustainable Modest Wear</span>
+              <span className="tag"><FaTshirt size={12} /> Modest Sportswear</span>
+              <span className="tag"><FaGlobe size={12} /> Modest Wedding Wear</span>
+              <span className="tag"><FaUsers size={12} /> Modest Children's Wear</span>
+              <span className="tag"><FaRuler size={12} /> Plus Size Modest Fashion</span>
             </div>
 
             <h3>4. Multi-Channel Approach</h3>
@@ -995,15 +981,15 @@ export default function ModestFashionTrendsPage() {
             <div className="cta-box">
               <h3>Ready to Capitalize on the Modest Fashion Boom?</h3>
               <p>Contact us to learn how our private label services can help you build a distinctive brand in the growing modest fashion market.</p>
-              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div className="cta-buttons">
                 <a href="https://wa.me/905519522448" className="btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-whatsapp"></i> Chat on WhatsApp
+                  <FaWhatsapp size={18} /> Chat on WhatsApp
                 </a>
                 <Link href="/en/contact" className="btn-primary">
                   Contact Us
                 </Link>
               </div>
-              <p style={{ marginTop: '20px', fontSize: '14px', color: 'rgba(255,255,255,0.6)' }}>We're here to answer all your questions about entering or expanding in the modest fashion market.</p>
+              <p className="cta-note">We're here to answer all your questions about entering or expanding in the modest fashion market.</p>
             </div>
 
             <div className="share-section">
@@ -1012,27 +998,27 @@ export default function ModestFashionTrendsPage() {
                 <a href="#" className="share-btn facebook" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-facebook-f"></i></a>
+                }}><FaFacebookF size={18} /></a>
                 <a href="#" className="share-btn twitter" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('The Rise of Modest Fashion 2026 - Complete Guide')+'&url='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-twitter"></i></a>
+                }}><FaTwitter size={18} /></a>
                 <a href="#" className="share-btn linkedin" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-linkedin-in"></i></a>
+                }}><FaLinkedinIn size={18} /></a>
                 <a href="#" className="share-btn whatsapp" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://wa.me/?text='+encodeURIComponent('The Rise of Modest Fashion 2026 - Complete Guide: '+window.location.href), '_blank')
-                }}><i className="fab fa-whatsapp"></i></a>
+                }}><FaWhatsapp size={18} /></a>
                 <a href="#" className="share-btn telegram" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://t.me/share/url?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent('The Rise of Modest Fashion 2026'), '_blank')
-                }}><i className="fab fa-telegram-plane"></i></a>
+                }}><FaTelegramPlane size={18} /></a>
                 <a href="#" className="share-btn pinterest" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://pinterest.com/pin/create/button/?url='+encodeURIComponent(window.location.href)+'&media='+encodeURIComponent('/images/rise-modest-fashion.webp')+'&description='+encodeURIComponent('The Rise of Modest Fashion 2026'), '_blank')
-                }}><i className="fab fa-pinterest-p"></i></a>
+                }}><FaPinterest size={18} /></a>
               </div>
             </div>
           </div>

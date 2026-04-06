@@ -1,126 +1,34 @@
 // app/ar/contact/page.tsx
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import { 
+  FaPhoneAlt, 
+  FaClock, 
+  FaWhatsapp, 
+  FaQuestionCircle, 
+  FaTruck, 
+  FaCreditCard, 
+  FaBox, 
+  FaEnvelope,
+  FaUser,
+  FaMapMarkerAlt,
+  FaCheckCircle,
+  FaTimesCircle
+} from 'react-icons/fa'
 
 export default function ContactPageAr() {
-  const [cartCount, setCartCount] = useState(0)
-  const [isCartOpen, setIsCartOpen] = useState(false)
-  const [cart, setCart] = useState<any[]>([])
+  const [mounted, setMounted] = useState(false)
   const [formStatus, setFormStatus] = useState<{type: 'success' | 'error' | null, message: string}>({ type: null, message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  // Add ref for form
   const formRef = useRef<HTMLFormElement>(null)
 
-  // Load cart from localStorage
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart')
-    if (savedCart) {
-      try {
-        const parsedCart = JSON.parse(savedCart)
-        setCart(parsedCart)
-        setCartCount(parsedCart.length)
-      } catch (e) {
-        console.error('Error parsing cart:', e)
-      }
-    }
-
-    const handleCartUpdate = (event: CustomEvent) => {
-      setCartCount(event.detail)
-    }
-    window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
-    
-    return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener)
-    }
+    setMounted(true)
   }, [])
 
-  // Listen for openCart event
-  useEffect(() => {
-    const handleOpenCart = () => {
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart)
-          setCart(parsedCart)
-          setCartCount(parsedCart.length)
-        } catch (e) {
-          console.error('Error parsing cart:', e)
-        }
-      }
-      setIsCartOpen(true)
-    }
-
-    window.addEventListener('openCart', handleOpenCart)
-    
-    return () => {
-      window.removeEventListener('openCart', handleOpenCart)
-    }
-  }, [])
-
-  // Remove from cart
-  const removeFromCart = (index: number) => {
-    const newCart = [...cart]
-    newCart.splice(index, 1)
-    setCart(newCart)
-    localStorage.setItem('cart', JSON.stringify(newCart))
-    setCartCount(newCart.length)
-    
-    const event = new CustomEvent('cartUpdated', { detail: newCart.length })
-    window.dispatchEvent(event)
-  }
-
-  // Send to WhatsApp
-  const sendToWhatsApp = () => {
-    if (cart.length === 0) {
-      alert('⚠️ سلة الاستفسار فارغة')
-      return
-    }
-    
-    let message = "مرحباً، أود الاستفسار عن المنتجات التالية:\n\n"
-    cart.forEach((item, index) => {
-      const name = item.name_ar || item.name_en || item.name || 'منتج'
-      let price = item.price_usd || item.price || 0
-      if (typeof price === 'string') {
-        price = parseFloat(price.replace(',', '.'))
-      }
-      message += `${index + 1}. ${name} - $${price.toFixed(2)}\n`
-    })
-    message += `\nإجمالي القطع: ${cart.length}`
-    
-    window.open(`https://wa.me/905519522448?text=${encodeURIComponent(message)}`, '_blank')
-  }
-
-  // Download PDF
-  const downloadPDF = () => {
-    if (cart.length === 0) {
-      alert('⚠️ سلة الاستفسار فارغة')
-      return
-    }
-    
-    let content = "حجاب فاشون مول - سلة الاستفسار\n\n"
-    cart.forEach((item, index) => {
-      const name = item.name_ar || item.name_en || item.name || 'منتج'
-      let price = item.price_usd || item.price || 0
-      if (typeof price === 'string') {
-        price = parseFloat(price.replace(',', '.'))
-      }
-      content += `${index + 1}. ${name} - $${price.toFixed(2)}\n`
-    })
-    content += `\nإجمالي القطع: ${cart.length}\n\nشكراً لاهتمامك!`
-    
-    const blob = new Blob([content], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'استفسار-حجاب-فاشون.txt'
-    a.click()
-  }
-
-  // Handle form submission - sends email via API
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -137,25 +45,17 @@ export default function ContactPageAr() {
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
-
       const result = await response.json()
 
       if (result.success) {
         setFormStatus({ 
           type: 'success', 
-          message: '✅ شكراً لك! تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.' 
+          message: '✅ شكراً لك! تم إرسال رسالتك بنجاح. سوف نتواصل معك قريباً.' 
         })
-        
-        // Reset form using ref instead of e.currentTarget
-        if (formRef.current) {
-          formRef.current.reset()
-        }
-        
+        if (formRef.current) formRef.current.reset()
         setTimeout(() => setFormStatus({ type: null, message: '' }), 5000)
       } else {
         throw new Error(result.message || 'حدث خطأ')
@@ -164,7 +64,7 @@ export default function ContactPageAr() {
       console.error('Error sending email:', error)
       setFormStatus({ 
         type: 'error', 
-        message: '❌ عذراً، حدث خطأ في إرسال رسالتك. يرجى المحاولة مرة أخرى أو الاتصال بنا عبر واتساب.' 
+        message: '❌ عذراً، حدث خطأ أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى أو الاتصال بنا عبر واتساب.' 
       })
       setTimeout(() => setFormStatus({ type: null, message: '' }), 5000)
     } finally {
@@ -172,706 +72,667 @@ export default function ContactPageAr() {
     }
   }
 
+  if (!mounted) {
+    return null
+  }
+
   return (
     <>
       <Head>
-        <title>اتصل بنا - حجاب فاشون مول | جملة ملابس محجبات تركية</title>
-        <meta name="description" content="تواصل مع حجاب فاشون مول للاستفسارات حول الجملة والطلبات بالجملة والشراكات. نحن هنا لمساعدتك في جميع احتياجات أزياء المحجبات." />
-        <meta name="keywords" content="اتصل بحجاب فاشون مول, جملة حجاب تركي, مورد أزياء محجبات, استفسارات جملة" />
+        <title>اتصل بنا - Hijab Fashion Mall | جملة الأزياء المحتشمة التركية</title>
+        <meta name="description" content="اتصل بـ Hijab Fashion Mall للاستفسارات بالجملة والطلبات الكبيرة والشراكات في مجال الأزياء المحتشمة." />
+        <meta name="keywords" content="اتصل بنا, هجاب فاشن مول, جملة حجاب تركي, مورد أزياء محتشمة" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="canonical" href="https://hijabfashionmall.com/ar/contact" />
         <link rel="alternate" href="https://hijabfashionmall.com/ar/contact" hrefLang="ar" />
         <link rel="alternate" href="https://hijabfashionmall.com/en/contact" hrefLang="en" />
+        <link rel="alternate" href="https://hijabfashionmall.com/fr/contact" hrefLang="fr" />
+        <link rel="alternate" href="https://hijabfashionmall.com/de/contact" hrefLang="de" />
+        <link rel="alternate" href="https://hijabfashionmall.com/it/contact" hrefLang="it" />
+        <link rel="alternate" href="https://hijabfashionmall.com/es/contact" hrefLang="es" />
+        <link rel="alternate" hrefLang="x-default" href="https://hijabfashionmall.com/en/contact" />
+        <meta property="og:title" content="اتصل بنا - Hijab Fashion Mall" />
+        <meta property="og:description" content="اتصل بنا للاستفسارات بالجملة والطلبات الكبيرة والشراكات في الأزياء المحتشمة." />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/contact-og.webp" />
+        <meta property="og:url" content="https://hijabfashionmall.com/ar/contact" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="ar_AR" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="اتصل بنا - Hijab Fashion Mall" />
+        <meta name="twitter:description" content="اتصل بنا للاستفسارات بالجملة والطلبات الكبيرة والشراكات." />
       </Head>
 
-      {/* Overlay for cart */}
-      <div 
-        className={`overlay ${isCartOpen ? 'active' : ''}`} 
-        onClick={() => setIsCartOpen(false)}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0,0,0,0.5)',
-          zIndex: 1999,
-          display: isCartOpen ? 'block' : 'none'
-        }}
-      ></div>
-
-      {/* Cart Sidebar */}
-      <div 
-        className={`cart-sidebar ${isCartOpen ? 'open' : ''}`} 
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: isCartOpen ? '0' : '-400px',
-          width: '380px',
-          height: '100vh',
-          background: 'white',
-          boxShadow: '5px 0 30px rgba(0,0,0,0.1)',
-          zIndex: 2000,
-          transition: 'left 0.3s ease',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <div className="cart-header" style={{
-          padding: '25px',
-          borderBottom: '1px solid #eee',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <h3 style={{ fontSize: '20px', color: '#000' }}>سلة الاستفسار</h3>
-          <span 
-            className="close-cart" 
-            onClick={() => setIsCartOpen(false)}
-            style={{ fontSize: '24px', cursor: 'pointer', color: '#555' }}
-          >&times;</span>
-        </div>
-        <div className="cart-items" style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '20px'
-        }}>
-          {cart.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#666' }}>
-              السلة فارغة
-            </div>
-          ) : (
-            cart.map((item, index) => (
-              <div key={index} className="cart-item" style={{
-                display: 'flex',
-                gap: '15px',
-                marginBottom: '20px',
-                paddingBottom: '20px',
-                borderBottom: '1px solid #eee'
-              }}>
-                <div className="cart-item-image" style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '8px',
-                  overflow: 'hidden',
-                  background: '#f5f5f5',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <img 
-                    src={item.imageUrl || '/images/default.webp'} 
-                    alt={item.name_ar || 'منتج'}
-                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/default.webp'
-                    }}
-                  />
-                </div>
-                <div className="cart-item-details" style={{ flex: 1 }}>
-                  <div className="cart-item-title" style={{ fontWeight: 600, marginBottom: '5px' }}>
-                    {item.name_ar || item.name_en || 'منتج'}
-                  </div>
-                  <div className="cart-item-price" style={{ color: '#ff5a00', fontWeight: 600 }}>
-                    ${item.price_usd?.toFixed(2) || '0.00'}
-                  </div>
-                  <div 
-                    className="cart-item-remove" 
-                    onClick={() => removeFromCart(index)}
-                    style={{ color: '#dc2626', cursor: 'pointer', fontSize: '14px' }}
-                  >
-                    إزالة
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-        <div className="cart-footer" style={{
-          padding: '25px',
-          borderTop: '1px solid #eee'
-        }}>
-          <div className="cart-total" style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '20px',
-            fontWeight: 600
-          }}>
-            <span>إجمالي القطع:</span>
-            <span>{cart.length}</span>
-          </div>
-          <div className="cart-actions" style={{ display: 'flex', gap: '10px' }}>
-            <button 
-              className="cart-whatsapp" 
-              onClick={sendToWhatsApp}
-              style={{
-                flex: 1,
-                padding: '12px',
-                border: 'none',
-                borderRadius: '8px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                background: '#25d366',
-                color: 'white'
-              }}
-            >
-              <i className="fab fa-whatsapp"></i> إرسال عبر واتساب
-            </button>
-            <button 
-              className="cart-pdf" 
-              onClick={downloadPDF}
-              style={{
-                flex: 1,
-                padding: '12px',
-                border: 'none',
-                borderRadius: '8px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                background: '#ff5a00',
-                color: 'white'
-              }}
-            >
-              <i className="fas fa-file-pdf"></i> PDF
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <ul style={{
-            listStyle: 'none',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px'
-          }}>
-            <li style={{ fontSize: '14px', color: '#555' }}>
-              <Link href="/ar" style={{ color: '#555', textDecoration: 'none' }}>الرئيسية</Link>
-            </li>
-            <li style={{ fontSize: '14px', color: '#555' }}>‹</li>
-            <li style={{ fontSize: '14px', color: '#000', fontWeight: 600 }}>اتصل بنا</li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Page Header */}
-      <section style={{
-        background: 'linear-gradient(135deg, rgba(255, 90, 0, 0.8) 0%, rgba(255, 140, 66, 0.8) 100%)',
-        padding: '60px 0',
-        textAlign: 'center',
-        color: 'white'
-      }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <h1 style={{ fontSize: '42px', fontWeight: 700, marginBottom: '15px' }}>تواصل معنا</h1>
-          <p style={{ fontSize: '18px', maxWidth: '600px', margin: '0 auto', opacity: 0.9 }}>
-            نحن هنا للإجابة على جميع أسئلتك ومساعدتك في تنمية أعمالك مع ملابس المحجبات التركية الفاخرة.
-          </p>
-        </div>
-      </section>
-
-      {/* Form Status Message */}
-      {formStatus.type && (
-        <div style={{
-          maxWidth: '1200px',
-          margin: '20px auto 0',
-          padding: '15px 20px',
-          background: formStatus.type === 'success' ? '#d4edda' : '#f8d7da',
-          color: formStatus.type === 'success' ? '#155724' : '#721c24',
-          borderRadius: '8px',
-          textAlign: 'center'
-        }}>
-          {formStatus.message}
-        </div>
-      )}
-
-      {/* Contact Section */}
-      <section style={{ padding: '80px 0' }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '50px',
-            alignItems: 'start'
-          }}>
-            {/* Left Side - Contact Info */}
-            <div>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '25px',
-                marginBottom: '30px'
-              }}>
-                {/* Phone Card */}
-                <div style={{
-                  background: 'white',
-                  borderRadius: '15px',
-                  padding: '30px 20px',
-                  textAlign: 'center',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                  transition: 'transform 0.3s',
-                  border: '1px solid rgba(0,0,0,0.02)'
-                }}>
-                  <div style={{
-                    width: '70px',
-                    height: '70px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 90, 0, 0.1)',
-                    color: '#ff5a00',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 20px',
-                    fontSize: '30px'
-                  }}>
-                    <i className="fas fa-phone-alt"></i>
-                  </div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#000', marginBottom: '10px' }}>اتصل بنا</h3>
-                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.6' }}>+90 551 952 24 48</p>
-                  <a href="tel:+905519522448" style={{
-                    color: '#ff5a00',
-                    textDecoration: 'none',
-                    fontWeight: 600,
-                    fontSize: '14px',
-                    display: 'inline-block',
-                    marginTop: '10px'
-                  }}>
-                    اتصل الآن <i className="fas fa-arrow-left"></i>
-                  </a>
-                </div>
-
-                {/* Hours Card */}
-                <div style={{
-                  background: 'white',
-                  borderRadius: '15px',
-                  padding: '30px 20px',
-                  textAlign: 'center',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                  transition: 'transform 0.3s',
-                  border: '1px solid rgba(0,0,0,0.02)'
-                }}>
-                  <div style={{
-                    width: '70px',
-                    height: '70px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 90, 0, 0.1)',
-                    color: '#ff5a00',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 20px',
-                    fontSize: '30px'
-                  }}>
-                    <i className="fas fa-clock"></i>
-                  </div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#000', marginBottom: '10px' }}>ساعات العمل</h3>
-                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.6' }}>الإثنين-الجمعة: 9ص - 8م</p>
-                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.6' }}>السبت: 10ص - 6م</p>
-                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.6' }}>الأحد: مغلق</p>
-                </div>
-              </div>
-
-              {/* WhatsApp Card */}
-              <div style={{
-                background: 'linear-gradient(135deg, #25d366 0%, #128C7E 100%)',
-                color: 'white',
-                padding: '40px',
-                borderRadius: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '30px'
-              }}>
-                <div style={{ flex: 1, minWidth: '250px' }}>
-                  <h3 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '10px', color: 'white' }}>تحدث معنا على واتساب</h3>
-                  <p style={{ opacity: 0.9, marginBottom: '20px' }}>
-                    احصل على إجابات فورية لأسئلتك. فريقنا متاح 24/7 لمساعدتك في الطلبات والاستفسارات والدعم.
-                  </p>
-                  <a href="https://wa.me/905519522448?text=مرحباً%2C%20لدي%20سؤال%20عن%20منتجاتكم" 
-                     style={{
-                       display: 'inline-flex',
-                       alignItems: 'center',
-                       gap: '10px',
-                       background: 'white',
-                       color: '#25d366',
-                       padding: '15px 35px',
-                       borderRadius: '50px',
-                       textDecoration: 'none',
-                       fontWeight: 600,
-                       transition: 'all 0.3s',
-                       boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
-                     }}
-                     target="_blank"
-                     rel="noopener noreferrer">
-                    <i className="fab fa-whatsapp"></i> بدء محادثة واتساب
-                  </a>
-                </div>
-                <div style={{ fontSize: '80px', opacity: 0.3, position: 'relative', left: '-20px' }}>
-                  <i className="fab fa-whatsapp"></i>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Side - Contact Form */}
-            <div style={{
-              background: 'white',
-              borderRadius: '20px',
-              padding: '40px',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.1)'
-            }}>
-              <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#000', marginBottom: '30px' }}>أرسل لنا رسالة</h2>
-              <form ref={formRef} onSubmit={handleSubmit}>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '20px',
-                  marginBottom: '20px'
-                }}>
-                  <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#555', marginBottom: '8px' }}>
-                      الاسم الكامل *
-                    </label>
-                    <input 
-                      type="text" 
-                      name="name" 
-                      required
-                      style={{
-                        width: '100%',
-                        padding: '15px 18px',
-                        border: '2px solid #eee',
-                        borderRadius: '12px',
-                        fontFamily: 'Tajawal, sans-serif',
-                        fontSize: '15px',
-                        transition: 'all 0.3s',
-                        background: '#fafafa'
-                      }}
-                      placeholder="أدخل اسمك الكامل"
-                      onFocus={(e) => e.target.style.borderColor = '#ff5a00'}
-                      onBlur={(e) => e.target.style.borderColor = '#eee'}
-                    />
-                  </div>
-                  <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#555', marginBottom: '8px' }}>
-                      الدولة *
-                    </label>
-                    <input 
-                      type="text" 
-                      name="country" 
-                      required
-                      style={{
-                        width: '100%',
-                        padding: '15px 18px',
-                        border: '2px solid #eee',
-                        borderRadius: '12px',
-                        fontFamily: 'Tajawal, sans-serif',
-                        fontSize: '15px',
-                        transition: 'all 0.3s',
-                        background: '#fafafa'
-                      }}
-                      placeholder="أدخل اسم دولتكم"
-                      onFocus={(e) => e.target.style.borderColor = '#ff5a00'}
-                      onBlur={(e) => e.target.style.borderColor = '#eee'}
-                    />
-                  </div>
-                </div>
-                
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '20px',
-                  marginBottom: '20px'
-                }}>
-                  <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#555', marginBottom: '8px' }}>
-                      رقم الهاتف *
-                    </label>
-                    <input 
-                      type="tel" 
-                      name="phone" 
-                      required
-                      style={{
-                        width: '100%',
-                        padding: '15px 18px',
-                        border: '2px solid #eee',
-                        borderRadius: '12px',
-                        fontFamily: 'Tajawal, sans-serif',
-                        fontSize: '15px',
-                        transition: 'all 0.3s',
-                        background: '#fafafa'
-                      }}
-                      placeholder="أدخل رقم هاتفك"
-                      onFocus={(e) => e.target.style.borderColor = '#ff5a00'}
-                      onBlur={(e) => e.target.style.borderColor = '#eee'}
-                    />
-                  </div>
-                  <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#555', marginBottom: '8px' }}>
-                      البريد الإلكتروني
-                    </label>
-                    <input 
-                      type="email" 
-                      name="email"
-                      style={{
-                        width: '100%',
-                        padding: '15px 18px',
-                        border: '2px solid #eee',
-                        borderRadius: '12px',
-                        fontFamily: 'Tajawal, sans-serif',
-                        fontSize: '15px',
-                        transition: 'all 0.3s',
-                        background: '#fafafa'
-                      }}
-                      placeholder="أدخل بريدك الإلكتروني (اختياري)"
-                      onFocus={(e) => e.target.style.borderColor = '#ff5a00'}
-                      onBlur={(e) => e.target.style.borderColor = '#eee'}
-                    />
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '20px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#555', marginBottom: '8px' }}>
-                    رسالتك *
-                  </label>
-                  <textarea 
-                    name="message" 
-                    required
-                    rows={6}
-                    style={{
-                      width: '100%',
-                      padding: '15px 18px',
-                      border: '2px solid #eee',
-                      borderRadius: '12px',
-                      fontFamily: 'Tajawal, sans-serif',
-                      fontSize: '15px',
-                      transition: 'all 0.3s',
-                      background: '#fafafa',
-                      resize: 'vertical',
-                      minHeight: '150px'
-                    }}
-                    placeholder="اكتب رسالتك هنا..."
-                    onFocus={(e) => e.target.style.borderColor = '#ff5a00'}
-                    onBlur={(e) => e.target.style.borderColor = '#eee'}
-                  ></textarea>
-                </div>
-
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  style={{
-                    background: '#ff5a00',
-                    color: 'white',
-                    border: 'none',
-                    padding: '16px 40px',
-                    borderRadius: '50px',
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.3s',
-                    width: '100%',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '10px',
-                    opacity: isSubmitting ? 0.7 : 1
-                  }}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <i className="fas fa-spinner fa-spin"></i> جاري الإرسال...
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-paper-plane"></i> إرسال الرسالة
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section style={{ padding: '60px 0', background: '#f5f5f5' }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <h2 style={{ textAlign: 'center', fontSize: '36px', color: '#000', marginBottom: '50px' }}>الأسئلة الشائعة</h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '30px'
-          }}>
-            <div style={{
-              background: 'white',
-              borderRadius: '15px',
-              padding: '30px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
-            }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#ff5a00', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <i className="fas fa-question-circle"></i> كيف يمكنني تقديم طلب؟
-              </h3>
-              <p style={{ color: '#555', lineHeight: '1.7' }}>
-                يمكنك تصفح الكتالوج الخاص بنا، واختيار المنتجات التي تهتم بها، وإرسال استفسارك عبر واتساب أو نموذج الاتصال. سنتواصل معك بخصوص الأسعار والتوفر.
-              </p>
-            </div>
-            <div style={{
-              background: 'white',
-              borderRadius: '15px',
-              padding: '30px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
-            }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#ff5a00', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <i className="fas fa-truck"></i> هل تشحنون عالمياً؟
-              </h3>
-              <p style={{ color: '#555', lineHeight: '1.7' }}>
-                نعم! نشحن إلى أكثر من 50 دولة حول العالم. تختلف تكاليف الشحن وأوقات التسليم حسب الموقع. اتصل بنا للحصول على أسعار محددة.
-              </p>
-            </div>
-            <div style={{
-              background: 'white',
-              borderRadius: '15px',
-              padding: '30px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
-            }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#ff5a00', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <i className="fas fa-credit-card"></i> ما هي طرق الدفع المقبولة؟
-              </h3>
-              <p style={{ color: '#555', lineHeight: '1.7' }}>
-                نقبل التحويلات البنكية، ويسترن يونيون، وللعملاء المنتظمين يمكننا ترتيب طرق دفع أخرى. اتصل بنا للتفاصيل.
-              </p>
-            </div>
-            <div style={{
-              background: 'white',
-              borderRadius: '15px',
-              padding: '30px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
-            }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#ff5a00', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <i className="fas fa-box"></i> ما هو الحد الأدنى للطلب؟
-              </h3>
-              <p style={{ color: '#555', lineHeight: '1.7' }}>
-                ليس لدينا حد أدنى صارم للطلب. يمكنك مزج منتجات مختلفة في طلبك. بعض المنتجات التي تحمل علامة "RSS" يمكن طلبها كقطع فردية.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* WhatsApp Float Button */}
-      <a 
-        href="https://wa.me/905519522448?text=مرحباً%2C%20لدي%20سؤال%20عن%20منتجاتكم" 
-        className="whatsapp-float" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        style={{
-          position: 'fixed',
-          bottom: '30px',
-          right: '30px',
-          background: '#25d366',
-          color: 'white',
-          width: '60px',
-          height: '60px',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '30px',
-          boxShadow: '0 4px 20px rgba(37, 211, 102, 0.3)',
-          zIndex: 9999,
-          transition: 'all 0.3s',
-          textDecoration: 'none'
-        }}
-      >
-        <i className="fab fa-whatsapp"></i>
-      </a>
-
-      {/* Back to Top Button */}
-      <button 
-        id="backToTop" 
-        className="back-to-top"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        style={{
-          position: 'fixed',
-          bottom: '30px',
-          left: '30px',
-          background: '#ff5a00',
-          color: 'white',
-          width: '50px',
-          height: '50px',
-          borderRadius: '50%',
-          border: 'none',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '24px',
-          boxShadow: '0 4px 20px rgba(255, 90, 0, 0.3)',
-          zIndex: 9998,
-          transition: 'all 0.3s',
-          opacity: 0,
-          visibility: 'hidden'
-        }}
-      >
-        <i className="fas fa-arrow-up"></i>
-      </button>
-
       <style>{`
-        #backToTop.show {
-          opacity: 1;
-          visibility: visible;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
+        :root {
+            --primary: #f87833;
+            --primary-dark: #f87833;
+            --primary-light: #ff7b33;
+            --primary-soft: #fff0e6;
+            --black: #000000;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #555555;
+            --light-gray: #f8f9fa;
+            --border-gray: #e9ecef;
+            --white: #ffffff;
+            --whatsapp: #25d366;
+            --whatsapp-dark: #128C7E;
+            --success: #28a745;
+            --error: #dc3545;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 5px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Poppins', system-ui, sans-serif;
+            color: var(--dark-gray);
+            line-height: 1.6;
+            background: var(--white);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* RTL Support */
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-section {
+            padding: 20px 0;
+            background: var(--light-gray);
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .breadcrumb-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .rtl .breadcrumb-list {
+            flex-direction: row-reverse;
+        }
+
+        .breadcrumb-list li a {
+            color: var(--medium-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-list li a:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb-list li:last-child {
+            color: var(--black);
+            font-weight: 600;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 60px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Form Status */
+        .form-status {
+            max-width: 1280px;
+            margin: 20px auto;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .form-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .form-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Contact Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+            border: 1px solid var(--border-gray);
+        }
+
         .info-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 20px 40px rgba(255,90,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
-        
-        .whatsapp-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+
+        .info-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--primary-soft);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
         }
-        
-        .submit-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(255,90,0,0.3);
+
+        .info-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--black);
         }
-        
-        input:focus, textarea:focus {
-          outline: none;
-          background: white;
+
+        .info-card p {
+            color: var(--medium-gray);
+            margin-bottom: 8px;
         }
-        
-        @media (max-width: 768px) {
-          .container {
-            padding: 0 15px;
-          }
-          
-          .contact-grid {
-            grid-template-columns: 1fr;
+
+        .info-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 12px;
+            transition: all 0.3s;
+        }
+
+        .rtl .info-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .info-link:hover {
+            transform: translateX(5px);
+        }
+
+        /* WhatsApp Card */
+        .whatsapp-card {
+            background: linear-gradient(135deg, var(--whatsapp) 0%, var(--whatsapp-dark) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
             gap: 30px;
-          }
-          
-          .info-cards {
-            grid-template-columns: 1fr;
-          }
+            margin-top: 30px;
+        }
+
+        .rtl .whatsapp-card {
+            flex-direction: row-reverse;
+        }
+
+        .whatsapp-content {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .whatsapp-content h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .whatsapp-content p {
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            color: var(--whatsapp);
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .whatsapp-icon-bg {
+            font-size: 80px;
+            opacity: 0.2;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-gray);
+        }
+
+        .contact-form h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--black);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            background: var(--light-gray);
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 60px 0;
+            background: var(--light-gray);
+        }
+
+        .faq-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 50px;
+            color: var(--black);
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .faq-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+            border: 1px solid var(--border-gray);
+        }
+
+        .faq-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .faq-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rtl .faq-card h3 {
+            flex-direction: row-reverse;
+        }
+
+        .faq-card p {
+            color: var(--medium-gray);
+            line-height: 1.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .page-header h1 {
+                font-size: 36px;
+            }
+            
+            .page-header p {
+                font-size: 16px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .contact-form {
+                padding: 30px 20px;
+            }
+            
+            .contact-form h2 {
+                font-size: 24px;
+            }
+            
+            .faq-title {
+                font-size: 28px;
+            }
+            
+            .whatsapp-card {
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .rtl .whatsapp-card {
+                flex-direction: column;
+            }
+            
+            .whatsapp-icon-bg {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-card {
+                padding: 20px 15px;
+            }
+            
+            .info-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+            }
+            
+            .whatsapp-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
       `}</style>
 
-      {/* Back to Top Button Script */}
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          window.addEventListener('scroll', function() {
-            const backToTop = document.getElementById('backToTop');
-            if (window.scrollY > 300) {
-              backToTop.classList.add('show');
-            } else {
-              backToTop.classList.remove('show');
+      <div className="rtl">
+        {/* Breadcrumb */}
+        <div className="breadcrumb-section">
+          <div className="container">
+            <ul className="breadcrumb-list">
+              <li><Link href="/ar">🏠 الرئيسية</Link></li>
+              <li>/</li>
+              <li>📞 اتصل بنا</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Page Header */}
+        <section className="page-header">
+          <div className="container">
+            <h1>اتصل بنا</h1>
+            <p>نحن هنا للإجابة على أسئلتك ومساعدتك في تنمية أعمالك.</p>
+          </div>
+        </section>
+
+        {/* Form Status */}
+        {formStatus.type && (
+          <div className={`form-status ${formStatus.type}`}>
+            {formStatus.message}
+          </div>
+        )}
+
+        {/* Contact Section */}
+        <section style={{ padding: '80px 0' }}>
+          <div className="container">
+            <div className="contact-grid">
+              
+              {/* Left Side - Contact Info */}
+              <div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '25px', marginBottom: '30px' }}>
+                  
+                  {/* Phone Card */}
+                  <div className="info-card">
+                    <div className="info-icon">
+                      <FaPhoneAlt size={28} />
+                    </div>
+                    <h3>اتصل بنا</h3>
+                    <p>+90 551 952 24 48</p>
+                    <a href="tel:+905519522448" className="info-link">
+                      اتصل الآن ←
+                    </a>
+                  </div>
+
+                  {/* Hours Card */}
+                  <div className="info-card">
+                    <div className="info-icon">
+                      <FaClock size={28} />
+                    </div>
+                    <h3>ساعات العمل</h3>
+                    <p>الإثنين-الجمعة: 9ص-8م</p>
+                    <p>السبت: 10ص-6م</p>
+                    <p>الأحد: مغلق</p>
+                  </div>
+                </div>
+
+                {/* WhatsApp Card */}
+                <div className="whatsapp-card">
+                  <div className="whatsapp-content">
+                    <h3>تحدث عبر واتساب</h3>
+                    <p>احصل على إجابات فورية. فريقنا متاح 24/7.</p>
+                    <a 
+                      href="https://wa.me/905519522448" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="whatsapp-btn"
+                    >
+                      <FaWhatsapp size={18} /> ابدأ المحادثة
+                    </a>
+                  </div>
+                  <div className="whatsapp-icon-bg">
+                    <FaWhatsapp size={80} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side - Contact Form */}
+              <div className="contact-form">
+                <h2>أرسل لنا رسالة</h2>
+                <form ref={formRef} onSubmit={handleSubmit}>
+                  <div className="form-grid">
+                    <input 
+                      type="text" 
+                      name="name" 
+                      placeholder="الاسم الكامل *" 
+                      required 
+                      className="form-input"
+                    />
+                    <input 
+                      type="text" 
+                      name="country" 
+                      placeholder="الدولة *" 
+                      required 
+                      className="form-input"
+                    />
+                    <input 
+                      type="tel" 
+                      name="phone" 
+                      placeholder="رقم الهاتف *" 
+                      required 
+                      className="form-input"
+                    />
+                    <input 
+                      type="email" 
+                      name="email" 
+                      placeholder="البريد الإلكتروني (اختياري)" 
+                      className="form-input"
+                    />
+                  </div>
+                  <textarea 
+                    name="message" 
+                    rows={6} 
+                    placeholder="رسالتك *" 
+                    required 
+                    className="form-textarea"
+                  ></textarea>
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting} 
+                    className="submit-btn"
+                  >
+                    {isSubmitting ? 'جاري الإرسال...' : 'إرسال الرسالة'}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="faq-section">
+          <div className="container">
+            <h2 className="faq-title">الأسئلة الشائعة</h2>
+            <div className="faq-grid">
+              <div className="faq-card">
+                <h3><FaQuestionCircle size={18} /> كيف يمكنني تقديم طلب؟</h3>
+                <p>تصفح كتالوجنا، اختر المنتجات، أضف إلى سلة الاستفسار، وأرسل عبر واتساب. سيقوم فريقنا بالتأكيد خلال 24 ساعة.</p>
+              </div>
+              <div className="faq-card">
+                <h3><FaTruck size={18} /> هل تشحن إلى جميع أنحاء العالم؟</h3>
+                <p>نعم! نشحن إلى أكثر من 50 دولة عبر شركات شحن موثوقة. توصيل سريع من الباب إلى الباب مع تتبع.</p>
+              </div>
+              <div className="faq-card">
+                <h3><FaCreditCard size={18} /> طرق الدفع؟</h3>
+                <p>تحويل بنكي، ويسترن يونيون، وبطاقات الائتمان الرئيسية. معالجة آمنة لراحتك.</p>
+              </div>
+              <div className="faq-card">
+                <h3><FaBox size={18} /> الحد الأدنى للطلب؟</h3>
+                <p>لا يوجد حد أدنى للكمية! اطلب ما تحتاجه - مثالي للمتاجر الصغيرة والكبيرة.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* JSON-LD Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "اتصل بـ Hijab Fashion Mall",
+            "description": "اتصل بنا للاستفسارات بالجملة والشراكات",
+            "url": "https://hijabfashionmall.com/ar/contact",
+            "mainEntity": {
+              "@type": "Organization",
+              "name": "Hijab Fashion Mall",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+905519522448",
+                "contactType": "خدمة العملاء",
+                "availableLanguage": ["العربية", "الإنجليزية", "التركية"]
+              }
             }
-          });
-        `
-      }} />
+          })
+        }}
+      />
     </>
   )
 }

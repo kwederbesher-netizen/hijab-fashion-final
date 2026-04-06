@@ -29,6 +29,7 @@ export default function HomePageEn() {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
   
   const isMounted = useRef(true)
@@ -101,6 +102,15 @@ export default function HomePageEn() {
       }
     }
   }, [slides.length])
+
+  // Back to top button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
@@ -1153,9 +1163,9 @@ export default function HomePageEn() {
           }
         `}</style>
 
-        {/* Hero Slider - Optimized with next/image and priority */}
-        <section className="hero-slider" style={{ position: 'relative', height: '650px', overflow: 'hidden' }}>
-          <div style={{ position: 'relative', height: '100%' }}>
+        {/* Hero Slider */}
+        <section className="hero-slider" style={{ position: 'relative', width: '100%', overflow: 'hidden', height: 'auto', maxHeight: '600px' }}>
+          <div style={{ position: 'relative', width: '100%' }}>
             {slides.map((slide, index) => (
               <div
                 key={index}
@@ -1169,15 +1179,15 @@ export default function HomePageEn() {
                   transition: 'opacity 0.5s ease-in-out'
                 }}
               >
-                <Image
+                <img
                   src={slide.image}
                   alt={slide.title}
-                  fill
-                  priority={index === 0}
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  sizes="100vw"
-                  style={{ objectFit: 'cover' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block'
+                  }}
                 />
                 <div style={{
                   position: 'absolute',
@@ -1188,9 +1198,9 @@ export default function HomePageEn() {
                   background: 'rgba(0, 0, 0, 0.55)',
                   zIndex: 1
                 }} />
-                <div style={{
+                <div className="hero-content" style={{
                   position: 'absolute',
-                  top: '50%',
+                  top: '42%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   zIndex: 2,
@@ -1199,39 +1209,52 @@ export default function HomePageEn() {
                   width: '90%',
                   maxWidth: '800px'
                 }}>
-                  <h1 style={{ fontSize: '54px', fontWeight: 800, marginBottom: '20px' }}>{slide.title}</h1>
-                  <p style={{ fontSize: '22px', marginBottom: '30px' }}>{slide.description}</p>
-                  <Link href={slide.cta.link} className="btn">
+                  <h1 style={{
+                    fontSize: 'clamp(28px, 6vw, 54px)',
+                    fontWeight: 800,
+                    marginBottom: '20px'
+                  }}>{slide.title}</h1>
+                  <p style={{
+                    fontSize: 'clamp(14px, 3.5vw, 22px)',
+                    marginBottom: '25px'
+                  }}>{slide.description}</p>
+                  <Link href={slide.cta.link} className="btn" style={{
+                    padding: '14px 40px',
+                    fontSize: '16px'
+                  }}>
                     {slide.cta.text}
                   </Link>
                 </div>
               </div>
             ))}
-          </div>
-          <div style={{
-            position: 'absolute',
-            bottom: '30px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: '10px',
-            zIndex: 3
-          }}>
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                style={{
-                  width: '14px',
-                  height: '14px',
-                  borderRadius: '50%',
-                  background: currentSlide === index ? '#ff5a00' : 'rgba(255,255,255,0.5)',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+            <img src={slides[0].image} alt="hidden" style={{ width: '100%', height: 'auto', visibility: 'hidden', display: 'block' }} />
+            <div className="hero-dots" style={{
+              position: 'absolute',
+              bottom: '25px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '12px',
+              zIndex: 3
+            }}>
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  style={{
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
+                    background: currentSlide === index ? '#ff5a00' : 'rgba(255,255,255,0.6)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    transition: 'all 0.3s'
+                  }}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -1633,6 +1656,35 @@ export default function HomePageEn() {
             </div>
           </div>
         </section>
+
+        {/* Back to Top Button */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{
+            position: 'fixed',
+            bottom: '30px',
+            right: '30px',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            background: '#ff5a00',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+            display: showBackToTop ? 'flex' : 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '24px',
+            boxShadow: '0 4px 15px rgba(255, 90, 0, 0.3)',
+            zIndex: 999,
+            transition: 'all 0.3s'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = '#e04e00'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = '#ff5a00'; e.currentTarget.style.transform = 'translateY(0)' }}
+          aria-label="Back to top"
+        >
+          <FaArrowUp />
+        </button>
       </main>
     </>
   )

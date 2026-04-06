@@ -1,4 +1,3 @@
-// app/en/product/[slug]/page.tsx
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
@@ -6,6 +5,11 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { 
+  FaBox, FaRuler, FaShoppingCart, FaBarcode, 
+  FaCheckCircle, FaTruck, FaArrowUp, FaInfoCircle,
+  FaSpinner
+} from 'react-icons/fa'
 
 export default function ProductPageEn() {
   const params = useParams()
@@ -16,7 +20,6 @@ export default function ProductPageEn() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [quantity, setQuantity] = useState(1)
-  const sliderInterval = useRef<NodeJS.Timeout | null>(null)
   const [selectedImage, setSelectedImage] = useState('')
   const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
@@ -24,12 +27,11 @@ export default function ProductPageEn() {
   const isMounted = useRef(true)
   const abortController = useRef<AbortController | null>(null)
 
-  // Get category display name
   const getCategoryDisplay = useCallback((categoryEn: string) => {
     return categoryEn
   }, [])
 
-  // تحميل المنتج
+  // Load product
   useEffect(() => {
     isMounted.current = true
     setLoading(true)
@@ -51,7 +53,6 @@ export default function ProductPageEn() {
           setProduct(foundProduct)
           setSelectedImage(foundProduct.imageUrl || foundProduct.mainImage || '/images/default.webp')
           
-          // جلب منتجات ذات صلة (نفس التصنيف)
           if (foundProduct.category_main_en) {
             const relatedRes = await fetch(`/api/products?category=${foundProduct.category_main_en}&limit=4`, {
               signal: abortController.current?.signal
@@ -96,14 +97,13 @@ export default function ProductPageEn() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Add to cart function
+  // Add to cart
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     
     const currentCart = JSON.parse(localStorage.getItem('cart') || '[]')
     
-    // تحديد نوع المنتج
     const isRSS = product['rss/not rss message_en']?.includes('single piece') || 
                   product['rss/not rss message_ar']?.includes('قطعة واحدة')
     const packetSize = product.pcs_per_packet ? parseInt(product.pcs_per_packet) : 1
@@ -154,7 +154,7 @@ export default function ProductPageEn() {
     return sizes.split(' ').filter(s => s.trim())
   }, [])
 
-  // تعيين الكمية الافتراضية
+  // Set default quantity
   useEffect(() => {
     if (product) {
       const isRSSProduct = product['rss/not rss message_en']?.includes('single piece') || 
@@ -165,7 +165,6 @@ export default function ProductPageEn() {
     }
   }, [product])
 
-  // دوال التحكم في الكمية
   const step = product ? (product['rss/not rss message_en']?.includes('single piece') || product['rss/not rss message_ar']?.includes('قطعة واحدة') ? 1 : (parseInt(product.pcs_per_packet) || 1)) : 1
   const minQuantity = product ? (product['rss/not rss message_en']?.includes('single piece') || product['rss/not rss message_ar']?.includes('قطعة واحدة') ? 1 : (parseInt(product.pcs_per_packet) || 1)) : 1
 
@@ -187,12 +186,10 @@ export default function ProductPageEn() {
       alignItems: 'center',
       justifyContent: 'center'
     }}>
-      <div style={{
-        width: '60px',
-        height: '60px',
-        border: '3px solid #f3f3f3',
-        borderTop: '3px solid #ff5a00',
-        borderRadius: '50%',
+      <FaSpinner style={{ 
+        width: '60px', 
+        height: '60px', 
+        color: '#ff5a00',
         animation: 'spin 1s linear infinite',
         marginBottom: '20px'
       }} />
@@ -202,13 +199,7 @@ export default function ProductPageEn() {
           100% { transform: rotate(360deg); }
         }
       `}</style>
-      <p style={{ 
-        color: '#555', 
-        fontSize: '18px',
-        fontFamily: 'Poppins, sans-serif'
-      }}>
-        Loading product...
-      </p>
+      <p style={{ color: '#555', fontSize: '18px' }}>Loading product...</p>
     </div>
   )
 
@@ -222,22 +213,9 @@ export default function ProductPageEn() {
       alignItems: 'center',
       justifyContent: 'center'
     }}>
-      <i className="fas fa-exclamation-circle" style={{ fontSize: '70px', color: '#ff5a00', marginBottom: '20px' }}></i>
-      <h1 style={{ 
-        fontSize: '36px', 
-        marginBottom: '15px',
-        fontFamily: 'Poppins, sans-serif',
-        fontWeight: 700
-      }}>
-        Product Not Found
-      </h1>
-      <p style={{ 
-        marginBottom: '30px', 
-        color: '#555',
-        fontSize: '18px'
-      }}>
-        Please select a product from our catalog.
-      </p>
+      <div style={{ fontSize: '70px', color: '#ff5a00', marginBottom: '20px' }}>⚠️</div>
+      <h1 style={{ fontSize: '36px', marginBottom: '15px', fontWeight: 700 }}>Product Not Found</h1>
+      <p style={{ marginBottom: '30px', color: '#555', fontSize: '18px' }}>Please select a product from our catalog.</p>
       <Link 
         href="/en/catalog" 
         style={{ 
@@ -249,18 +227,7 @@ export default function ProductPageEn() {
           textDecoration: 'none',
           fontWeight: '600',
           fontSize: '16px',
-          transition: 'all 0.3s',
-          boxShadow: '0 4px 15px rgba(255, 90, 0, 0.2)'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = '#e04e00'
-          e.currentTarget.style.transform = 'translateY(-2px)'
-          e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 90, 0, 0.3)'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = '#ff5a00'
-          e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 90, 0, 0.2)'
+          transition: 'all 0.3s'
         }}
       >
         Back to Catalog
@@ -282,19 +249,15 @@ export default function ProductPageEn() {
     <>
       <Head>
         <title>{productName} - Hijab Fashion Mall | Wholesale Turkish Modest Fashion</title>
-        <meta name="description" content={product.description_en || product.description_ar || `Premium ${productName} from Turkish modest fashion. Wholesale hijab with worldwide shipping.`} />
-        <meta name="keywords" content={`${productName}, wholesale hijab turkish, ${productCategory}, modest fashion wholesale, abaya, modest dresses, turkish hijab wholesale`} />
+        <meta name="description" content={product.description_en || product.description_ar || `Premium ${productName} from Turkish modest fashion.`} />
+        <meta name="keywords" content={`${productName}, wholesale hijab turkish, ${productCategory}, modest fashion wholesale`} />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={`https://hijabfashionmall.com/en/product/${product.slug_en || product.slug_ar || product._id}`} />
-        <link rel="alternate" href={`https://hijabfashionmall.com/ar/product/${product.slug_ar || product._id}`} hrefLang="ar" />
-        <link rel="alternate" href={`https://hijabfashionmall.com/en/product/${product.slug_en || product._id}`} hrefLang="en" />
-        
         <meta property="og:title" content={`${productName} - Hijab Fashion Mall`} />
-        <meta property="og:description" content={product.description_en || product.description_ar || `Premium ${productName} collection`} />
+        <meta property="og:description" content={product.description_en || product.description_ar} />
         <meta property="og:url" content={`https://hijabfashionmall.com/en/product/${product.slug_en || product.slug_ar || product._id}`} />
         <meta property="og:type" content="product" />
-        <meta property="og:image" content={product.imageUrl || product.mainImage || '/images/default.webp'} />
-        
+        <meta property="og:image" content={product.imageUrl || '/images/default.webp'} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -303,7 +266,7 @@ export default function ProductPageEn() {
               "@type": "Product",
               "name": productName,
               "description": product.description_en || product.description_ar,
-              "image": product.imageUrl || product.mainImage,
+              "image": product.imageUrl,
               "sku": product.product_code,
               "brand": { "@type": "Brand", "name": "Hijab Fashion Mall" },
               "offers": {
@@ -339,46 +302,23 @@ export default function ProductPageEn() {
           zIndex: 999,
           transition: 'all 0.3s'
         }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-5px)'
-          e.currentTarget.style.background = '#e04e00'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.background = '#ff5a00'
-        }}
-        aria-label="Back to top"
       >
-        <i className="fas fa-arrow-up"></i>
+        <FaArrowUp />
       </button>
 
       {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
+      <div style={{ padding: '20px 0', background: '#f5f5f5', borderBottom: '1px solid #eee' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '8px',
-            fontSize: '14px',
-            color: '#555'
-          }}>
-            <Link href="/en" style={{ color: '#555', textDecoration: 'none', transition: 'color 0.3s' }}>
-              Home
-            </Link>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '14px', color: '#555' }}>
+            <Link href="/en" style={{ color: '#555', textDecoration: 'none' }}>Home</Link>
             <span style={{ color: '#999' }}>/</span>
-            <Link href="/en/catalog" style={{ color: '#555', textDecoration: 'none', transition: 'color 0.3s' }}>
-              Catalog
-            </Link>
+            <Link href="/en/catalog" style={{ color: '#555', textDecoration: 'none' }}>Catalog</Link>
             <span style={{ color: '#999' }}>/</span>
-            <Link href={`/en/category/${product.category_main_en?.toLowerCase() || ''}`} style={{ color: '#555', textDecoration: 'none', transition: 'color 0.3s' }}>
+            <Link href={`/en/category/${product.category_main_en?.toLowerCase() || ''}`} style={{ color: '#555', textDecoration: 'none' }}>
               {productCategoryDisplay}
             </Link>
             <span style={{ color: '#999' }}>/</span>
-            <span style={{ color: '#000', fontWeight: '600' }}>{productName}</span>
+            <span style={{ color: '#000', fontWeight: 600 }}>{productName}</span>
           </div>
         </div>
       </div>
@@ -386,11 +326,7 @@ export default function ProductPageEn() {
       {/* Product Section */}
       <div style={{ padding: '60px 0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '50px'
-          }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px' }}>
             {/* Product Image */}
             <div>
               <div style={{
@@ -402,22 +338,13 @@ export default function ProductPageEn() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                transition: 'transform 0.3s'
+                boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
               }}>
                 <img 
-                  src={selectedImage || product.imageUrl || product.mainImage || '/images/default.webp'} 
+                  src={selectedImage || product.imageUrl || '/images/default.webp'} 
                   alt={productName}
-                  style={{ 
-                    maxWidth: '100%', 
-                    maxHeight: '100%', 
-                    objectFit: 'contain',
-                    padding: '20px',
-                    transition: 'transform 0.5s'
-                  }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/default.webp'
-                  }}
+                  style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '20px' }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }}
                 />
               </div>
             </div>
@@ -437,13 +364,7 @@ export default function ProductPageEn() {
                 {productCategoryDisplay}
               </span>
               
-              <h1 style={{
-                fontSize: '36px',
-                fontWeight: '700',
-                color: '#000',
-                marginBottom: '15px',
-                lineHeight: '1.2'
-              }}>
+              <h1 style={{ fontSize: '36px', fontWeight: '700', color: '#000', marginBottom: '15px', lineHeight: '1.2' }}>
                 {productName}
               </h1>
               
@@ -455,35 +376,17 @@ export default function ProductPageEn() {
                 paddingBottom: '25px',
                 borderBottom: '1px solid #eee'
               }}>
-                <div style={{
-                  fontSize: '42px',
-                  fontWeight: '700',
-                  color: '#ff5a00'
-                }}>
+                <div style={{ fontSize: '42px', fontWeight: '700', color: '#ff5a00' }}>
                   {formatPrice(productPrice)}
                 </div>
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                   {isRSS && (
-                    <span style={{
-                      padding: '6px 15px',
-                      borderRadius: '30px',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      background: '#10b981',
-                      color: 'white'
-                    }}>
+                    <span style={{ padding: '6px 15px', borderRadius: '30px', fontSize: '13px', fontWeight: '600', background: '#10b981', color: 'white' }}>
                       Single Piece
                     </span>
                   )}
                   {hasPlus && (
-                    <span style={{
-                      padding: '6px 15px',
-                      borderRadius: '30px',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      background: '#000',
-                      color: 'white'
-                    }}>
+                    <span style={{ padding: '6px 15px', borderRadius: '30px', fontSize: '13px', fontWeight: '600', background: '#000', color: 'white' }}>
                       Plus Sizes
                     </span>
                   )}
@@ -502,30 +405,24 @@ export default function ProductPageEn() {
                   gap: '10px',
                   color: '#3b82f6'
                 }}>
-                  <i className="fas fa-box" style={{ fontSize: '20px' }}></i>
+                  <FaBox />
                   <span>
                     {(() => {
-                      if (product['rss/not rss message_en'] && product['rss/not rss message_en'] !== 'null' && product['rss/not rss message_en'] !== '') {
+                      if (product['rss/not rss message_en'] && product['rss/not rss message_en'] !== 'null') {
                         return product['rss/not rss message_en']
                       }
                       if (product.pcs_per_packet && product.pcs_per_packet !== '') {
-                        return `📦 Sold in packs of ${product.pcs_per_packet} pieces`
+                        return `Sold in packs of ${product.pcs_per_packet} pieces`
                       }
-                      return product['rss/not rss message_ar'] || '📦 Packaging information not available'
+                      return product['rss/not rss message_ar'] || 'Packaging information not available'
                     })()}
                   </span>
                 </div>
               )}
 
+              {/* Description */}
               <div style={{ marginBottom: '30px' }}>
-                <h3 style={{
-                  fontSize: '18px',
-                  fontWeight: '700',
-                  color: '#000',
-                  marginBottom: '10px'
-                }}>
-                  Product Description
-                </h3>
+                <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#000', marginBottom: '10px' }}>Product Description</h3>
                 <p style={{ color: '#555', lineHeight: '1.8' }}>
                   {product.description_en || product.description_ar || 'Premium quality Turkish product.'}
                 </p>
@@ -538,17 +435,8 @@ export default function ProductPageEn() {
                 background: '#f5f5f5',
                 borderRadius: '15px'
               }}>
-                <h3 style={{
-                  fontSize: '18px',
-                  fontWeight: '700',
-                  color: '#000',
-                  marginBottom: '15px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px'
-                }}>
-                  <i className="fas fa-ruler" style={{ color: '#ff5a00' }}></i>
-                  Available Sizes
+                <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#000', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <FaRuler style={{ color: '#ff5a00' }} /> Available Sizes
                 </h3>
                 <div style={{ fontSize: '14px', color: '#555', marginBottom: '10px' }}>
                   {sizes.length > 0 ? sizes.join(' - ') : 'Standard size'}
@@ -583,109 +471,60 @@ export default function ProductPageEn() {
               </div>
 
               {/* Quantity */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                marginBottom: '15px'
-              }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
                 <label style={{ fontWeight: '600', color: '#000' }}>Quantity:</label>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  border: '2px solid #eee',
-                  borderRadius: '50px',
-                  overflow: 'hidden'
-                }}>
+                <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #eee', borderRadius: '50px', overflow: 'hidden' }}>
                   <button 
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      background: 'none',
-                      border: 'none',
-                      fontSize: '18px',
-                      cursor: 'pointer',
-                      color: '#555',
-                      transition: 'background 0.3s'
-                    }}
+                    style={{ width: '40px', height: '40px', background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#555' }}
                     onClick={decrementQuantity}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                   >-</button>
                   <input 
                     type="text" 
                     value={quantity} 
                     readOnly 
-                    style={{
-                      width: '60px',
-                      height: '40px',
-                      border: 'none',
-                      textAlign: 'center',
-                      fontWeight: '600',
-                      fontSize: '16px',
-                      fontFamily: 'Poppins, sans-serif'
-                    }}
+                    style={{ width: '60px', height: '40px', border: 'none', textAlign: 'center', fontWeight: '600', fontSize: '16px' }}
                   />
                   <button 
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      background: 'none',
-                      border: 'none',
-                      fontSize: '18px',
-                      cursor: 'pointer',
-                      color: '#555',
-                      transition: 'background 0.3s'
-                    }}
+                    style={{ width: '40px', height: '40px', background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#555' }}
                     onClick={incrementQuantity}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                   >+</button>
                 </div>
               </div>
 
               {/* Minimum order info */}
               {!isRSS && packetSize > 1 && (
-                <div style={{
-                  fontSize: '12px',
-                  color: '#666',
-                  marginBottom: '25px'
-                }}>
-                  <i className="fas fa-info-circle"></i> Minimum order: {packetSize} pieces (full carton)
+                <div style={{ fontSize: '12px', color: '#666', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <FaInfoCircle /> Minimum order: {packetSize} pieces (full carton)
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div style={{
-                display: 'flex',
-                gap: '15px',
-                marginBottom: '30px',
-                flexWrap: 'wrap'
-              }}>
+              {/* Action Buttons - معدلة (أصغر وبدون أيقونة واتساب) */}
+              <div style={{ display: 'flex', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
                 <button 
                   style={{
-                    flex: '2',
+                    flex: '1',
                     background: '#ff5a00',
                     color: 'white',
                     border: 'none',
-                    padding: '16px 30px',
+                    padding: '12px 24px',
                     borderRadius: '50px',
                     fontWeight: '600',
-                    fontSize: '16px',
+                    fontSize: '14px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px',
-                    minWidth: '200px',
+                    gap: '8px',
+                    minWidth: '160px',
                     transition: 'all 0.3s'
                   }}
                   onClick={(e) => addToCart(product, e)}
                   onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
                 >
-                  <i className="fas fa-shopping-cart"></i> Add to Inquiry
+                  <FaShoppingCart size={14} /> Add to Inquiry
                 </button>
+                
                 <a 
                   href={`https://wa.me/905519522448?text=${encodeURIComponent(
                     `Hello, I'm interested in ordering:\n\n*${productName}*\nPrice: ${formatPrice(productPrice)}\nCode: ${product.product_code || 'N/A'}\nQuantity: ${quantity}\n\nPlease provide more information.`
@@ -695,16 +534,16 @@ export default function ProductPageEn() {
                     background: '#25d366',
                     color: 'white',
                     border: 'none',
-                    padding: '16px 30px',
+                    padding: '12px 24px',
                     borderRadius: '50px',
                     fontWeight: '600',
-                    fontSize: '16px',
+                    fontSize: '14px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px',
                     textDecoration: 'none',
+                    minWidth: '160px',
                     transition: 'all 0.3s'
                   }}
                   target="_blank"
@@ -712,59 +551,28 @@ export default function ProductPageEn() {
                   onMouseEnter={(e) => e.currentTarget.style.background = '#128C7E'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#25d366'}
                 >
-                  <i className="fab fa-whatsapp"></i> Order via WhatsApp
+                  Order via WhatsApp
                 </a>
               </div>
 
               {/* Product Meta */}
-              <div style={{
-                paddingTop: '20px',
-                borderTop: '1px solid #eee'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '10px',
-                  fontSize: '14px',
-                  color: '#555'
-                }}>
-                  <i className="fas fa-barcode" style={{ width: '20px', color: '#ff5a00' }}></i>
+              <div style={{ paddingTop: '20px', borderTop: '1px solid #eee' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
+                  <FaBarcode style={{ width: '20px', color: '#ff5a00' }} />
                   <span><strong>Code:</strong> {product.product_code || 'N/A'}</span>
                 </div>
                 {product.pcs_per_packet && (
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    marginBottom: '10px',
-                    fontSize: '14px',
-                    color: '#555'
-                  }}>
-                    <i className="fas fa-box" style={{ width: '20px', color: '#ff5a00' }}></i>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
+                    <FaBox style={{ width: '20px', color: '#ff5a00' }} />
                     <span><strong>Packet:</strong> {product.pcs_per_packet} pieces</span>
                   </div>
                 )}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '10px',
-                  fontSize: '14px',
-                  color: '#555'
-                }}>
-                  <i className="fas fa-check-circle" style={{ width: '20px', color: '#ff5a00' }}></i>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
+                  <FaCheckCircle style={{ width: '20px', color: '#ff5a00' }} />
                   <span><strong>Availability:</strong> In Stock</span>
                 </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '10px',
-                  fontSize: '14px',
-                  color: '#555'
-                }}>
-                  <i className="fas fa-truck" style={{ width: '20px', color: '#ff5a00' }}></i>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
+                  <FaTruck style={{ width: '20px', color: '#ff5a00' }} />
                   <span><strong>Shipping:</strong> Worldwide (3-7 business days)</span>
                 </div>
               </div>
@@ -777,21 +585,10 @@ export default function ProductPageEn() {
       {relatedProducts.length > 0 && (
         <div style={{ padding: '60px 0', background: '#f5f5f5' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-            <h2 style={{
-              textAlign: 'center',
-              fontSize: '36px',
-              color: '#000',
-              marginBottom: '15px',
-              fontWeight: '700'
-            }}>
+            <h2 style={{ textAlign: 'center', fontSize: '36px', color: '#000', marginBottom: '15px', fontWeight: '700' }}>
               You May Also Like
             </h2>
-            <p style={{
-              textAlign: 'center',
-              color: '#555',
-              marginBottom: '40px',
-              fontSize: '18px'
-            }}>
+            <p style={{ textAlign: 'center', color: '#555', marginBottom: '40px', fontSize: '18px' }}>
               Similar products you might be interested in
             </p>
             <div style={{
@@ -814,14 +611,6 @@ export default function ProductPageEn() {
                     color: 'inherit',
                     display: 'block'
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-5px)'
-                    e.currentTarget.style.boxShadow = '0 15px 30px rgba(255,90,0,0.15)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.03)'
-                  }}
                 >
                   <div style={{
                     width: '100%',
@@ -833,34 +622,18 @@ export default function ProductPageEn() {
                     background: '#f5f5f5'
                   }}>
                     <img 
-                      src={p.imageUrl || p.mainImage || '/images/default.webp'} 
+                      src={p.imageUrl || '/images/default.webp'} 
                       alt={p.name_en || p.name_ar || ''}
-                      style={{ 
-                        maxWidth: '100%', 
-                        maxHeight: '100%', 
-                        objectFit: 'contain',
-                        transition: 'transform 0.5s'
-                      }}
+                      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       loading="lazy"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/images/default.webp'
-                      }}
+                      onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }}
                     />
                   </div>
                   <div style={{ padding: '15px', textAlign: 'center' }}>
-                    <h4 style={{
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      color: '#000',
-                      marginBottom: '5px'
-                    }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#000', marginBottom: '5px' }}>
                       {p.name_en || p.name_ar || ''}
                     </h4>
-                    <div style={{
-                      color: '#ff5a00',
-                      fontWeight: '700',
-                      fontSize: '16px'
-                    }}>
+                    <div style={{ color: '#ff5a00', fontWeight: '700', fontSize: '16px' }}>
                       {formatPrice(p.price_usd)}
                     </div>
                   </div>
@@ -885,7 +658,7 @@ export default function ProductPageEn() {
         }
         
         @media (max-width: 576px) {
-          div[style*="grid-template-columns: repeat(4, 1fr)"] {
+          div[style*="grid-template-columns: repeat(4, 2fr)"] {
             grid-template-columns: 1fr !important;
           }
           div[style*="height: 500px"] {

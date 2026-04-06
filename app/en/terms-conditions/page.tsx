@@ -1,8 +1,7 @@
 // app/en/terms-conditions/page.tsx
-'use client'
-
 import Link from 'next/link'
 import Head from 'next/head'
+import { FaArrowLeft } from 'react-icons/fa'
 
 export default function TermsConditionsPageEn() {
   return (
@@ -11,7 +10,23 @@ export default function TermsConditionsPageEn() {
         <title>Terms & Conditions - Hijab Fashion Mall | Wholesale Turkish Modest Wear</title>
         <meta name="description" content="Read our wholesale terms and conditions for ordering Turkish modest wear. Learn about pricing, shipping, payment methods, and international wholesale policies." />
         <meta name="keywords" content="terms and conditions, wholesale terms, hijab wholesale terms, modest wear terms, turkey wholesale" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/en/terms-conditions" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/terms-conditions" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/terms-conditions" />
+        <link rel="alternate" hrefLang="fr" href="https://hijabfashionmall.com/fr/terms-conditions" />
+        <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/terms-conditions" />
+        <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/terms-conditions" />
+        <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/terms-conditions" />
+        <meta property="og:title" content="Terms & Conditions - Hijab Fashion Mall" />
+        <meta property="og:description" content="Read our wholesale terms and conditions for ordering Turkish modest wear. Learn about pricing, shipping, and payment methods." />
+        <meta property="og:url" content="https://hijabfashionmall.com/en/terms-conditions" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/og-terms.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Terms & Conditions - Hijab Fashion Mall" />
+        <meta name="twitter:description" content="Read our wholesale terms and conditions for ordering Turkish modest wear." />
       </Head>
 
       <style>{`
@@ -44,6 +59,35 @@ export default function TermsConditionsPageEn() {
           padding: 0 20px;
         }
 
+        .breadcrumb-bar {
+          padding: 20px 0;
+          background: #f5f5f5;
+          border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb-list {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .breadcrumb-item a {
+          color: #555;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .breadcrumb-item a:hover {
+          color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+          font-size: 14px;
+          color: #000;
+          font-weight: 600;
+        }
+
         .page-header {
           background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
           padding: 60px 0;
@@ -63,22 +107,6 @@ export default function TermsConditionsPageEn() {
           color: var(--medium-gray);
           max-width: 800px;
           margin: 0 auto;
-        }
-
-        .page-header .breadcrumb {
-          font-size: 14px;
-          color: var(--medium-gray);
-          margin-bottom: 20px;
-        }
-
-        .page-header .breadcrumb a {
-          color: var(--primary);
-          text-decoration: none;
-        }
-
-        .page-header .breadcrumb span {
-          color: var(--medium-gray);
-          margin: 0 5px;
         }
 
         .terms-content {
@@ -154,6 +182,15 @@ export default function TermsConditionsPageEn() {
           border-left: 4px solid var(--primary);
         }
 
+        .info-box a {
+          color: var(--primary);
+          text-decoration: none;
+        }
+
+        .info-box a:hover {
+          text-decoration: underline;
+        }
+
         .btn-back {
           display: inline-flex;
           align-items: center;
@@ -173,6 +210,15 @@ export default function TermsConditionsPageEn() {
           transform: translateY(-2px);
         }
 
+        .inline-link {
+          color: var(--primary);
+          text-decoration: none;
+        }
+
+        .inline-link:hover {
+          text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
           .page-header h1 {
             font-size: 32px;
@@ -189,23 +235,14 @@ export default function TermsConditionsPageEn() {
       `}</style>
 
       {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
+      <div className="breadcrumb-bar">
         <div className="container">
-          <ul style={{
-            listStyle: 'none',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px'
-          }}>
-            <li style={{ fontSize: '14px', color: '#555' }}>
-              <Link href="/en" style={{ color: '#555', textDecoration: 'none' }}>Home</Link>
+          <ul className="breadcrumb-list">
+            <li className="breadcrumb-item">
+              <Link href="/en">Home</Link>
             </li>
-            <li style={{ fontSize: '14px', color: '#555' }}>/</li>
-            <li style={{ fontSize: '14px', color: '#000', fontWeight: 600 }}>Terms & Conditions</li>
+            <li className="breadcrumb-item">/</li>
+            <li className="breadcrumb-item active">Terms & Conditions</li>
           </ul>
         </div>
       </div>
@@ -284,7 +321,7 @@ export default function TermsConditionsPageEn() {
                 <li>Claims must be submitted within 7 days of delivery with clear photos</li>
                 <li>Compensation provided as credit, replacement, or refund based on case review</li>
               </ul>
-              <p>Please refer to our <Link href="/en/refund-policy" style={{ color: 'var(--primary)' }}>Refund & Return Policy</Link> for detailed information.</p>
+              <p>Please refer to our <Link href="/en/refund-policy" className="inline-link">Refund & Return Policy</Link> for detailed information.</p>
             </div>
 
             <div className="terms-section">
@@ -295,7 +332,7 @@ export default function TermsConditionsPageEn() {
             <div className="terms-section">
               <h2>8. Privacy Policy</h2>
               <p>We respect your privacy and are committed to protecting your personal information. Your data is used solely for order processing, communication, and improving our services. We do not share your information with third parties except as necessary for shipping and payment processing.</p>
-              <p>For more details, please review our <Link href="/en/privacy-policy" style={{ color: 'var(--primary)' }}>Privacy Policy</Link>.</p>
+              <p>For more details, please review our <Link href="/en/privacy-policy" className="inline-link">Privacy Policy</Link>.</p>
             </div>
 
             <div className="terms-section">
@@ -318,13 +355,12 @@ export default function TermsConditionsPageEn() {
               <p>If you have any questions about these Terms and Conditions, please contact us:</p>
               <ul>
                 <li><strong>WhatsApp:</strong> +90 551 952 24 48 (24/7 Support)</li>
-                <li><strong>Email:</strong> support@hijabfashionmall.com</li>
                 <li><strong>Contact Form:</strong> Available on our website</li>
               </ul>
             </div>
 
             <Link href="/en" className="btn-back">
-              <i className="fas fa-arrow-left"></i> Back to Home
+              <FaArrowLeft size={14} /> Back to Home
             </Link>
           </div>
         </div>

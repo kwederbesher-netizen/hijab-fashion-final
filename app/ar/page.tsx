@@ -5,21 +5,41 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { 
+  FaUsers, 
+  FaWhatsapp, 
+  FaTelegramPlane, 
+  FaShoppingCart, 
+  FaArrowUp, 
+  FaImage, 
+  FaVideo,
+  FaCheckCircle,
+  FaNewspaper,
+  FaStore,
+  FaGlobe,
+  FaCreditCard,
+  FaBoxes,
+  FaTruck,
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube
+} from 'react-icons/fa'
 
 export default function HomePageAr() {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [showBackToTop, setShowBackToTop] = useState(false)
   const { formatPrice } = useCurrency()
   
   const isMounted = useRef(true)
   const sliderInterval = useRef<NodeJS.Timeout | null>(null)
 
-  // Hero Slider Data - محسن
+  // Hero Slider Data
   const slides = [
     {
       image: '/images/hero-slider-1.webp',
-      title: 'ملابس محجبات تركية',
+      title: 'أزياء محجبات تركية',
       description: 'اكتشف مجموعتنا الحصرية من العبايات والفساتين وأزياء المحجبات',
       cta: { text: 'تسوق الآن', link: '/ar/catalog' }
     },
@@ -33,7 +53,7 @@ export default function HomePageAr() {
       image: '/images/hero-slider-3.webp',
       title: 'شحن سريع عالمي',
       description: 'توصيل إلى أكثر من 50 دولة مع شركات شحن موثوقة',
-      cta: { text: 'معرفة المزيد', link: '/ar/catalog' }
+      cta: { text: 'تسوق الآن', link: '/ar/catalog' }
     }
   ]
 
@@ -51,7 +71,6 @@ export default function HomePageAr() {
         
         if (data.result && isMounted.current) {
           setProducts(data.result)
-          console.log('✅ تم تحميل المنتجات:', data.result.length)
         }
       } catch (error: any) {
         if (error.name !== 'AbortError' && isMounted.current) {
@@ -83,6 +102,15 @@ export default function HomePageAr() {
       }
     }
   }, [slides.length])
+
+  // Back to top button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
@@ -136,7 +164,7 @@ export default function HomePageAr() {
     }, 50)
   }, [])
 
-  // Generate Arabic slug for product URL
+  // Generate product URL
   const getProductUrl = useCallback((product: any) => {
     if (product.slug_ar) {
       return `/ar/product/${product.slug_ar}`
@@ -151,26 +179,19 @@ export default function HomePageAr() {
     <>
       <Head>
         <title>حجاب فاشون مول | جملة ملابس محجبات تركية - مورد أزياء محجبات من تركيا</title>
-        <meta name="description" content="جملة حجاب تركي premium منذ 2019. أكثر من 5000+ منتج: عبايات، فساتين محجبات، أطقم، ملابس رياضية. لا يوجد حد أدنى للطلب، شحن عالمي، دعم 24/7. انضم إلى 5000+ تاجر حول العالم." />
-        <meta name="keywords" content="جملة حجاب تركي, أزياء محجبات جملة, جملة ملابس محجبات, عبايات جملة, فساتين محجبات تركية, مورد حجاب تركي, تركيا" />
+        <meta name="description" content="جملة حجاب تركي premium منذ 2019. أكثر من 5000+ منتج: عبايات، فساتين محجبات، أطقم، ملابس رياضية. لا يوجد حد أدنى للطلب، شحن عالمي، دعم 24/7." />
+        <meta name="keywords" content="جملة حجاب تركي, أزياء محجبات جملة, جملة ملابس محجبات, عبايات جملة, حجاب تركي بالجملة" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://hijabfashionmall.com/ar" />
-        <link rel="alternate" href="https://hijabfashionmall.com" hrefLang="en" />
-        <link rel="alternate" href="https://hijabfashionmall.com/ar" hrefLang="ar" />
-        <link rel="alternate" href="https://hijabfashionmall.com" hrefLang="x-default" />
-        
-        {/* Open Graph */}
-        <meta property="og:title" content="حجاب فاشون مول - جملة ملابس محجبات تركية" />
-        <meta property="og:description" content="أكبر مورد لملابس المحجبات التركية بالجملة. أكثر من 5000+ منتج، شحن عالمي، بدون حد أدنى للطلب." />
-        <meta property="og:url" content="https://hijabfashionmall.com/ar" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://hijabfashionmall.com/images/og-home.jpg" />
       </Head>
 
       <main id="main-content" dir="rtl">
-        {/* Global CSS */}
+        {/* Global CSS with Tajawal font */}
         <style>{`
-          /* إصلاح الفراغ الأبيض على اليمين في الجوال */
+          @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+          /* Fix white space on right in mobile */
           html, body {
             overflow-x: hidden !important;
             width: 100% !important;
@@ -181,6 +202,7 @@ export default function HomePageAr() {
           
           body {
             overflow-x: hidden !important;
+            font-family: 'Tajawal', 'Poppins', sans-serif;
           }
           
           * {
@@ -198,8 +220,6 @@ export default function HomePageAr() {
             max-width: 100% !important;
             height: auto !important;
           }
-          
-          @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
           
           :root {
             --primary: #ff5a00;
@@ -222,7 +242,7 @@ export default function HomePageAr() {
           }
 
           body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Tajawal', 'Poppins', sans-serif;
             color: #333;
             line-height: 1.7;
             background: #fff;
@@ -236,12 +256,8 @@ export default function HomePageAr() {
           }
 
           h1, h2, h3, h4, h5, h6 {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Tajawal', 'Poppins', sans-serif;
             font-weight: 700;
-          }
-
-          p, a, li, span, div {
-            font-family: 'Tajawal', sans-serif;
           }
 
           .section-title {
@@ -348,7 +364,6 @@ export default function HomePageAr() {
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
             border: 1px solid rgba(0,0,0,0.02);
             transition: transform 0.3s;
-            flex: 0 1 auto;
           }
 
           .ranked-h-item:hover {
@@ -363,7 +378,7 @@ export default function HomePageAr() {
 
           .ranked-h-item strong {
             color: var(--black);
-            margin-left: 5px;
+            margin-right: 5px;
             font-weight: 700;
           }
 
@@ -392,7 +407,7 @@ export default function HomePageAr() {
 
           .channels-grid {
             display: grid;
-            grid-template-columns: repeat(2, 420px);
+            grid-template-columns: repeat(2, 320px);
             gap: 30px;
             justify-content: center;
             margin: 0 auto;
@@ -436,7 +451,7 @@ export default function HomePageAr() {
 
           .channel-card h3 {
             font-size: 24px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: var(--black);
             font-weight: 700;
           }
@@ -458,11 +473,9 @@ export default function HomePageAr() {
           .channel-stats span {
             font-size: 14px;
             color: var(--medium-gray);
-          }
-
-          .channel-stats i {
-            margin-left: 5px;
-            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
           }
 
           .channel-btn {
@@ -470,16 +483,18 @@ export default function HomePageAr() {
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 12px 30px;
+            padding: 12px 25px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
             transition: all 0.3s;
             width: 100%;
-            max-width: 280px;
+            max-width: 250px;
             margin: 0 auto;
             color: var(--white);
+            border: none;
+            cursor: pointer;
           }
 
           .whatsapp-btn {
@@ -592,6 +607,7 @@ export default function HomePageAr() {
             height: 100%;
             min-height: 450px;
             overflow: hidden;
+            position: relative;
           }
 
           .privatelabel-image img {
@@ -651,7 +667,7 @@ export default function HomePageAr() {
             gap: 10px;
           }
 
-          .privatelabel-features i {
+          .privatelabel-features svg {
             color: var(--primary);
             font-size: 20px;
           }
@@ -669,16 +685,14 @@ export default function HomePageAr() {
             font-size: 17px;
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(255, 90, 0, 0.2);
+            border: none;
+            cursor: pointer;
           }
 
           .privatelabel-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(255, 90, 0, 0.3);
-          }
-
-          .privatelabel-btn i {
-            font-size: 20px;
           }
 
           .categories-section {
@@ -826,6 +840,10 @@ export default function HomePageAr() {
             font-weight: 600;
             width: 100%;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
           }
 
           .add-to-cart:hover {
@@ -932,12 +950,7 @@ export default function HomePageAr() {
             overflow: hidden;
             margin: 0 auto 20px;
             border: 3px solid var(--primary);
-          }
-
-          .testimonial-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            position: relative;
           }
 
           .testimonial-card h4 {
@@ -989,13 +1002,7 @@ export default function HomePageAr() {
             width: 100%;
             height: 220px;
             overflow: hidden;
-          }
-
-          .blog-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
+            position: relative;
           }
 
           .blog-card:hover .blog-image img {
@@ -1004,7 +1011,7 @@ export default function HomePageAr() {
 
           .blog-content {
             padding: 25px;
-            text-align: right;
+            text-align: left;
           }
 
           .blog-category {
@@ -1046,10 +1053,6 @@ export default function HomePageAr() {
 
           .blog-link:hover {
             gap: 8px;
-          }
-
-          .blog-link i {
-            transform: rotate(180deg);
           }
 
           @keyframes fadeIn {
@@ -1129,6 +1132,13 @@ export default function HomePageAr() {
             
             .channels-grid {
               grid-template-columns: 1fr;
+              gap: 20px;
+            }
+            
+            .channel-card {
+              max-width: 320px;
+              margin: 0 auto;
+              width: 100%;
             }
           }
           
@@ -1157,9 +1167,9 @@ export default function HomePageAr() {
           }
         `}</style>
 
-        {/* Hero Slider - Optimized with next/image and priority */}
-        <section className="hero-slider" style={{ position: 'relative', height: '650px', overflow: 'hidden' }}>
-          <div style={{ position: 'relative', height: '100%' }}>
+        {/* Hero Slider */}
+        <section className="hero-slider" style={{ position: 'relative', width: '100%', overflow: 'hidden', height: 'auto', maxHeight: '600px' }}>
+          <div style={{ position: 'relative', width: '100%' }}>
             {slides.map((slide, index) => (
               <div
                 key={index}
@@ -1173,15 +1183,15 @@ export default function HomePageAr() {
                   transition: 'opacity 0.5s ease-in-out'
                 }}
               >
-                <Image
+                <img
                   src={slide.image}
                   alt={slide.title}
-                  fill
-                  priority={index === 0}
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  sizes="100vw"
-                  style={{ objectFit: 'cover' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block'
+                  }}
                 />
                 <div style={{
                   position: 'absolute',
@@ -1192,9 +1202,9 @@ export default function HomePageAr() {
                   background: 'rgba(0, 0, 0, 0.55)',
                   zIndex: 1
                 }} />
-                <div style={{
+                <div className="hero-content" style={{
                   position: 'absolute',
-                  top: '50%',
+                  top: '42%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   zIndex: 2,
@@ -1203,39 +1213,52 @@ export default function HomePageAr() {
                   width: '90%',
                   maxWidth: '800px'
                 }}>
-                  <h1 style={{ fontSize: '54px', fontWeight: 800, marginBottom: '20px' }}>{slide.title}</h1>
-                  <p style={{ fontSize: '22px', marginBottom: '30px' }}>{slide.description}</p>
-                  <Link href={slide.cta.link} className="btn">
+                  <h1 style={{
+                    fontSize: 'clamp(28px, 6vw, 54px)',
+                    fontWeight: 800,
+                    marginBottom: '20px'
+                  }}>{slide.title}</h1>
+                  <p style={{
+                    fontSize: 'clamp(14px, 3.5vw, 22px)',
+                    marginBottom: '25px'
+                  }}>{slide.description}</p>
+                  <Link href={slide.cta.link} className="btn" style={{
+                    padding: '14px 40px',
+                    fontSize: '16px'
+                  }}>
                     {slide.cta.text}
                   </Link>
                 </div>
               </div>
             ))}
-          </div>
-          <div style={{
-            position: 'absolute',
-            bottom: '30px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: '10px',
-            zIndex: 3
-          }}>
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                style={{
-                  width: '14px',
-                  height: '14px',
-                  borderRadius: '50%',
-                  background: currentSlide === index ? '#ff5a00' : 'rgba(255,255,255,0.5)',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
-                aria-label={`الانتقال إلى الشريحة ${index + 1}`}
-              />
-            ))}
+            <img src={slides[0].image} alt="hidden" style={{ width: '100%', height: 'auto', visibility: 'hidden', display: 'block' }} />
+            <div className="hero-dots" style={{
+              position: 'absolute',
+              bottom: '25px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '12px',
+              zIndex: 3
+            }}>
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  style={{
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
+                    background: currentSlide === index ? '#ff5a00' : 'rgba(255,255,255,0.6)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    transition: 'all 0.3s'
+                  }}
+                  aria-label={`انتقل إلى الشريحة ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -1270,27 +1293,31 @@ export default function HomePageAr() {
             <div className="channels-grid">
               <div className="channel-card whatsapp-card">
                 <div className="channel-icon">
-                  <i className="fab fa-whatsapp"></i>
+                  <FaWhatsapp size={40} />
                 </div>
                 <h3>قناة واتساب</h3>
                 <p>انضم إلى قناتنا على واتساب للوافدين الجدد اليوميين، خصومات خاصة، ووصول مبكر للمجموعات.</p>
                 <div className="channel-stats">
-                  <span><i className="fas fa-users"></i> 1,500+ عضو</span>
-                  <span><i className="fas fa-image"></i> تحديثات يومية</span>
+                  <span><FaUsers size={14} /> 1,500+ عضو</span>
+                  <span><FaImage size={14} /> تحديثات يومية</span>
                 </div>
-                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">انضم لقناة واتساب</a>
+                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">
+                  <FaWhatsapp size={18} /> انضم لقناة واتساب
+                </a>
               </div>
               <div className="channel-card telegram-card">
                 <div className="channel-icon">
-                  <i className="fab fa-telegram-plane"></i>
+                  <FaTelegramPlane size={40} />
                 </div>
                 <h3>قناة تليجرام</h3>
                 <p>انضم إلى قناتنا على تليجرام لمحتوى حصري، نصائح تنسيق، وعروض خاصة.</p>
                 <div className="channel-stats">
-                  <span><i className="fas fa-users"></i> 11,000+ عضو</span>
-                  <span><i className="fas fa-video"></i> دروس فيديو</span>
+                  <span><FaUsers size={14} /> 11,000+ عضو</span>
+                  <span><FaVideo size={14} /> دروس فيديو</span>
                 </div>
-                <a href="https://t.me/hijabfashionmall" className="channel-btn telegram-btn" target="_blank" rel="noopener noreferrer">انضم لقناة تليجرام</a>
+                <a href="https://t.me/hijabfashionmall" className="channel-btn telegram-btn" target="_blank" rel="noopener noreferrer">
+                  <FaTelegramPlane size={18} /> انضم لقناة تليجرام
+                </a>
               </div>
             </div>
           </div>
@@ -1350,20 +1377,20 @@ export default function HomePageAr() {
                   ابنِ علامتك التجارية بجودة تركية ووصول عالمي.
                 </p>
                 <ul className="privatelabel-features">
-                  <li><i className="fas fa-check-circle"></i> تغليف مخصص بشعارك</li>
-                  <li><i className="fas fa-check-circle"></i> تصاميم حصرية لعلامتك</li>
-                  <li><i className="fas fa-check-circle"></i> حد أدنى مرن للطلبات المنتظمة</li>
-                  <li><i className="fas fa-check-circle"></i> مراقبة الجودة وشحن سريع</li>
+                  <li><FaCheckCircle /> تغليف مخصص بشعارك</li>
+                  <li><FaCheckCircle /> تصاميم حصرية لعلامتك</li>
+                  <li><FaCheckCircle /> حد أدنى مرن للطلبات المنتظمة</li>
+                  <li><FaCheckCircle /> مراقبة الجودة وشحن سريع</li>
                 </ul>
                 
                 <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
                   <Link href="/ar/private-label-service" className="privatelabel-btn" style={{ background: 'transparent', color: 'var(--primary)', border: '2px solid var(--primary)', boxShadow: 'none' }}>
-                    <i className="fas fa-newspaper"></i> اقرأ الدليل الكامل
+                    <FaNewspaper /> اقرأ الدليل الكامل
                   </Link>
                   
                   <a href="https://wa.me/905519522448?text=أنا%20مهتم%20بخدمة%20العلامة%20التجارية%20الخاصة%20للطلبات%20المنتظمة.%20أرجو%20تزويدي%20بمزيد%20من%20المعلومات." 
                      className="privatelabel-btn" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-whatsapp"></i> استفسر الآن
+                    <FaWhatsapp /> استفسر الآن
                   </a>
                 </div>
               </div>
@@ -1378,7 +1405,7 @@ export default function HomePageAr() {
             <p className="section-subtitle">ابحث عن النمط المثالي لكل مناسبة</p>
             <div className="categories-grid">
               <Link href="/ar/category/abayas" className="category-card">
-                <Image src="/images/category-abayas.webp" alt="عبايات تركي جملة" width={600} height={800} loading="lazy" />
+                <Image src="/images/category-abayas.webp" alt="عبايات تركية جملة" width={600} height={800} loading="lazy" />
                 <div className="category-info">
                   <h3>عبايات</h3>
                   <p>حرير المدينة، كريب والمزيد</p>
@@ -1436,7 +1463,7 @@ export default function HomePageAr() {
               <Link href="/ar/category/burkini" className="category-card">
                 <Image src="/images/category-swimwear.webp" alt="بوركيني وملابس سباحة محتشمة" width={600} height={800} loading="lazy" />
                 <div className="category-info">
-                  <h3>بوركيني ملابس سباحة محجبات</h3>
+                  <h3>بوركيني وملابس سباحة محتشمة</h3>
                   <p>ملابس سباحة محتشمة</p>
                 </div>
               </Link>
@@ -1490,7 +1517,7 @@ export default function HomePageAr() {
                             onClick={(e) => addToCart(product, e)}
                             aria-label={`إضافة ${productName} إلى سلة الاستفسار`}
                           >
-                            <i className="fas fa-shopping-cart"></i> أضف للاستفسار
+                            <FaShoppingCart /> أضف للاستفسار
                           </button>
                         </div>
                       </Link>
@@ -1513,42 +1540,42 @@ export default function HomePageAr() {
             <div className="faq-grid-cards">
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-store"></i>
+                  <FaStore size={36} />
                 </div>
                 <h3>من نحن؟</h3>
                 <p>حجاب فاشون مول هو السوق التركي الرائد لتجار التجزئة والمتاجر حول العالم، يربط تجار الجملة بتجار تجزئة أزياء المحجبات عالمياً.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-shopping-cart"></i>
+                  <FaShoppingCart size={36} />
                 </div>
                 <h3>كيف أطلب؟</h3>
                 <p>تصفح الكتالوج، اختر المنتجات، أضف لسلة الاستفسار، وأرسل عبر واتساب. سيقوم فريقنا بتأكيد طلبك خلال 24 ساعة.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-globe"></i>
+                  <FaGlobe size={36} />
                 </div>
                 <h3>هل تشحنون عالمياً؟</h3>
                 <p>نعم! نشحن لأكثر من 50 دولة مع شركات شحن موثوقة. توصيل سريع من الباب للباب مع رقم تتبع.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-credit-card"></i>
+                  <FaCreditCard size={36} />
                 </div>
                 <h3>طرق الدفع؟</h3>
                 <p>نقبل التحويل البنكي، ويسترن يونيون، وبطاقات الائتمان الرئيسية. معالجة آمنة للدفع لراحتك.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-boxes"></i>
+                  <FaBoxes size={36} />
                 </div>
                 <h3>الحد الأدنى للطلب؟</h3>
                 <p>لا يوجد حد أدنى للكمية! اطلب ما تحتاجه - مثالي للمتاجر الصغيرة وكبار تجار التجزئة على حد سواء.</p>
               </div>
               <div className="faq-card">
                 <div className="faq-card-icon">
-                  <i className="fas fa-truck"></i>
+                  <FaTruck size={36} />
                 </div>
                 <h3>تتبع الطلب؟</h3>
                 <p>بمجرد الشحن، ستتلقى اسم شركة الشحن ورقم التتبع لمتابعة شحنتك في الوقت الفعلي.</p>
@@ -1605,7 +1632,7 @@ export default function HomePageAr() {
                   <span className="blog-category">دليل شراء</span>
                   <h3>المتجر الإلكتروني</h3>
                   <p>كيف تنشئ متجراً إلكترونياً ناجحاً لبيع ملابس المحجبات: الدليل الكامل 2026.</p>
-                  <Link href="/ar/online-store-guide" className="blog-link">اقرأ المزيد <i className="fas fa-arrow-left"></i></Link>
+                  <Link href="/ar/online-store-guide" className="blog-link">اقرأ المزيد ←</Link>
                 </div>
               </div>
               <div className="blog-card">
@@ -1616,7 +1643,7 @@ export default function HomePageAr() {
                   <span className="blog-category">دليل شراء</span>
                   <h3>المتجر الواقعي</h3>
                   <p>كيف تبدأ بوتيكاً لبيع ملابس المحجبات في 2026: الاستيراد من تركيا.</p>
-                  <Link href="/ar/physical-store-guide" className="blog-link">اقرأ المزيد <i className="fas fa-arrow-left"></i></Link>
+                  <Link href="/ar/physical-store-guide" className="blog-link">اقرأ المزيد ←</Link>
                 </div>
               </div>
               <div className="blog-card">
@@ -1627,12 +1654,72 @@ export default function HomePageAr() {
                   <span className="blog-category">دليل السوق</span>
                   <h3>موضة أزياء المحجبات</h3>
                   <p>احتضان أنماط الحجاب في أوروبا: اتجاهات وفرص لتجار التجزئة.</p>
-                  <Link href="/ar/modest-fashion-trends" className="blog-link">اقرأ المزيد <i className="fas fa-arrow-left"></i></Link>
+                  <Link href="/ar/modest-fashion-trends" className="blog-link">اقرأ المزيد ←</Link>
                 </div>
               </div>
             </div>
           </div>
         </section>
+
+        {/* WhatsApp Float Button */}
+        <a
+          href="https://wa.me/905519522448?text=مرحباً،%20لدي%20سؤال%20عن%20منتجاتكم"
+          className="whatsapp-float"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            position: 'fixed',
+            bottom: '30px',
+            left: '30px',
+            background: '#25d366',
+            color: 'white',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '30px',
+            boxShadow: '0 4px 20px rgba(37, 211, 102, 0.3)',
+            zIndex: 999,
+            transition: 'all 0.3s',
+            textDecoration: 'none'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = '#128C7E'; e.currentTarget.style.transform = 'scale(1.05)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = '#25d366'; e.currentTarget.style.transform = 'scale(1)' }}
+          aria-label="اتصل بنا على واتساب"
+        >
+          <FaWhatsapp size={28} />
+        </a>
+
+        {/* Back to Top Button */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{
+            position: 'fixed',
+            bottom: '30px',
+            right: '30px',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            background: '#ff5a00',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+            display: showBackToTop ? 'flex' : 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '24px',
+            boxShadow: '0 4px 15px rgba(255, 90, 0, 0.3)',
+            zIndex: 999,
+            transition: 'all 0.3s'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = '#e04e00'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = '#ff5a00'; e.currentTarget.style.transform = 'translateY(0)' }}
+          aria-label="العودة للأعلى"
+        >
+          <FaArrowUp />
+        </button>
       </main>
     </>
   )

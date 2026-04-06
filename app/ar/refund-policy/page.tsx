@@ -1,17 +1,31 @@
 // app/ar/refund-policy/page.tsx
-'use client'
-
 import Link from 'next/link'
 import Head from 'next/head'
+import { FaArrowLeft } from 'react-icons/fa'
 
 export default function RefundPolicyPageAr() {
   return (
     <>
       <Head>
-        <title>سياسة الاسترجاع والاستبدال - حجاب فاشون مول | جملة ملابس محجبات تركية</title>
-        <meta name="description" content="سياسة الضمان لجودة منتجاتنا بالجملة. تعويض كامل عن القطع التالفة أو المعيبة مع ضمان الجودة للطلبات الدولية." />
-        <meta name="keywords" content="سياسة الاسترجاع, سياسة الاستبدال, جملة ملابس محجبات, ضمان الجودة, تعويض القطع التالفة" />
+        <title>سياسة الاسترداد والإرجاع - Hijab Fashion Mall | جملة الأزياء المحتشمة التركية</title>
+        <meta name="description" content="سياسة الإرجاع لدينا بالجملة تغطي عيوب التصنيع وأضرار الشحن. تعرف على عملية ضمان الجودة للطلبات الدولية بالجملة." />
+        <meta name="keywords" content="سياسة الاسترداد, سياسة الإرجاع, إرجاع الجملة, العناصر التالفة, ضمان الجودة, جملة حجاب تركيا" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/ar/refund-policy" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/refund-policy" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/refund-policy" />
+        <link rel="alternate" hrefLang="fr" href="https://hijabfashionmall.com/fr/refund-policy" />
+        <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/refund-policy" />
+        <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/refund-policy" />
+        <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/refund-policy" />
+        <meta property="og:title" content="سياسة الاسترداد والإرجاع - Hijab Fashion Mall" />
+        <meta property="og:description" content="سياسة الإرجاع لدينا بالجملة تغطي عيوب التصنيع وأضرار الشحن." />
+        <meta property="og:url" content="https://hijabfashionmall.com/ar/refund-policy" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="سياسة الاسترداد والإرجاع - Hijab Fashion Mall" />
+        <meta name="twitter:description" content="سياسة الإرجاع لدينا بالجملة تغطي عيوب التصنيع وأضرار الشحن." />
       </Head>
 
       <style>{`
@@ -22,9 +36,9 @@ export default function RefundPolicyPageAr() {
         }
 
         body {
-          font-family: 'Tajawal', sans-serif;
+          font-family: 'Poppins', 'Cairo', sans-serif;
           color: #333;
-          line-height: 1.7;
+          line-height: 1.6;
           background: #fff;
         }
 
@@ -42,6 +56,35 @@ export default function RefundPolicyPageAr() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 20px;
+        }
+
+        .breadcrumb-bar {
+          padding: 20px 0;
+          background: #f5f5f5;
+          border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb-list {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .breadcrumb-item a {
+          color: #555;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .breadcrumb-item a:hover {
+          color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+          font-size: 14px;
+          color: #000;
+          font-weight: 600;
         }
 
         .page-header {
@@ -65,22 +108,6 @@ export default function RefundPolicyPageAr() {
           margin: 0 auto;
         }
 
-        .page-header .breadcrumb {
-          font-size: 14px;
-          color: var(--medium-gray);
-          margin-bottom: 20px;
-        }
-
-        .page-header .breadcrumb a {
-          color: var(--primary);
-          text-decoration: none;
-        }
-
-        .page-header .breadcrumb span {
-          color: var(--medium-gray);
-          margin: 0 5px;
-        }
-
         .policy-content {
           padding: 60px 0;
           background: var(--white);
@@ -94,7 +121,6 @@ export default function RefundPolicyPageAr() {
           padding: 40px;
           box-shadow: 0 10px 30px rgba(0,0,0,0.05);
           border: 1px solid #f0f0f0;
-          text-align: right;
         }
 
         .policy-section {
@@ -194,23 +220,14 @@ export default function RefundPolicyPageAr() {
       `}</style>
 
       {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
+      <div className="breadcrumb-bar">
         <div className="container">
-          <ul style={{
-            listStyle: 'none',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px'
-          }}>
-            <li style={{ fontSize: '14px', color: '#555' }}>
-              <Link href="/ar" style={{ color: '#555', textDecoration: 'none' }}>الرئيسية</Link>
+          <ul className="breadcrumb-list">
+            <li className="breadcrumb-item">
+              <Link href="/ar">الرئيسية</Link>
             </li>
-            <li style={{ fontSize: '14px', color: '#555' }}>/</li>
-            <li style={{ fontSize: '14px', color: '#000', fontWeight: 600 }}>سياسة الاسترجاع والاستبدال</li>
+            <li className="breadcrumb-item">/</li>
+            <li className="breadcrumb-item active">سياسة الاسترداد والإرجاع</li>
           </ul>
         </div>
       </div>
@@ -218,8 +235,8 @@ export default function RefundPolicyPageAr() {
       {/* Page Header */}
       <section className="page-header">
         <div className="container">
-          <h1>سياسة الاسترجاع والاستبدال</h1>
-          <p>ضمان الجودة لطلبات الجملة</p>
+          <h1>سياسة الاسترداد والإرجاع</h1>
+          <p>ضمان الجودة لطلبات الجملة الخاصة بك</p>
         </div>
       </section>
 
@@ -230,78 +247,77 @@ export default function RefundPolicyPageAr() {
             
             <div className="policy-section">
               <h2>١. ضمان الجودة</h2>
-              <p>في حجاب فاشون مول، نفخر بتقديم أجود ملابس المحجبات التركية لشركائنا من تجار الجملة حول العالم. تخضع جميع المنتجات لفحص جودة دقيق قبل الشحن لضمان وصولها إليك مطابقة لأعلى معايير الحرفية والأصالة التركية.</p>
-              <p>بصفتنا مورد جملة يخدم تجار التجزئة في أكثر من ٥٠ دولة، ندرك أهمية الجودة الموثوقة لنجاح عملك. التزامنا هو توفير منتجات تركية أصلية ومتسقة الجودة يحبها عملاؤك.</p>
+              <p>في Hijab Fashion Mall، نفخر بتقديم الأزياء المحتشمة التركية المتميزة لشركائنا في الجملة حول العالم. يخضع كل منتج لمراقبة جودة صارمة قبل الشحن لضمان حصولك على عناصر تلبي معاييرنا العالية من الحرفية والأصالة.</p>
+              <p>باعتبارنا مورد جملة يخدم تجار التجزئة في أكثر من ٥٠ دولة، فإننا ندرك أهمية الجودة الموثوقة لعملك. التزامنا هو توفير منتجات تركية أصلية متسقة سيعشقها عملاؤك.</p>
             </div>
 
             <div className="policy-section">
-              <h2>٢. المنتجات التالفة أو المعيبة</h2>
-              <p>نحن نضمن جودة منتجاتنا. في حال وصول أي قطعة بها عيب تصنيع أو تعرضت للتلف أثناء الشحن، سنقوم بتعويضك بالكامل عن القطع المتضررة.</p>
+              <h2>٢. العناصر التالفة أو المعيبة</h2>
+              <p>نحن نقف وراء جودة منتجاتنا. في حالة نادرة أن تستلم عنصرًا به عيب تصنيع أو ضرر حدث أثناء النقل، فسوف نعوضك بالكامل عن العناصر المتضررة.</p>
               
               <div className="info-box">
-                <p><strong>📦 الإجراء عند استلام قطع تالفة:</strong></p>
+                <p><strong>📦 ماذا تفعل إذا استلمت عناصر تالفة:</strong></p>
                 <ul style={{ marginTop: '10px' }}>
-                  <li>تواصل مع خدمة العملاء خلال ٧ أيام من استلام الطلب</li>
-                  <li>قدم صوراً واضحة تظهر التلف أو العيب</li>
-                  <li>أرفق رقم الطلب ورموز المنتجات المتضررة</li>
-                  <li>سيقوم فريقنا بمراجعة ومعالجة التعويض خلال ٢-٣ أيام عمل</li>
+                  <li>اتصل بخدمة العملاء لدينا في غضون ٧ أيام من استلام طلبك</li>
+                  <li>قدم صورًا واضحة تظهر الضرر أو العيب</li>
+                  <li>قم بتضمين رقم طلبك ورموز المنتج</li>
+                  <li>سيراجع فريقنا ويعالج التعويض في غضون ٢-٣ أيام عمل</li>
                 </ul>
               </div>
             </div>
 
             <div className="policy-section">
               <h2>٣. اعتبارات الجملة الدولية</h2>
-              <p>نحن نتعامل كتجار جملة دوليين نشحن لتجار التجزئة حول العالم. نظراً لطبيعة الطلبات بالجملة والخدمات اللوجستية الدولية، لا نقبل استرجاع المنتجات للأسباب التالية:</p>
+              <p>باعتبارنا تاجر جملة دولي يشحن إلى تجار التجزئة في جميع أنحاء العالم، فإننا نعمل وفقًا لمعايير تجارة الجملة. نظرًا لطبيعة الطلبات بالجملة والخدمات اللوجستية الدولية، فإننا لا نقبل الإرجاع لأسباب مثل:</p>
               <ul>
-                <li>تغير الرأي أو عدم الرغبة بالمنتج</li>
-                <li>اختلاف الألوان بسبب إعدادات الشاشة</li>
-                <li>اختيار المقاس (يرجى التأكد من المقاسات قبل الطلب)</li>
+                <li>تغيير الرأي أو التفضيل</li>
+                <li>اختلافات الألوان بسبب إعدادات الشاشة</li>
+                <li>اختيار المقاس (يرجى التحقق من المقاسات قبل الطلب)</li>
                 <li>اختلافات طفيفة عن صور المنتج</li>
               </ul>
-              <p>نشجع شركاءنا من تجار الجملة على مراجعة تفاصيل المنتج بعناية قبل تقديم الطلبات. يوفر كتالوجنا وصفاً مفصلاً عن الأقمشة والمقاسات لمساعدتك في اتخاذ قرارات شراء مدروسة.</p>
+              <p>نحن نشجع شركاء الجملة لدينا على مراجعة تفاصيل المنتج بعناية قبل تقديم الطلبات. يوفر كتالوجنا أوصافًا مفصلة ومعلومات عن الأقمشة وأدلة مقاسات لمساعدتك في اتخاذ قرارات شراء مستنيرة.</p>
             </div>
 
             <div className="policy-section">
               <h2>٤. عملية مراقبة الجودة</h2>
-              <p>للتقليل من أي مشاكل في طلباتك، نطبق عملية مراقبة جودة شاملة:</p>
+              <p>لتقليل أي مشاكل مع طلباتك، ننفذ عملية مراقبة جودة شاملة:</p>
               <ul>
-                <li>فحص كل قطعة قبل التعبئة</li>
+                <li>يتم فحص كل عنصر قبل التعبئة</li>
                 <li>تغليف احترافي للنقل الدولي</li>
                 <li>توفير معلومات التتبع لجميع الشحنات</li>
-                <li>الشراكة مع شركات شحن موثوقة للتوصيل العالمي</li>
+                <li>الشراكة مع شركات نقل موثوقة للتوصيل العالمي</li>
               </ul>
             </div>
 
             <div className="policy-section">
               <h2>٥. كيفية الإبلاغ عن مشكلة</h2>
-              <p>إذا استلمت قطعاً بها عيب تصنيع أو تلف أثناء الشحن، يرجى التواصل معنا فوراً:</p>
+              <p>إذا استلمت عناصر بها عيوب تصنيع أو أضرار شحن، يرجى الاتصال بنا فورًا:</p>
               <ul>
-                <li><strong>البريد الإلكتروني:</strong> support@hijabfashionmall.com</li>
                 <li><strong>واتساب:</strong> +90 551 952 24 48</li>
-                <li><strong>نموذج الاتصال:</strong> متوفر على موقعنا</li>
+                <li><strong>نموذج الاتصال:</strong> متاح على موقعنا</li>
               </ul>
-              <p>فريق خدمة العملاء متاح على مدار الساعة لمساعدتك في أي استفسار بخصوص طلبات الجملة.</p>
+              <p>فريق خدمة العملاء لدينا متاح ٢٤/٧ لمساعدتك في أي مخاوف بشأن طلبات الجملة الخاصة بك.</p>
             </div>
 
             <div className="policy-section">
-              <h2>٦. إجراءات التعويض</h2>
-              <p>بعد التحقق من القطع التالفة أو المعيبة، سنقوم بتقديم تعويض كامل من خلال:</p>
+              <h2>٦. عملية التعويض</h2>
+              <p>عند التحقق من العناصر التالفة أو المعيبة، سنقدم تعويضًا كاملاً من خلال:</p>
               <ul>
-                <li>رصيد للاستخدام في طلبك القادم</li>
-                <li>استبدال القطع المتضررة (حسب التوفر)</li>
+                <li>رصيد نحو طلبك التالي</li>
+                <li>استبدال العناصر المتضررة (حسب التوفر)</li>
                 <li>استرداد المبلغ عبر طريقة الدفع الأصلية</li>
               </ul>
-              <p>يتم معالجة التعويض خلال ٢-٥ أيام عمل بعد تأكيد المشكلة.</p>
+              <p>تتم معالجة التعويض في غضون ٢-٥ أيام عمل بعد تأكيد المشكلة.</p>
             </div>
 
             <div className="policy-section">
-              <h2>٧. تواصل معنا</h2>
-              <p>لأي استفسار حول سياسة الاسترجاع أو للإبلاغ عن مشكلة في طلبك، لا تتردد في التواصل مع فريقنا. نحن هنا لضمان أن تكون تجربتك مع الجملة سلسة وناجحة.</p>
-              <p><strong>خدمة العملاء:</strong> +90 551 952 24 48 (واتساب 24/7)</p>
+              <h2>٧. اتصل بنا</h2>
+              <p>لأي أسئلة حول سياسة الإرجاع أو للإبلاغ عن مشكلة مع طلبك، لا تتردد في التواصل مع فريقنا. نحن هنا لضمان أن تكون تجربة الجملة الخاصة بك سلسة وناجحة.</p>
+              <p><strong>دعم العملاء (واتساب):</strong> +90 551 952 24 48</p>
             </div>
 
             <Link href="/ar" className="btn-back">
-              <i className="fas fa-arrow-right"></i> العودة للرئيسية
+              <FaArrowLeft size={14} /> العودة إلى الرئيسية
             </Link>
           </div>
         </div>

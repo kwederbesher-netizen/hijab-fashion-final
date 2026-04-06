@@ -1,550 +1,422 @@
-// app/it/page.tsx
 'use client'
 
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import Head from 'next/head'
+import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { 
+  FaUsers, FaWhatsapp, FaTelegramPlane, FaShoppingCart, FaArrowUp, 
+  FaImage, FaVideo, FaCheckCircle, FaNewspaper, FaStore, FaGlobe, 
+  FaCreditCard, FaBoxes, FaTruck, FaFacebookF, FaInstagram, FaYoutube
+} from 'react-icons/fa'
 
-export default function ComingSoonPageIt() {
+export default function HomePageIt() {
+  const [products, setProducts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const { formatPrice } = useCurrency()
+  
+  const isMounted = useRef(true)
+  const sliderInterval = useRef<NodeJS.Timeout | null>(null)
+
+  const slides = [
+    {
+      image: '/images/hero-slider-1.webp',
+      title: 'Moda Modesta Turca',
+      description: 'Scopri la nostra esclusiva collezione di Abaya, Abiti e Abbigliamento Modesto',
+      cta: { text: 'Acquista Ora', link: '/it/catalog' }
+    },
+    {
+      image: '/images/hero-slider-2.webp',
+      title: 'Prezzi all\'Ingrosso',
+      description: 'Migliori prezzi per rivenditori e negozi in tutto il mondo',
+      cta: { text: 'Vedi Catalogo', link: '/it/catalog' }
+    },
+    {
+      image: '/images/hero-slider-3.webp',
+      title: 'Spedizione Veloce Mondiale',
+      description: 'Consegna in oltre 50 paesi con vettori affidabili',
+      cta: { text: 'Acquista Ora', link: '/it/catalog' }
+    }
+  ]
+
+  useEffect(() => {
+    isMounted.current = true
+    const abortController = new AbortController()
+    
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products?limit=8&sort=newest', {
+          signal: abortController.signal
+        })
+        const data = await res.json()
+        if (data.result && isMounted.current) setProducts(data.result)
+      } catch (error: any) {
+        if (error.name !== 'AbortError' && isMounted.current) {
+          console.error('Errore nel caricamento dei prodotti:', error)
+        }
+      } finally {
+        if (isMounted.current) setLoading(false)
+      }
+    }
+    loadProducts()
+    return () => { isMounted.current = false; abortController.abort() }
+  }, [])
+
+  useEffect(() => {
+    sliderInterval.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    }, 5000)
+    return () => { if (sliderInterval.current) clearInterval(sliderInterval.current) }
+  }, [slides.length])
+
+  useEffect(() => {
+    const handleScroll = () => setShowBackToTop(window.scrollY > 500)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const addToCart = useCallback((product: any, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]')
+    const isRSS = product['rss/not rss message_en']?.includes('single piece') || 
+                  product['rss/not rss message_ar']?.includes('قطعة واحدة')
+    const packetSize = product.pcs_per_packet ? parseInt(product.pcs_per_packet) : 1
+    const productToAdd = {
+      _id: product._id, name_ar: product.name_ar, name_en: product.name_en, price_usd: product.price_usd,
+      product_code: product.product_code, imageUrl: product.imageUrl, slug_ar: product.slug_ar, slug_en: product.slug_en,
+      category_main_en: product.category_main_en, quantity: 1, packetSize: packetSize, isRSS: isRSS, unitPrice: product.price_usd
+    }
+    const existingIndex = currentCart.findIndex((item: any) => item._id === product._id)
+    if (existingIndex !== -1) currentCart[existingIndex].quantity += 1
+    else currentCart.push(productToAdd)
+    localStorage.setItem('cart', JSON.stringify(currentCart))
+    const totalItems = currentCart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0)
+    const cartCountElement = document.getElementById('cartCount')
+    if (cartCountElement) cartCountElement.textContent = totalItems.toString()
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: totalItems }))
+    setTimeout(() => window.dispatchEvent(new CustomEvent('openCart')), 50)
+  }, [])
+
+  const getProductUrl = useCallback((product: any) => {
+    if (product.slug_en) return `/it/product/${product.slug_en}`
+    else if (product.slug_ar) return `/it/product/${product.slug_ar}`
+    else return `/it/product/${product._id || 'product'}`
+  }, [])
+
   return (
     <>
       <Head>
-        <title>Prossimamente - Hijab Fashion Mall | Moda Modesta Turca All'ingrosso</title>
-        <meta name="description" content="Il nostro sito web italiano sarà presto lanciato. Stiamo preparando qualcosa di speciale per te. Resta sintonizzato per offerte esclusive e novità." />
-        <meta name="keywords" content="coming soon, prossimamente, moda modesta turca, hijab all'ingrosso" />
+        <title>Hijab Fashion Mall | Ingrosso Hijab Turco - Moda Modesta dalla Turchia</title>
+        <meta name="description" content="Ingrosso hijab turco premium dal 2019. 5000+ prodotti: Abaya, Abiti Modesti, Set, Sportswear. Nessun ordine minimo, spedizione mondiale, supporto 24/7." />
+        <meta name="keywords" content="ingrosso hijab turco, moda modesta all'ingrosso, hijab all'ingrosso" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://hijabfashionmall.com/it" />
       </Head>
 
-      <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
+      <main id="main-content">
+        <style>{`
+          html, body { overflow-x: hidden !important; width: 100% !important; position: relative !important; margin: 0 !important; padding: 0 !important; }
+          body { overflow-x: hidden !important; font-family: 'Poppins', sans-serif; }
+          * { max-width: 100vw !important; box-sizing: border-box !important; }
+          .container, [class*="container"], [style*="max-width"] { overflow-x: hidden !important; }
+          img, video, iframe, svg { max-width: 100% !important; height: auto !important; }
+          :root { --primary: #ff5a00; --primary-dark: #e04e00; --black: #000000; --dark-gray: #222; --medium-gray: #555; --light-gray: #f5f5f5; --white: #fff; --whatsapp: #25d366; --whatsapp-dark: #128C7E; --telegram: #0088cc; --telegram-dark: #006699; }
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Poppins', sans-serif; color: #333; line-height: 1.7; background: #fff; font-size: 16px; }
+          .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+          h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+          .section-title { text-align: center; font-size: 42px; color: var(--black); margin-bottom: 15px; font-weight: 800; letter-spacing: -0.5px; }
+          .section-subtitle { text-align: center; color: var(--medium-gray); margin-bottom: 40px; font-size: 20px; font-weight: 400; }
+          .btn, .btn-primary { display: inline-block; background: var(--primary); color: var(--white); padding: 16px 45px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 18px; transition: all 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 90, 0, 0.2); }
+          .btn:hover, .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 90, 0, 0.3); }
+          .btn-view-all { display: inline-block; background: var(--black); color: var(--white); padding: 16px 45px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 18px; transition: all 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
+          .btn-view-all:hover { background: var(--dark-gray); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
+          .ranked-section { padding: 60px 0 40px; background: var(--light-gray); text-align: center; }
+          .ranked-section .badge { display: inline-block; background: var(--primary); color: var(--white); padding: 8px 30px; border-radius: 50px; font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+          .ranked-section h3 { font-size: 32px; color: var(--black); margin-bottom: 30px; font-weight: 700; }
+          .ranked-horizontal { display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap; margin: 30px 0; }
+          .ranked-h-item { display: flex; align-items: center; gap: 12px; font-size: 20px; color: var(--medium-gray); background: var(--white); padding: 15px 30px; border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); transition: transform 0.3s; }
+          .ranked-h-item:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255, 90, 0, 0.1); }
+          .simple-icon { font-size: 32px; line-height: 1; }
+          .ranked-h-item strong { color: var(--black); margin-right: 5px; font-weight: 700; }
+          .ranked-btn { display: inline-block; background: transparent; color: var(--primary); padding: 14px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 18px; transition: all 0.3s; border: 2px solid var(--primary); }
+          .ranked-btn:hover { background: var(--primary); color: var(--white); }
+          .channels-section { padding: 60px 0; background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%); }
+          .channels-grid { display: grid; grid-template-columns: repeat(2, 320px); gap: 30px; justify-content: center; margin: 0 auto; }
+          .channel-card { background: var(--white); border-radius: 20px; padding: 30px 25px; text-align: center; transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+          .channel-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+          .channel-icon { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 40px; }
+          .whatsapp-card .channel-icon { background: rgba(37, 211, 102, 0.1); color: var(--whatsapp); }
+          .telegram-card .channel-icon { background: rgba(0, 136, 204, 0.1); color: var(--telegram); }
+          .channel-card h3 { font-size: 24px; margin-bottom: 12px; color: var(--black); font-weight: 700; }
+          .channel-card p { color: var(--medium-gray); margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
+          .channel-stats { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; }
+          .channel-stats span { font-size: 14px; color: var(--medium-gray); display: flex; align-items: center; gap: 5px; }
+          .channel-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 15px; transition: all 0.3s; width: 100%; max-width: 250px; margin: 0 auto; color: var(--white); border: none; cursor: pointer; }
+          .whatsapp-btn { background: var(--whatsapp); }
+          .whatsapp-btn:hover { background: var(--whatsapp-dark); }
+          .telegram-btn { background: var(--telegram); }
+          .telegram-btn:hover { background: var(--telegram-dark); }
+          .features-section { padding: 70px 0; background: var(--white); border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+          .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-top: 40px; }
+          .feature-card { background: var(--white); padding: 35px 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.02); }
+          .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255, 90, 0, 0.05); }
+          .feature-icon { width: 120px; height: 120px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; background: rgba(255, 90, 0, 0.05); border-radius: 50%; padding: 20px; transition: all 0.3s; }
+          .feature-icon img { width: 100%; height: 100%; object-fit: contain; transition: all 0.3s; }
+          .feature-card:hover .feature-icon { background: var(--primary); }
+          .feature-card:hover .feature-icon img { filter: brightness(0) invert(1); }
+          .feature-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: var(--black); }
+          .feature-card p { font-size: 16px; color: var(--medium-gray); line-height: 1.7; }
+          .privatelabel-section { padding: 80px 0; background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%); border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+          .privatelabel-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; max-width: 1100px; margin: 0 auto; background: var(--white); border-radius: 30px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+          .privatelabel-image { height: 100%; min-height: 450px; overflow: hidden; position: relative; }
+          .privatelabel-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+          .privatelabel-image:hover img { transform: scale(1.03); }
+          .privatelabel-content { padding: 40px 40px 40px 0; }
+          .privatelabel-badge { display: inline-block; background: rgba(255, 90, 0, 0.1); color: var(--primary); font-size: 14px; font-weight: 600; padding: 6px 18px; border-radius: 30px; margin-bottom: 20px; letter-spacing: 0.5px; }
+          .privatelabel-title { font-size: 42px; font-weight: 800; color: var(--black); line-height: 1.2; margin-bottom: 20px; }
+          .privatelabel-description { font-size: 18px; color: var(--medium-gray); line-height: 1.8; margin-bottom: 25px; }
+          .privatelabel-features { list-style: none; padding: 0; margin-bottom: 30px; }
+          .privatelabel-features li { font-size: 17px; color: var(--dark-gray); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+          .privatelabel-features svg { color: var(--primary); font-size: 20px; }
+          .privatelabel-btn { display: inline-flex; align-items: center; gap: 12px; background: var(--primary); color: var(--white); padding: 16px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 17px; transition: all 0.3s; box-shadow: 0 5px 15px rgba(255, 90, 0, 0.2); border: none; cursor: pointer; }
+          .privatelabel-btn:hover { background: var(--primary-dark); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255, 90, 0, 0.3); }
+          .categories-section { padding: 70px 0; background: var(--light-gray); }
+          .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 40px; }
+          .category-card { position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s; aspect-ratio: 3/4; text-decoration: none; display: block; }
+          .category-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 90, 0, 0.2); }
+          .category-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+          .category-card:hover img { transform: scale(1.1); }
+          .category-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: var(--white); padding: 25px; text-align: center; }
+          .category-info h3 { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
+          .category-info p { font-size: 16px; opacity: 0.9; margin: 0; }
+          .products-section { padding: 70px 0; background: var(--white); }
+          .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin: 40px 0 30px; }
+          .product-card { background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.02); text-decoration: none; color: inherit; display: block; }
+          .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 90, 0, 0.1); }
+          .product-image { width: 100%; height: 350px; overflow: hidden; position: relative; background-color: #f8f8f8; display: flex; align-items: center; justify-content: center; }
+          .product-image img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s; padding: 10px; }
+          .product-card:hover .product-image img { transform: scale(1.03); }
+          .product-info { padding: 20px; text-align: center; }
+          .product-info h3 { font-size: 18px; font-weight: 600; color: var(--black); margin-bottom: 10px; line-height: 1.5; }
+          .product-price { color: var(--primary); font-weight: 700; font-size: 20px; margin-bottom: 15px; }
+          .add-to-cart { background: var(--primary); color: var(--white); border: none; padding: 12px 20px; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: 600; width: 100%; transition: background 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+          .add-to-cart:hover { background: var(--primary-dark); }
+          .view-all-container { text-align: center; margin-top: 30px; }
+          .faq-section { padding: 70px 0; background: var(--light-gray); }
+          .faq-grid-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; max-width: 1100px; margin: 40px auto 0; }
+          .faq-card { background: var(--white); border-radius: 20px; padding: 35px 25px; text-align: center; transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+          .faq-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(255, 90, 0, 0.1); }
+          .faq-card-icon { width: 90px; height: 90px; background: rgba(255, 90, 0, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 36px; color: var(--primary); transition: all 0.3s; }
+          .faq-card:hover .faq-card-icon { background: var(--primary); color: var(--white); }
+          .faq-card h3 { font-size: 20px; font-weight: 700; color: var(--black); margin-bottom: 15px; }
+          .faq-card p { font-size: 16px; color: var(--medium-gray); line-height: 1.7; margin: 0; }
+          .testimonials-section { padding: 70px 0; background: var(--white); }
+          .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 40px; }
+          .testimonial-card { background: var(--white); border-radius: 15px; padding: 35px; text-align: center; transition: transform 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
+          .testimonial-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 90, 0, 0.1); }
+          .testimonial-image { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px; border: 3px solid var(--primary); position: relative; }
+          .testimonial-card h4 { font-size: 20px; font-weight: 700; color: var(--black); margin-bottom: 5px; }
+          .testimonial-card .location { color: var(--primary); font-size: 16px; margin-bottom: 15px; }
+          .testimonial-text { font-size: 16px; color: var(--medium-gray); line-height: 1.8; font-style: italic; }
+          .blogs-section { padding: 70px 0; background: var(--light-gray); }
+          .blogs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 40px; }
+          .blog-card { background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: transform 0.3s; }
+          .blog-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 90, 0, 0.1); }
+          .blog-image { width: 100%; height: 220px; overflow: hidden; position: relative; }
+          .blog-card:hover .blog-image img { transform: scale(1.05); }
+          .blog-content { padding: 25px; text-align: left; }
+          .blog-category { display: inline-block; background: rgba(255, 90, 0, 0.08); color: var(--primary); font-size: 14px; font-weight: 600; padding: 5px 15px; border-radius: 30px; margin-bottom: 12px; }
+          .blog-content h3 { font-size: 20px; font-weight: 700; color: var(--black); margin-bottom: 12px; line-height: 1.4; }
+          .blog-content p { font-size: 16px; color: var(--medium-gray); margin-bottom: 15px; line-height: 1.7; }
+          .blog-link { color: var(--primary); text-decoration: none; font-weight: 600; font-size: 16px; display: inline-flex; align-items: center; gap: 5px; transition: gap 0.3s; }
+          .blog-link:hover { gap: 8px; }
+          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+          @media (max-width: 992px) { .features-grid, .testimonials-grid, .blogs-grid, .faq-grid-cards, .categories-grid { grid-template-columns: repeat(2, 1fr) !important; } .privatelabel-wrapper { grid-template-columns: 1fr !important; } .privatelabel-content { padding: 40px !important; } }
+          @media (max-width: 768px) { .hero-slider { height: 500px; } .section-title { font-size: 32px; } .section-subtitle { font-size: 18px; } .features-grid, .testimonials-grid, .blogs-grid, .faq-grid-cards, .categories-grid { grid-template-columns: 1fr !important; } .products-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 15px; } .product-image { height: 250px; } .ranked-horizontal { flex-direction: column; gap: 15px; } .ranked-h-item { width: 100%; justify-content: center; } .channels-grid { grid-template-columns: 1fr; gap: 20px; } .channel-card { max-width: 320px; margin: 0 auto; width: 100%; } }
+          @media (max-width: 576px) { .products-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; } .product-image { height: 220px; } .product-info h3 { font-size: 14px; } .product-price { font-size: 16px; } .add-to-cart { font-size: 13px; padding: 8px 12px; } }
+        `}</style>
 
-        body {
-          font-family: 'Poppins', sans-serif;
-          color: #333;
-          line-height: 1.6;
-          background: #fff;
-        }
-
-        :root {
-          --primary: #ff5a00;
-          --primary-dark: #e04e00;
-          --black: #000000;
-          --dark-gray: #222;
-          --medium-gray: #555;
-          --light-gray: #f5f5f5;
-          --white: #fff;
-          --whatsapp: #25d366;
-          --whatsapp-dark: #128C7E;
-          --telegram: #0088cc;
-          --telegram-dark: #006699;
-        }
-
-        .container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 20px;
-        }
-
-        .section-title {
-          text-align: center;
-          font-size: 42px;
-          color: var(--black);
-          margin-bottom: 15px;
-          font-weight: 800;
-          letter-spacing: -0.5px;
-        }
-
-        .section-subtitle {
-          text-align: center;
-          color: var(--medium-gray);
-          margin-bottom: 40px;
-          font-size: 20px;
-          font-weight: 400;
-        }
-
-        .coming-soon {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .coming-soon::before {
-          content: '✦';
-          position: absolute;
-          top: 10%;
-          left: 5%;
-          font-size: 120px;
-          color: rgba(255, 90, 0, 0.03);
-          font-family: monospace;
-          pointer-events: none;
-        }
-
-        .coming-soon::after {
-          content: '✦';
-          position: absolute;
-          bottom: 10%;
-          right: 5%;
-          font-size: 180px;
-          color: rgba(255, 90, 0, 0.03);
-          font-family: monospace;
-          pointer-events: none;
-        }
-
-        .coming-content {
-          text-align: center;
-          max-width: 800px;
-          padding: 40px;
-          z-index: 2;
-          animation: fadeInUp 0.8s ease;
-        }
-
-        .logo {
-          margin-bottom: 40px;
-        }
-
-        .logo h1 {
-          font-size: 48px;
-          color: var(--black);
-          font-weight: 800;
-          letter-spacing: -1px;
-        }
-
-        .logo span {
-          color: var(--primary);
-          font-size: 24px;
-          font-weight: 500;
-        }
-
-        .coming-icon {
-          width: 120px;
-          height: 120px;
-          background: rgba(255, 90, 0, 0.1);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 30px;
-          font-size: 50px;
-          color: var(--primary);
-          animation: pulse 2s infinite;
-        }
-
-        h2 {
-          font-size: 56px;
-          color: var(--black);
-          margin-bottom: 20px;
-          font-weight: 800;
-        }
-
-        .coming-description {
-          font-size: 20px;
-          color: var(--medium-gray);
-          margin-bottom: 40px;
-          line-height: 1.6;
-        }
-
-        .coming-features {
-          display: flex;
-          justify-content: center;
-          gap: 30px;
-          flex-wrap: wrap;
-          margin: 40px 0;
-        }
-
-        .feature-item {
-          text-align: center;
-          padding: 20px;
-          background: white;
-          border-radius: 20px;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-          min-width: 160px;
-          transition: transform 0.3s;
-        }
-
-        .feature-item:hover {
-          transform: translateY(-5px);
-        }
-
-        .feature-icon {
-          font-size: 32px;
-          color: var(--primary);
-          margin-bottom: 10px;
-        }
-
-        .feature-item p {
-          font-size: 14px;
-          color: var(--medium-gray);
-          font-weight: 500;
-        }
-
-        /* Channels Section */
-        .channels-section {
-          padding: 60px 0 40px;
-          background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
-        }
-
-        .channels-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 320px);
-          gap: 30px;
-          justify-content: center;
-          margin: 0 auto;
-        }
-
-        .channel-card {
-          background: var(--white);
-          border-radius: 20px;
-          padding: 30px 25px;
-          text-align: center;
-          transition: transform 0.3s;
-          border: 1px solid rgba(0,0,0,0.05);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-
-        .channel-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .channel-icon {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 20px;
-          font-size: 40px;
-        }
-
-        .whatsapp-card .channel-icon {
-          background: rgba(37, 211, 102, 0.1);
-          color: var(--whatsapp);
-        }
-
-        .telegram-card .channel-icon {
-          background: rgba(0, 136, 204, 0.1);
-          color: var(--telegram);
-        }
-
-        .channel-card h3 {
-          font-size: 24px;
-          margin-bottom: 12px;
-          color: var(--black);
-          font-weight: 700;
-        }
-
-        .channel-card p {
-          color: var(--medium-gray);
-          margin-bottom: 20px;
-          font-size: 15px;
-          line-height: 1.6;
-        }
-
-        .channel-stats {
-          display: flex;
-          justify-content: center;
-          gap: 20px;
-          margin-bottom: 25px;
-        }
-
-        .channel-stats span {
-          font-size: 14px;
-          color: var(--medium-gray);
-        }
-
-        .channel-stats i {
-          margin-right: 5px;
-          color: var(--primary);
-        }
-
-        .channel-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          padding: 12px 25px;
-          border-radius: 50px;
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 15px;
-          transition: all 0.3s;
-          width: 100%;
-          max-width: 250px;
-          margin: 0 auto;
-          color: var(--white);
-        }
-
-        .whatsapp-btn {
-          background: var(--whatsapp);
-        }
-
-        .whatsapp-btn:hover {
-          background: var(--whatsapp-dark);
-        }
-
-        .telegram-btn {
-          background: var(--telegram);
-        }
-
-        .telegram-btn:hover {
-          background: var(--telegram-dark);
-        }
-
-        .contact-buttons {
-          display: flex;
-          gap: 20px;
-          justify-content: center;
-          margin-top: 30px;
-          flex-wrap: wrap;
-        }
-
-        .btn-primary {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          background: var(--primary);
-          color: var(--white);
-          padding: 16px 40px;
-          border-radius: 50px;
-          text-decoration: none;
-          font-weight: 600;
-          transition: all 0.3s;
-          box-shadow: 0 4px 15px rgba(255, 90, 0, 0.2);
-        }
-
-        .btn-primary:hover {
-          background: var(--primary-dark);
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(255, 90, 0, 0.3);
-        }
-
-        .btn-outline {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          background: transparent;
-          color: var(--primary);
-          border: 2px solid var(--primary);
-          padding: 14px 38px;
-          border-radius: 50px;
-          text-decoration: none;
-          font-weight: 600;
-          transition: all 0.3s;
-        }
-
-        .btn-outline:hover {
-          background: var(--primary);
-          color: var(--white);
-          transform: translateY(-2px);
-        }
-
-        .language-links {
-          margin-top: 50px;
-          display: flex;
-          gap: 20px;
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-
-        .language-links a {
-          color: var(--medium-gray);
-          text-decoration: none;
-          font-size: 14px;
-          transition: color 0.3s;
-          padding: 5px 10px;
-          border-radius: 20px;
-        }
-
-        .language-links a:hover {
-          color: var(--primary);
-          background: rgba(255, 90, 0, 0.05);
-        }
-
-        .language-links span {
-          color: var(--primary);
-          font-weight: 600;
-        }
-
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-
-        @media (max-width: 768px) {
-          h2 {
-            font-size: 36px;
-          }
-          
-          .coming-description {
-            font-size: 16px;
-          }
-          
-          .logo h1 {
-            font-size: 32px;
-          }
-          
-          .coming-icon {
-            width: 90px;
-            height: 90px;
-            font-size: 40px;
-          }
-          
-          .contact-buttons {
-            flex-direction: column;
-            align-items: center;
-          }
-          
-          .btn-primary, .btn-outline {
-            width: 100%;
-            max-width: 280px;
-            justify-content: center;
-          }
-          
-          .section-title {
-            font-size: 32px;
-          }
-          
-          .section-subtitle {
-            font-size: 18px;
-          }
-          
-          .channels-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
-          }
-          
-          .channel-card {
-            max-width: 320px;
-            margin: 0 auto;
-            width: 100%;
-          }
-        }
-      `}</style>
-
-      <div className="coming-soon">
-        <div className="container">
-          <div className="coming-content">
-            <div className="logo">
-              <h1>Hijab Fashion Mall</h1>
-              <span>All'ingrosso</span>
-            </div>
-            
-            <div className="coming-icon">
-              <i className="fas fa-construction"></i>
-            </div>
-            
-            <h2>Prossimamente</h2>
-            <p className="coming-description">
-              Stiamo lavorando per offrirti la migliore selezione di moda modesta turca. 
-              Il nostro sito web italiano sarà presto lanciato. Resta sintonizzato per offerte esclusive!
-            </p>
-            
-            <div className="coming-features">
-              <div className="feature-item">
-                <div className="feature-icon"><i className="fas fa-tshirt"></i></div>
-                <p>Abaya & Abiti Premium</p>
+        <section className="hero-slider" style={{ position: 'relative', width: '100%', overflow: 'hidden', height: 'auto', maxHeight: '600px' }}>
+          <div style={{ position: 'relative', width: '100%' }}>
+            {slides.map((slide, index) => (
+              <div key={index} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: currentSlide === index ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
+                <img src={slide.image} alt={slide.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.55)', zIndex: 1 }} />
+                <div className="hero-content" style={{ position: 'absolute', top: '42%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2, textAlign: 'center', color: 'white', width: '90%', maxWidth: '800px' }}>
+                  <h1 style={{ fontSize: 'clamp(28px, 6vw, 54px)', fontWeight: 800, marginBottom: '20px' }}>{slide.title}</h1>
+                  <p style={{ fontSize: 'clamp(14px, 3.5vw, 22px)', marginBottom: '25px' }}>{slide.description}</p>
+                  <Link href={slide.cta.link} className="btn" style={{ padding: '14px 40px', fontSize: '16px' }}>{slide.cta.text}</Link>
+                </div>
               </div>
-              <div className="feature-item">
-                <div className="feature-icon"><i className="fas fa-shipping-fast"></i></div>
-                <p>Spedizione Mondiale</p>
+            ))}
+            <img src={slides[0].image} alt="hidden" style={{ width: '100%', height: 'auto', visibility: 'hidden', display: 'block' }} />
+            <div className="hero-dots" style={{ position: 'absolute', bottom: '25px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '12px', zIndex: 3 }}>
+              {slides.map((_, index) => (
+                <button key={index} onClick={() => setCurrentSlide(index)} style={{ width: '12px', height: '12px', borderRadius: '50%', background: currentSlide === index ? '#ff5a00' : 'rgba(255,255,255,0.6)', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.3s' }} aria-label={`Vai alla diapositiva ${index + 1}`} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="ranked-section">
+          <div className="container">
+            <span className="badge">🏆 Leader Globale</span>
+            <h3>Siamo classificati #1 su Google per:</h3>
+            <div className="ranked-horizontal">
+              <div className="ranked-h-item"><span className="simple-icon" style={{ color: '#ff5a00' }}>👗</span><span><strong>Ingrosso Abbigliamento Modesto</strong> #1</span></div>
+              <div className="ranked-h-item"><span className="simple-icon" style={{ color: '#4facfe' }}>🧕</span><span><strong>Ingrosso Moda Hijab</strong> #1</span></div>
+              <div className="ranked-h-item"><span className="simple-icon" style={{ color: '#f093fb' }}>👚</span><span><strong>Ingrosso Set Modesti</strong> #1</span></div>
+            </div>
+            <Link href="/it/why-were-number-one" className="ranked-btn">Scopri perché siamo #1 →</Link>
+          </div>
+        </section>
+
+        <section className="channels-section">
+          <div className="container">
+            <h2 className="section-title">Unisciti ai Nostri Canali</h2>
+            <p className="section-subtitle">Seguici su WhatsApp e Telegram per gli ultimi aggiornamenti e offerte esclusive</p>
+            <div className="channels-grid">
+              <div className="channel-card whatsapp-card">
+                <div className="channel-icon"><FaWhatsapp size={40} /></div>
+                <h3>Canale WhatsApp</h3>
+                <p>Unisciti al nostro canale WhatsApp per nuovi arrivi quotidiani, sconti speciali e accesso anticipato alle collezioni.</p>
+                <div className="channel-stats"><span><FaUsers size={14} /> 1.500+ membri</span><span><FaImage size={14} /> Aggiornamenti giornalieri</span></div>
+                <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer"><FaWhatsapp size={18} /> Unisciti a WhatsApp</a>
               </div>
-              <div className="feature-item">
-                <div className="feature-icon"><i className="fas fa-tags"></i></div>
-                <p>Prezzi All'ingrosso</p>
+              <div className="channel-card telegram-card">
+                <div className="channel-icon"><FaTelegramPlane size={40} /></div>
+                <h3>Canale Telegram</h3>
+                <p>Unisciti al nostro canale Telegram per contenuti esclusivi, consigli di stile e offerte speciali.</p>
+                <div className="channel-stats"><span><FaUsers size={14} /> 11.000+ membri</span><span><FaVideo size={14} /> Video tutorial</span></div>
+                <a href="https://t.me/hijabfashionmall" className="channel-btn telegram-btn" target="_blank" rel="noopener noreferrer"><FaTelegramPlane size={18} /> Unisciti a Telegram</a>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Channels Section */}
-      <section className="channels-section">
-        <div className="container">
-          <h2 className="section-title">Unisciti ai nostri canali</h2>
-          <p className="section-subtitle">Seguici su WhatsApp e Telegram per gli ultimi aggiornamenti e offerte esclusive</p>
-          <div className="channels-grid">
-            <div className="channel-card whatsapp-card">
-              <div className="channel-icon">
-                <i className="fab fa-whatsapp"></i>
-              </div>
-              <h3>Canale WhatsApp</h3>
-              <p>Unisciti al nostro canale WhatsApp per novità quotidiane, sconti speciali e accesso anticipato alle collezioni.</p>
-              <div className="channel-stats">
-                <span><i className="fas fa-users"></i> 1.500+ membri</span>
-                <span><i className="fas fa-image"></i> Aggiornamenti giornalieri</span>
-              </div>
-              <a href="https://whatsapp.com/channel/0029VatIrfWId7nGgsYAFQ1G" className="channel-btn whatsapp-btn" target="_blank" rel="noopener noreferrer">Unisciti al canale WhatsApp</a>
-            </div>
-            <div className="channel-card telegram-card">
-              <div className="channel-icon">
-                <i className="fab fa-telegram-plane"></i>
-              </div>
-              <h3>Canale Telegram</h3>
-              <p>Unisciti al nostro canale Telegram per contenuti esclusivi, consigli di stile e offerte speciali.</p>
-              <div className="channel-stats">
-                <span><i className="fas fa-users"></i> 11.000+ membri</span>
-                <span><i className="fas fa-video"></i> Tutorial video</span>
-              </div>
-              <a href="https://t.me/hijabfashionmall" className="channel-btn telegram-btn" target="_blank" rel="noopener noreferrer">Unisciti al canale Telegram</a>
+        <section className="features-section">
+          <div className="container">
+            <h2 className="section-title">Perché Scegliere Noi</h2>
+            <p className="section-subtitle">La tua soddisfazione è la nostra priorità</p>
+            <div className="features-grid">
+              <div className="feature-card"><div className="feature-icon"><Image src="/images/mix-icon.webp" alt="Mix di prodotti" width={100} height={100} loading="lazy" /></div><h3>Mix & Match</h3><p>Tutte le tue collezioni in un unico ordine. Ordina la quantità che desideri al giusto costo.</p></div>
+              <div className="feature-card"><div className="feature-icon"><Image src="/images/no-minimum-icon.webp" alt="Nessun ordine minimo" width={100} height={100} loading="lazy" /></div><h3>Nessun Minimo</h3><p>Nessuna quantità minima d'ordine grazie al nostro servizio di consolidamento. Ordina ciò di cui hai bisogno.</p></div>
+              <div className="feature-card"><div className="feature-icon"><Image src="/images/original-icon.webp" alt="100% originale turco" width={100} height={100} loading="lazy" /></div><h3>100% Originale Turco</h3><p>Non vendiamo imitazioni. Solo autentica qualità turca.</p></div>
+              <div className="feature-card"><div className="feature-icon"><Image src="/images/service-icon.webp" alt="Supporto 24/7" width={100} height={100} loading="lazy" /></div><h3>Supporto 24/7</h3><p>Servizio clienti a tua disposizione per aiutarti con gli ordini e fornire assistenza personalizzata.</p></div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer - Centered with All Languages */}
-      <div style={{ 
-        maxWidth: '1200px', 
-        margin: '0 auto', 
-        padding: '0 20px 60px 20px',
-        textAlign: 'center',
-        width: '100%'
-      }}>
-        <div className="contact-buttons">
-          <a href="https://wa.me/905519522448?text=Ciao%2C%20ho%20una%20domanda%20sui%20vostri%20prodotti" 
-             className="btn-primary" 
-             target="_blank" 
-             rel="noopener noreferrer">
-            <i className="fab fa-whatsapp"></i> Contattaci
-          </a>
-          <Link href="/en" className="btn-outline">
-            <i className="fas fa-globe"></i> English Version
-          </Link>
-        </div>
-        
-        <div className="language-links">
-          <Link href="/en">English</Link>
-          <Link href="/ar">العربية</Link>
-          <Link href="/fr">Français</Link>
-          <Link href="/de">Deutsch</Link>
-          <Link href="/es">Español</Link>
-          <span style={{ color: '#ff5a00', fontWeight: 600 }}>Italiano</span>
-          <Link href="/tr">Türkçe</Link>
-        </div>
-      </div>
+        <section className="privatelabel-section">
+          <div className="container">
+            <div className="privatelabel-wrapper">
+              <div className="privatelabel-image"><Image src="/images/private-label.webp" alt="Servizio private label" width={800} height={800} loading="lazy" /></div>
+              <div className="privatelabel-content">
+                <span className="privatelabel-badge">Servizio Premium</span>
+                <h2 className="privatelabel-title">Il Tuo Marchio,<br />La Tua Identità</h2>
+                <p className="privatelabel-description">Offri ai tuoi clienti design esclusivi con il nostro <strong>servizio di private label</strong>. Personalizziamo i prodotti con il tuo logo, imballaggio e specifiche per ordini regolari.</p>
+                <ul className="privatelabel-features"><li><FaCheckCircle /> Imballaggio personalizzato con il tuo logo</li><li><FaCheckCircle /> Design esclusivi per il tuo marchio</li><li><FaCheckCircle /> Minimo flessibile per ordini regolari</li><li><FaCheckCircle /> Controllo qualità e spedizione veloce</li></ul>
+                <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+                  <Link href="/it/private-label-service" className="privatelabel-btn" style={{ background: 'transparent', color: 'var(--primary)', border: '2px solid var(--primary)', boxShadow: 'none' }}><FaNewspaper /> Leggi la Guida</Link>
+                  <a href="https://wa.me/905519522448?text=Ciao%2C%20sono%20interessato%20al%20vostro%20servizio%20private%20label" className="privatelabel-btn" target="_blank" rel="noopener noreferrer"><FaWhatsapp /> Richiedi</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="categories-section">
+          <div className="container">
+            <h2 className="section-title">Esplora le Nostre Collezioni</h2>
+            <p className="section-subtitle">Trova lo stile perfetto per ogni occasione</p>
+            <div className="categories-grid">
+              <Link href="/it/category/abayas" className="category-card"><Image src="/images/category-abayas.webp" alt="Abaya" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Abaya</h3><p>Seta di Medina, crespo e altro</p></div></Link>
+              <Link href="/it/category/modest-dresses" className="category-card"><Image src="/images/category-dresses.webp" alt="Abiti modesti" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Abiti Modesti</h3><p>Casual e formali</p></div></Link>
+              <Link href="/it/category/modest-skirt-sets" className="category-card"><Image src="/images/category-skirt-sets.webp" alt="Set gonna" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Set Gonna</h3><p>Set 2 pezzi con gonna</p></div></Link>
+              <Link href="/it/category/modest-evening-dresses" className="category-card"><Image src="/images/category-evening-dresses.webp" alt="Abiti da sera" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Abiti da Sera</h3><p>Per occasioni speciali</p></div></Link>
+              <Link href="/it/category/modest-pants-sets" className="category-card"><Image src="/images/178.webp" alt="Set pantalone" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Set Pantalone</h3><p>Set 2 pezzi con pantalone</p></div></Link>
+              <Link href="/it/category/hijabs" className="category-card"><Image src="/images/category-hijabs.webp" alt="Hijab" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Hijab</h3><p>Seta, chiffon, cotone</p></div></Link>
+              <Link href="/it/category/prayer-clothes" className="category-card"><Image src="/images/53.webp" alt="Abiti da preghiera" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Abiti da Preghiera</h3><p>Set e abiti per la preghiera</p></div></Link>
+              <Link href="/it/category/modest-sportswear" className="category-card"><Image src="/images/category-sportswear.webp" alt="Abbigliamento sportivo" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Sport</h3><p>Per attività e sport</p></div></Link>
+              <Link href="/it/category/burkini" className="category-card"><Image src="/images/category-swimwear.webp" alt="Burkini" width={600} height={800} loading="lazy" /><div className="category-info"><h3>Burkini</h3><p>Costumi da bagno modesti</p></div></Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="products-section">
+          <div className="container">
+            <h2 className="section-title">Ultimi Prodotti</h2>
+            <p className="section-subtitle">Sfoglia i nostri ultimi arrivi</p>
+            {loading ? (<div style={{ textAlign: 'center', padding: '60px', fontSize: '18px', color: '#555' }}>Caricamento prodotti...</div>) : products.length === 0 ? (<div style={{ textAlign: 'center', padding: '60px', fontSize: '18px', color: '#555' }}>Nessun prodotto trovato</div>) : (
+              <>
+                <div className="products-grid">
+                  {products.slice(0, 8).map((product: any) => {
+                    const productName = product.name_en || product.name_ar || 'Prodotto';
+                    const productPrice = product.price_usd || 0;
+                    const productUrl = getProductUrl(product);
+                    return (
+                      <Link href={productUrl} key={product._id} className="product-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <div className="product-image"><img src={product.imageUrl || '/images/default.webp'} alt={productName} width={400} height={400} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }} /></div>
+                        <div className="product-info"><h3>{productName}</h3><div className="product-price">{formatPrice(productPrice)}</div><button className="add-to-cart" onClick={(e) => addToCart(product, e)}><FaShoppingCart /> Aggiungi</button></div>
+                      </Link>
+                    );
+                  })}
+                </div>
+                <div className="view-all-container"><Link href="/it/catalog" className="btn-view-all">Vedi Tutti</Link></div>
+              </>
+            )}
+          </div>
+        </section>
+
+        <section className="faq-section">
+          <div className="container">
+            <h2 className="section-title">Domande Frequenti</h2>
+            <p className="section-subtitle">Trova risposte alle domande comuni sui nostri servizi</p>
+            <div className="faq-grid-cards">
+              <div className="faq-card"><div className="faq-card-icon"><FaStore size={36} /></div><h3>Chi siamo?</h3><p>Hijab Fashion Mall è il principale mercato turco che collega grossisti con rivenditori di moda modesta in tutto il mondo.</p></div>
+              <div className="faq-card"><div className="faq-card-icon"><FaShoppingCart size={36} /></div><h3>Come ordinare?</h3><p>Sfoglia il catalogo, seleziona i prodotti, aggiungi al carrello richieste e invia tramite WhatsApp. Il nostro team confermerà entro 24 ore.</p></div>
+              <div className="faq-card"><div className="faq-card-icon"><FaGlobe size={36} /></div><h3>Spedite in tutto il mondo?</h3><p>Sì! Spediamo in oltre 50 paesi con vettori affidabili. Consegna rapida porta a porta con numero di tracciamento.</p></div>
+              <div className="faq-card"><div className="faq-card-icon"><FaCreditCard size={36} /></div><h3>Metodi di pagamento?</h3><p>Accettiamo bonifico bancario, Western Union e principali carte di credito.</p></div>
+              <div className="faq-card"><div className="faq-card-icon"><FaBoxes size={36} /></div><h3>Ordine minimo?</h3><p>Nessuna quantità minima! Ordina ciò di cui hai bisogno.</p></div>
+              <div className="faq-card"><div className="faq-card-icon"><FaTruck size={36} /></div><h3>Tracciamento ordine?</h3><p>Una volta spedito, riceverai il nome del corriere e il numero di tracciamento.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="testimonials-section">
+          <div className="container">
+            <h2 className="section-title">Cosa Dicono i Nostri Clienti</h2>
+            <p className="section-subtitle">Approvato dai rivenditori di tutto il mondo</p>
+            <div className="testimonials-grid">
+              <div className="testimonial-card"><div className="testimonial-image"><Image src="/images/testimonial-1.webp" alt="Sarah Ahmed" width={150} height={150} loading="lazy" /></div><h4>Sarah Ahmed</h4><div className="location">Londra, Regno Unito</div><p className="testimonial-text">"La qualità degli hijab è eccezionale. I miei clienti adorano i tessuti turchi."</p></div>
+              <div className="testimonial-card"><div className="testimonial-image"><Image src="/images/testimonial-2.webp" alt="Fatima Khan" width={150} height={150} loading="lazy" /></div><h4>Fatima Khan</h4><div className="location">New York, USA</div><p className="testimonial-text">"Fornitore affidabile con qualità costante. Spedizione veloce."</p></div>
+              <div className="testimonial-card"><div className="testimonial-image"><Image src="/images/testimonial-3.webp" alt="Maryam Al Mansouri" width={150} height={150} loading="lazy" /></div><h4>Maryam Al Mansouri</h4><div className="location">Dubai, UAE</div><p className="testimonial-text">"Varietà di prodotti sorprendente. Trovo sempre qualcosa di nuovo per il mio negozio."</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="blogs-section">
+          <div className="container">
+            <h2 className="section-title">Blog Utili</h2>
+            <p className="section-subtitle">Guide pratiche per aiutarti a prendere decisioni aziendali informate.</p>
+            <div className="blogs-grid">
+              <div className="blog-card"><div className="blog-image"><Image src="/images/blog-1.webp" alt="Guida negozio online" width={400} height={225} loading="lazy" /></div><div className="blog-content"><span className="blog-category">Guida all'Acquisto</span><h3>Negozio Online</h3><p>Come creare un negozio online di successo per vendere moda modesta.</p><Link href="/it/online-store-guide" className="blog-link">Leggi di più →</Link></div></div>
+              <div className="blog-card"><div className="blog-image"><Image src="/images/blog-2.webp" alt="Guida negozio fisico" width={400} height={225} loading="lazy" /></div><div className="blog-content"><span className="blog-category">Guida all'Acquisto</span><h3>Negozio Fisico</h3><p>Come avviare una boutique di moda modesta nel 2026: Importare dalla Turchia.</p><Link href="/it/physical-store-guide" className="blog-link">Leggi di più →</Link></div></div>
+              <div className="blog-card"><div className="blog-image"><Image src="/images/blog-3.webp" alt="Tendenze moda" width={400} height={225} loading="lazy" /></div><div className="blog-content"><span className="blog-category">Guida di Mercato</span><h3>Tendenze Moda</h3><p>Abbracciare gli stili hijab in Europa: Tendenze e opportunità per i rivenditori.</p><Link href="/it/modest-fashion-trends" className="blog-link">Leggi di più →</Link></div></div>
+            </div>
+          </div>
+        </section>
+
+        <a href="https://wa.me/905519522448?text=Ciao%2C%20ho%20una%20domanda" className="whatsapp-float" target="_blank" rel="noopener noreferrer" style={{ position: 'fixed', bottom: '30px', left: '30px', background: '#25d366', color: 'white', width: '50px', height: '50px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', boxShadow: '0 4px 20px rgba(37,211,102,0.3)', zIndex: 999, transition: 'all 0.3s', textDecoration: 'none' }} onMouseEnter={(e) => { e.currentTarget.style.background = '#128C7E'; e.currentTarget.style.transform = 'scale(1.05)' }} onMouseLeave={(e) => { e.currentTarget.style.background = '#25d366'; e.currentTarget.style.transform = 'scale(1)' }}><FaWhatsapp size={28} /></a>
+
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ position: 'fixed', bottom: '30px', right: '30px', width: '50px', height: '50px', borderRadius: '50%', background: '#ff5a00', color: 'white', border: 'none', cursor: 'pointer', display: showBackToTop ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center', fontSize: '24px', boxShadow: '0 4px 15px rgba(255,90,0,0.3)', zIndex: 999, transition: 'all 0.3s' }} onMouseEnter={(e) => { e.currentTarget.style.background = '#e04e00'; e.currentTarget.style.transform = 'translateY(-2px)' }} onMouseLeave={(e) => { e.currentTarget.style.background = '#ff5a00'; e.currentTarget.style.transform = 'translateY(0)' }} aria-label="Torna su"><FaArrowUp /></button>
+      </main>
     </>
   )
 }

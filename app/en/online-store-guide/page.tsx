@@ -1,89 +1,51 @@
-﻿// app/en/online-store-guide/page.tsx
-'use client'
+﻿'use client'
 
-import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
+import { 
+  FaCalendarAlt, 
+  FaUser, 
+  FaClock, 
+  FaChevronRight, 
+  FaWhatsapp, 
+  FaFacebookF, 
+  FaTwitter, 
+  FaLinkedinIn, 
+  FaTelegramPlane, 
+  FaPinterest,
+  FaCheckCircle,
+  FaCheck,
+  FaCreditCard,
+  FaMobileAlt,
+  FaGoogle,
+  FaPaypal
+} from 'react-icons/fa'
 
 export default function OnlineStoreGuideEnglishPage() {
-  const [cart, setCart] = useState<any[]>([])
-  const cartInitialized = useRef(false)
-  const processingEvent = useRef(false)
-  const cartStringRef = useRef('')
-
-  // Load cart from localStorage - only once
-  useEffect(() => {
-    if (!cartInitialized.current) {
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart)
-          setCart(parsedCart)
-          cartStringRef.current = JSON.stringify(parsedCart)
-        } catch (e) {
-          console.error('Error loading cart:', e)
-        }
-      }
-      cartInitialized.current = true
-    }
-  }, [])
-
-  // Handle cart updates from events
-  useEffect(() => {
-    const handleCartUpdate = () => {
-      // Prevent multiple simultaneous updates
-      if (processingEvent.current) return
-      
-      processingEvent.current = true
-      
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart)
-          const newCartString = JSON.stringify(parsedCart)
-          
-          // Only update if cart actually changed
-          if (newCartString !== cartStringRef.current) {
-            setCart(parsedCart)
-            cartStringRef.current = newCartString
-          }
-        } catch (e) {
-          console.error('Error loading cart:', e)
-        }
-      }
-      
-      // Reset processing flag after a short delay
-      setTimeout(() => {
-        processingEvent.current = false
-      }, 100)
-    }
-
-    window.addEventListener('cartUpdated', handleCartUpdate)
-    
-    return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate)
-    }
-  }, [])
-
-  // Save cart to localStorage
-  useEffect(() => {
-    if (cartInitialized.current) {
-      const newCartString = JSON.stringify(cart)
-      
-      // Only save and dispatch if cart actually changed
-      if (newCartString !== cartStringRef.current) {
-        localStorage.setItem('cart', newCartString)
-        cartStringRef.current = newCartString
-        
-        // Update cart count in header using event
-        const event = new CustomEvent('cartUpdated', { detail: cart.length })
-        window.dispatchEvent(event)
-      }
-    }
-  }, [cart])
+  // No cart code here - cart is handled by ClientLayout
 
   return (
     <>
+      <Head>
+        <title>How to Start an Online Clothing Store in 2026 | Complete Guide | Hijab Fashion Mall</title>
+        <meta name="description" content="A comprehensive step-by-step guide to launching and growing a successful e-commerce fashion business in 2026. Learn about niche selection, private label, marketing, and more." />
+        <meta name="keywords" content="online clothing store, start ecommerce business, fashion ecommerce, private label clothing, start clothing line, online store guide 2026, ecommerce tips" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="canonical" href="https://hijabfashionmall.com/en/online-store-guide" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/online-store-guide" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/online-store-guide" />
+        <meta property="og:title" content="How to Start an Online Clothing Store in 2026 | Complete Guide" />
+        <meta property="og:description" content="A comprehensive step-by-step guide to launching and growing a successful e-commerce fashion business in 2026." />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/online-clothing-store-guide.webp" />
+        <meta property="og:url" content="https://hijabfashionmall.com/en/online-store-guide" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="How to Start an Online Clothing Store in 2026 | Complete Guide" />
+        <meta name="twitter:description" content="A comprehensive step-by-step guide to launching and growing a successful e-commerce fashion business in 2026." />
+        <meta name="twitter:image" content="https://hijabfashionmall.com/images/online-clothing-store-guide.webp" />
+      </Head>
+
       <style>{`
         /* All styles - fully responsive */
         * {
@@ -239,7 +201,7 @@ export default function OnlineStoreGuideEnglishPage() {
             margin: 0 auto;
         }
 
-        .page-header .meta-info {
+        .meta-info {
             display: flex;
             justify-content: center;
             gap: 30px;
@@ -249,28 +211,29 @@ export default function OnlineStoreGuideEnglishPage() {
             flex-wrap: wrap;
         }
 
-        .page-header .meta-info i {
+        .meta-info svg {
             color: var(--primary);
             margin-right: 5px;
+            vertical-align: middle;
         }
 
-        .page-header .breadcrumb {
+        .breadcrumb {
             font-size: 14px;
             color: var(--medium-gray);
             margin-bottom: 20px;
         }
 
-        .page-header .breadcrumb a {
+        .breadcrumb a {
             color: var(--primary);
             text-decoration: none;
             margin: 0 5px;
         }
 
-        .page-header .breadcrumb a:hover {
+        .breadcrumb a:hover {
             text-decoration: underline;
         }
 
-        .page-header .breadcrumb span {
+        .breadcrumb span {
             margin: 0 5px;
         }
 
@@ -365,7 +328,7 @@ export default function OnlineStoreGuideEnglishPage() {
             color: var(--dark-gray);
         }
 
-        .article-content .highlight-box {
+        .highlight-box {
             background: linear-gradient(135deg, var(--primary-soft) 0%, #ffffff 100%);
             padding: 30px;
             border-radius: 15px;
@@ -373,20 +336,20 @@ export default function OnlineStoreGuideEnglishPage() {
             border: 1px solid rgba(255,90,0,0.2);
         }
 
-        .article-content .highlight-box h4 {
+        .highlight-box h4 {
             color: var(--primary);
             margin-bottom: 15px;
             font-size: 20px;
         }
 
-        .article-content .stats-grid {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin: 40px 0;
         }
 
-        .article-content .stat-item {
+        .stat-item {
             text-align: center;
             padding: 20px;
             background: var(--white);
@@ -395,37 +358,38 @@ export default function OnlineStoreGuideEnglishPage() {
             border: 1px solid #eee;
         }
 
-        .article-content .stat-number {
+        .stat-number {
             font-size: 36px;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 5px;
         }
 
-        .article-content .stat-label {
+        .stat-label {
             color: var(--medium-gray);
             font-size: 14px;
         }
 
-        .article-content .checklist {
+        .checklist {
             list-style: none;
             padding: 0;
         }
 
-        .article-content .checklist li {
+        .checklist li {
             display: flex;
             align-items: flex-start;
             gap: 15px;
             margin-bottom: 15px;
         }
 
-        .article-content .checklist li i {
+        .checklist svg {
             color: var(--primary);
             font-size: 20px;
             margin-top: 2px;
+            flex-shrink: 0;
         }
 
-        .article-content .tip-box {
+        .tip-box {
             background: #e8f5e9;
             padding: 25px;
             border-radius: 15px;
@@ -433,7 +397,7 @@ export default function OnlineStoreGuideEnglishPage() {
             border-left: 4px solid #4caf50;
         }
 
-        .article-content .warning-box {
+        .warning-box {
             background: #fff3e0;
             padding: 25px;
             border-radius: 15px;
@@ -441,7 +405,7 @@ export default function OnlineStoreGuideEnglishPage() {
             border-left: 4px solid #ff9800;
         }
 
-        .article-content .tags {
+        .tags {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
@@ -449,18 +413,21 @@ export default function OnlineStoreGuideEnglishPage() {
             justify-content: center;
         }
 
-        .article-content .tag {
+        .tag {
             background: var(--light-gray);
             padding: 8px 16px;
             border-radius: 50px;
             font-size: 14px;
             color: var(--medium-gray);
             border: 1px solid #eee;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .article-content .tag i {
+        .tag svg {
             color: var(--primary);
-            margin-right: 5px;
+            font-size: 12px;
         }
 
         .share-section {
@@ -557,7 +524,7 @@ export default function OnlineStoreGuideEnglishPage() {
             color: var(--primary);
         }
 
-        .toc li a i {
+        .toc li svg {
             color: var(--primary);
             margin-right: 8px;
             font-size: 12px;
@@ -613,13 +580,26 @@ export default function OnlineStoreGuideEnglishPage() {
             background: var(--whatsapp-dark);
         }
 
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .toc ul {
                 grid-template-columns: 1fr;
             }
             
-            .article-content .stats-grid {
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -629,7 +609,7 @@ export default function OnlineStoreGuideEnglishPage() {
                 font-size: 36px;
             }
             
-            .page-header .meta-info {
+            .meta-info {
                 flex-direction: column;
                 gap: 10px;
             }
@@ -642,7 +622,7 @@ export default function OnlineStoreGuideEnglishPage() {
                 font-size: 22px;
             }
             
-            .article-content .stats-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -666,9 +646,8 @@ export default function OnlineStoreGuideEnglishPage() {
           <h1>How to Start an <span>Online Clothing Store</span> in 2026</h1>
           <p>A comprehensive step-by-step guide to launching and growing a successful e-commerce fashion business</p>
           <div className="meta-info">
-            <span><i className="far fa-calendar-alt"></i> March 15, 2026</span>
-            <span><i className="far fa-user"></i> By: Bashar Quwaider</span>
-            <span><i className="far fa-clock"></i> 15 min read</span>
+            <span><FaCalendarAlt size={14} /> March 15, 2026</span>
+            <span><FaClock size={14} /> 15 min read</span>
           </div>
         </div>
       </section>
@@ -683,10 +662,7 @@ export default function OnlineStoreGuideEnglishPage() {
                 alt="How to Start an Online Clothing Store in 2026 - Complete Guide" 
                 width={800} 
                 height={450} 
-                loading="lazy"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/default.webp'
-                }}
+                priority
               />
             </div>
 
@@ -696,18 +672,18 @@ export default function OnlineStoreGuideEnglishPage() {
             <div className="toc">
               <h3>📋 Table of Contents</h3>
               <ul>
-                <li><a href="#introduction"><i className="fas fa-chevron-right"></i> Introduction</a></li>
-                <li><a href="#niche-selection"><i className="fas fa-chevron-right"></i> 1. Choose Your Niche</a></li>
-                <li><a href="#market-research"><i className="fas fa-chevron-right"></i> 2. Conduct Market Research</a></li>
-                <li><a href="#brand-identity"><i className="fas fa-chevron-right"></i> 3. Build Your Brand Identity</a></li>
-                <li><a href="#sourcing-products"><i className="fas fa-chevron-right"></i> 4. Source Products with Private Label</a></li>
-                <li><a href="#ecommerce-platform"><i className="fas fa-chevron-right"></i> 5. Choose Your E-commerce Platform</a></li>
-                <li><a href="#legal-structure"><i className="fas fa-chevron-right"></i> 6. Legal Structure & Business Registration</a></li>
-                <li><a href="#payment-shipping"><i className="fas fa-chevron-right"></i> 7. Payment Gateways & Shipping</a></li>
-                <li><a href="#marketing"><i className="fas fa-chevron-right"></i> 8. Marketing Your Online Store</a></li>
-                <li><a href="#launch"><i className="fas fa-chevron-right"></i> 9. Launch Day Checklist</a></li>
-                <li><a href="#growth"><i className="fas fa-chevron-right"></i> 10. Long-Term Growth Strategies</a></li>
-                <li><a href="#conclusion"><i className="fas fa-chevron-right"></i> Conclusion & Next Steps</a></li>
+                <li><a href="#introduction"><FaChevronRight size={10} /> Introduction</a></li>
+                <li><a href="#niche-selection"><FaChevronRight size={10} /> 1. Choose Your Niche</a></li>
+                <li><a href="#market-research"><FaChevronRight size={10} /> 2. Conduct Market Research</a></li>
+                <li><a href="#brand-identity"><FaChevronRight size={10} /> 3. Build Your Brand Identity</a></li>
+                <li><a href="#sourcing-products"><FaChevronRight size={10} /> 4. Source Products with Private Label</a></li>
+                <li><a href="#ecommerce-platform"><FaChevronRight size={10} /> 5. Choose Your E-commerce Platform</a></li>
+                <li><a href="#legal-structure"><FaChevronRight size={10} /> 6. Legal Structure & Business Registration</a></li>
+                <li><a href="#payment-shipping"><FaChevronRight size={10} /> 7. Payment Gateways & Shipping</a></li>
+                <li><a href="#marketing"><FaChevronRight size={10} /> 8. Marketing Your Online Store</a></li>
+                <li><a href="#launch"><FaChevronRight size={10} /> 9. Launch Day Checklist</a></li>
+                <li><a href="#growth"><FaChevronRight size={10} /> 10. Long-Term Growth Strategies</a></li>
+                <li><a href="#conclusion"><FaChevronRight size={10} /> Conclusion & Next Steps</a></li>
               </ul>
             </div>
 
@@ -734,22 +710,22 @@ export default function OnlineStoreGuideEnglishPage() {
 
             <h3>Top Fashion Niches for 2026:</h3>
             <div className="tags">
-              <span className="tag"><i className="fas fa-check"></i> Modest Fashion</span>
-              <span className="tag"><i className="fas fa-check"></i> Sustainable Clothing</span>
-              <span className="tag"><i className="fas fa-check"></i> Plus Size Apparel</span>
-              <span className="tag"><i className="fas fa-check"></i> Activewear</span>
-              <span className="tag"><i className="fas fa-check"></i> Maternity Wear</span>
-              <span className="tag"><i className="fas fa-check"></i> Luxury Streetwear</span>
-              <span className="tag"><i className="fas fa-check"></i> Vintage & Retro</span>
-              <span className="tag"><i className="fas fa-check"></i> Size-Inclusive Fashion</span>
+              <span className="tag"><FaCheck size={12} /> Modest Fashion</span>
+              <span className="tag"><FaCheck size={12} /> Sustainable Clothing</span>
+              <span className="tag"><FaCheck size={12} /> Plus Size Apparel</span>
+              <span className="tag"><FaCheck size={12} /> Activewear</span>
+              <span className="tag"><FaCheck size={12} /> Maternity Wear</span>
+              <span className="tag"><FaCheck size={12} /> Luxury Streetwear</span>
+              <span className="tag"><FaCheck size={12} /> Vintage & Retro</span>
+              <span className="tag"><FaCheck size={12} /> Size-Inclusive Fashion</span>
             </div>
 
             <h4>Questions to Ask When Choosing Your Niche:</h4>
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> <strong>Is there demand?</strong> Use tools like Google Trends and Keyword Planner to verify interest.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Is the niche growing?</strong> Look for year-over-year growth in search volume and social media conversations.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Can you add value?</strong> Identify gaps in the market where you can offer something unique—better quality, specific designs, or sizes others don't carry.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Is it profitable?</strong> Research average price points and ensure you can maintain healthy margins.</li>
+              <li><FaCheckCircle size={18} /> <strong>Is there demand?</strong> Use tools like Google Trends and Keyword Planner to verify interest.</li>
+              <li><FaCheckCircle size={18} /> <strong>Is the niche growing?</strong> Look for year-over-year growth in search volume and social media conversations.</li>
+              <li><FaCheckCircle size={18} /> <strong>Can you add value?</strong> Identify gaps in the market where you can offer something unique—better quality, specific designs, or sizes others don't carry.</li>
+              <li><FaCheckCircle size={18} /> <strong>Is it profitable?</strong> Research average price points and ensure you can maintain healthy margins.</li>
             </ul>
 
             <div className="tip-box">
@@ -789,11 +765,11 @@ export default function OnlineStoreGuideEnglishPage() {
 
             <h3>Why Private Label is Essential for Long-Term Success:</h3>
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> <strong>Brand Ownership:</strong> Products carry your brand, building recognition and loyalty with every sale.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Higher Profit Margins:</strong> Private label products command premium pricing compared to generic alternatives.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Customer Trust:</strong> Shoppers trust branded products more than unbranded imports, leading to higher conversion rates.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Repeat Business:</strong> When customers love your brand, they come back to you specifically, not a generic supplier.</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Market Positioning:</strong> Position yourself as a premium brand rather than a commodity seller.</li>
+              <li><FaCheckCircle size={18} /> <strong>Brand Ownership:</strong> Products carry your brand, building recognition and loyalty with every sale.</li>
+              <li><FaCheckCircle size={18} /> <strong>Higher Profit Margins:</strong> Private label products command premium pricing compared to generic alternatives.</li>
+              <li><FaCheckCircle size={18} /> <strong>Customer Trust:</strong> Shoppers trust branded products more than unbranded imports, leading to higher conversion rates.</li>
+              <li><FaCheckCircle size={18} /> <strong>Repeat Business:</strong> When customers love your brand, they come back to you specifically, not a generic supplier.</li>
+              <li><FaCheckCircle size={18} /> <strong>Market Positioning:</strong> Position yourself as a premium brand rather than a commodity seller.</li>
             </ul>
 
             <p>Through private label partnerships, you can create a complete brand experience with custom-woven labels, professional hang tags, and branded packaging, elevating your products from ordinary to exceptional.</p>
@@ -871,12 +847,12 @@ export default function OnlineStoreGuideEnglishPage() {
 
             <h3>Popular Payment Gateways:</h3>
             <div className="tags">
-              <span className="tag"><i className="fas fa-credit-card"></i> Stripe</span>
-              <span className="tag"><i className="fab fa-paypal"></i> PayPal</span>
-              <span className="tag"><i className="fas fa-credit-card"></i> Square</span>
-              <span className="tag"><i className="fas fa-credit-card"></i> Authorize.net</span>
-              <span className="tag"><i className="fas fa-mobile-alt"></i> Apple Pay</span>
-              <span className="tag"><i className="fab fa-google"></i> Google Pay</span>
+              <span className="tag"><FaCreditCard size={12} /> Stripe</span>
+              <span className="tag"><FaPaypal size={12} /> PayPal</span>
+              <span className="tag"><FaCreditCard size={12} /> Square</span>
+              <span className="tag"><FaCreditCard size={12} /> Authorize.net</span>
+              <span className="tag"><FaMobileAlt size={12} /> Apple Pay</span>
+              <span className="tag"><FaGoogle size={12} /> Google Pay</span>
             </div>
 
             <h2 id="marketing">8. Marketing Your Online Clothing Store</h2>
@@ -910,15 +886,15 @@ export default function OnlineStoreGuideEnglishPage() {
             <p>Before you go live, make sure everything is ready:</p>
 
             <ul className="checklist">
-              <li><i className="fas fa-check-circle"></i> <strong>Site Testing:</strong> Place test orders, check all links, ensure mobile responsiveness, test checkout flow</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Product Photography:</strong> High-quality images from multiple angles, zoom functionality, lifestyle photos</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Product Descriptions:</strong> Detailed, SEO-optimized descriptions with size charts and fabric information</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Policy Pages:</strong> Clear shipping, returns, and privacy policies</li>
-              <li><i className="fas fa-check-circle"></i> <strong>About Us Page:</strong> Your brand story and mission</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Contact Information:</strong> Easy ways for customers to reach you</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Analytics Setup:</strong> Google Analytics, Facebook Pixel, and other tracking tools</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Email Marketing:</strong> Welcome sequence and abandoned cart flows ready</li>
-              <li><i className="fas fa-check-circle"></i> <strong>Social Media:</strong> Accounts created and optimized with links to your store</li>
+              <li><FaCheckCircle size={18} /> <strong>Site Testing:</strong> Place test orders, check all links, ensure mobile responsiveness, test checkout flow</li>
+              <li><FaCheckCircle size={18} /> <strong>Product Photography:</strong> High-quality images from multiple angles, zoom functionality, lifestyle photos</li>
+              <li><FaCheckCircle size={18} /> <strong>Product Descriptions:</strong> Detailed, SEO-optimized descriptions with size charts and fabric information</li>
+              <li><FaCheckCircle size={18} /> <strong>Policy Pages:</strong> Clear shipping, returns, and privacy policies</li>
+              <li><FaCheckCircle size={18} /> <strong>About Us Page:</strong> Your brand story and mission</li>
+              <li><FaCheckCircle size={18} /> <strong>Contact Information:</strong> Easy ways for customers to reach you</li>
+              <li><FaCheckCircle size={18} /> <strong>Analytics Setup:</strong> Google Analytics, Facebook Pixel, and other tracking tools</li>
+              <li><FaCheckCircle size={18} /> <strong>Email Marketing:</strong> Welcome sequence and abandoned cart flows ready</li>
+              <li><FaCheckCircle size={18} /> <strong>Social Media:</strong> Accounts created and optimized with links to your store</li>
             </ul>
 
             <h2 id="growth">10. Long-Term Growth Strategies</h2>
@@ -945,15 +921,15 @@ export default function OnlineStoreGuideEnglishPage() {
             <div className="cta-box">
               <h3>Ready to Build Your Brand?</h3>
               <p>Contact us to learn more about private label services and how we can help you create your successful clothing line.</p>
-              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div className="cta-buttons">
                 <a href="https://wa.me/905519522448" className="btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-whatsapp"></i> Chat on WhatsApp
+                  <FaWhatsapp size={18} /> Chat on WhatsApp
                 </a>
                 <Link href="/en/contact" className="btn-primary">
                   Contact Us
                 </Link>
               </div>
-              <p style={{ marginTop: '20px', fontSize: '14px', color: 'rgba(255,255,255,0.6)' }}>We're here to answer all your questions about starting your online clothing store.</p>
+              <p className="cta-note">We're here to answer all your questions about starting your online clothing store.</p>
             </div>
 
             <div className="share-section">
@@ -962,27 +938,27 @@ export default function OnlineStoreGuideEnglishPage() {
                 <a href="#" className="share-btn facebook" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-facebook-f"></i></a>
+                }}><FaFacebookF size={18} /></a>
                 <a href="#" className="share-btn twitter" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('How to Start an Online Clothing Store in 2026 - Complete Guide')+'&url='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-twitter"></i></a>
+                }}><FaTwitter size={18} /></a>
                 <a href="#" className="share-btn linkedin" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href), '_blank')
-                }}><i className="fab fa-linkedin-in"></i></a>
+                }}><FaLinkedinIn size={18} /></a>
                 <a href="#" className="share-btn whatsapp" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://wa.me/?text='+encodeURIComponent('How to Start an Online Clothing Store in 2026 - Complete Guide: '+window.location.href), '_blank')
-                }}><i className="fab fa-whatsapp"></i></a>
+                }}><FaWhatsapp size={18} /></a>
                 <a href="#" className="share-btn telegram" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://t.me/share/url?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent('How to Start an Online Clothing Store in 2026'), '_blank')
-                }}><i className="fab fa-telegram-plane"></i></a>
+                }}><FaTelegramPlane size={18} /></a>
                 <a href="#" className="share-btn pinterest" onClick={(e) => {
                   e.preventDefault()
                   window.open('https://pinterest.com/pin/create/button/?url='+encodeURIComponent(window.location.href)+'&media='+encodeURIComponent('/images/online-store-guide.webp')+'&description='+encodeURIComponent('How to Start an Online Clothing Store in 2026'), '_blank')
-                }}><i className="fab fa-pinterest-p"></i></a>
+                }}><FaPinterest size={18} /></a>
               </div>
             </div>
           </div>

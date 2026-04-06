@@ -1,8 +1,7 @@
 // app/en/refund-policy/page.tsx
-'use client'
-
 import Link from 'next/link'
 import Head from 'next/head'
+import { FaArrowLeft } from 'react-icons/fa'
 
 export default function RefundPolicyPageEn() {
   return (
@@ -11,7 +10,22 @@ export default function RefundPolicyPageEn() {
         <title>Refund & Return Policy - Hijab Fashion Mall | Wholesale Turkish Modest Wear</title>
         <meta name="description" content="Our wholesale return policy covers manufacturing defects and shipping damages. Learn about our quality assurance process for international wholesale orders." />
         <meta name="keywords" content="refund policy, return policy, wholesale returns, damaged items, quality assurance, hijab wholesale turkey" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/en/refund-policy" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/refund-policy" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/refund-policy" />
+        <link rel="alternate" hrefLang="fr" href="https://hijabfashionmall.com/fr/refund-policy" />
+        <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/refund-policy" />
+        <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/refund-policy" />
+        <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/refund-policy" />
+        <meta property="og:title" content="Refund & Return Policy - Hijab Fashion Mall" />
+        <meta property="og:description" content="Our wholesale return policy covers manufacturing defects and shipping damages." />
+        <meta property="og:url" content="https://hijabfashionmall.com/en/refund-policy" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Refund & Return Policy - Hijab Fashion Mall" />
+        <meta name="twitter:description" content="Our wholesale return policy covers manufacturing defects and shipping damages." />
       </Head>
 
       <style>{`
@@ -44,6 +58,35 @@ export default function RefundPolicyPageEn() {
           padding: 0 20px;
         }
 
+        .breadcrumb-bar {
+          padding: 20px 0;
+          background: #f5f5f5;
+          border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb-list {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .breadcrumb-item a {
+          color: #555;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .breadcrumb-item a:hover {
+          color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+          font-size: 14px;
+          color: #000;
+          font-weight: 600;
+        }
+
         .page-header {
           background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
           padding: 60px 0;
@@ -63,22 +106,6 @@ export default function RefundPolicyPageEn() {
           color: var(--medium-gray);
           max-width: 800px;
           margin: 0 auto;
-        }
-
-        .page-header .breadcrumb {
-          font-size: 14px;
-          color: var(--medium-gray);
-          margin-bottom: 20px;
-        }
-
-        .page-header .breadcrumb a {
-          color: var(--primary);
-          text-decoration: none;
-        }
-
-        .page-header .breadcrumb span {
-          color: var(--medium-gray);
-          margin: 0 5px;
         }
 
         .policy-content {
@@ -105,8 +132,8 @@ export default function RefundPolicyPageEn() {
           color: var(--black);
           margin-bottom: 20px;
           font-weight: 700;
-          border-right: 3px solid var(--primary);
-          padding-right: 15px;
+          border-left: 3px solid var(--primary);
+          padding-left: 15px;
         }
 
         .policy-section h3 {
@@ -193,23 +220,14 @@ export default function RefundPolicyPageEn() {
       `}</style>
 
       {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
+      <div className="breadcrumb-bar">
         <div className="container">
-          <ul style={{
-            listStyle: 'none',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px'
-          }}>
-            <li style={{ fontSize: '14px', color: '#555' }}>
-              <Link href="/en" style={{ color: '#555', textDecoration: 'none' }}>Home</Link>
+          <ul className="breadcrumb-list">
+            <li className="breadcrumb-item">
+              <Link href="/en">Home</Link>
             </li>
-            <li style={{ fontSize: '14px', color: '#555' }}>/</li>
-            <li style={{ fontSize: '14px', color: '#000', fontWeight: 600 }}>Refund & Return Policy</li>
+            <li className="breadcrumb-item">/</li>
+            <li className="breadcrumb-item active">Refund & Return Policy</li>
           </ul>
         </div>
       </div>
@@ -275,7 +293,6 @@ export default function RefundPolicyPageEn() {
               <h2>5. How to Report an Issue</h2>
               <p>If you receive items with manufacturing defects or transit damage, please contact us immediately:</p>
               <ul>
-                <li><strong>Email:</strong> support@hijabfashionmall.com</li>
                 <li><strong>WhatsApp:</strong> +90 551 952 24 48</li>
                 <li><strong>Contact Form:</strong> Available on our website</li>
               </ul>
@@ -296,12 +313,11 @@ export default function RefundPolicyPageEn() {
             <div className="policy-section">
               <h2>7. Contact Us</h2>
               <p>For any questions about our return policy or to report an issue with your order, please don't hesitate to reach out to our team. We're here to ensure your wholesale experience is smooth and successful.</p>
-              <p><strong>Customer Support:</strong> +90 551 952 24 48 (WhatsApp 24/7)</p>
-              <p><strong>Email:</strong> support@hijabfashionmall.com</p>
+              <p><strong>Customer Support (WhatsApp):</strong> +90 551 952 24 48</p>
             </div>
 
             <Link href="/en" className="btn-back">
-              <i className="fas fa-arrow-left"></i> Back to Home
+              <FaArrowLeft size={14} /> Back to Home
             </Link>
           </div>
         </div>

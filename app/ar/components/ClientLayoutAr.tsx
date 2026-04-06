@@ -1,9 +1,31 @@
-// app/ar/components/ClientLayoutAr.tsx
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { 
+  FaWhatsapp, 
+  FaTelegramPlane, 
+  FaShoppingCart, 
+  FaSearch, 
+  FaBars, 
+  FaTimes, 
+  FaArrowUp,
+  FaUsers,
+  FaImage,
+  FaVideo,
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube,
+  FaCheckCircle,
+  FaLock,
+  FaTruck,
+  FaFileAlt,
+  FaStore,
+  FaCreditCard,
+  FaBoxes,
+  FaNewspaper
+} from 'react-icons/fa'
 
 export default function ClientLayoutAr({ children }: { children: React.ReactNode }) {
   const [cartCount, setCartCount] = useState(0)
@@ -14,10 +36,8 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   
-  // استخدام Hook العملات
   const { currency, setCurrency, loading: currencyLoading } = useCurrency()
 
-  // دالة البحث
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
@@ -25,7 +45,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     }
   }
 
-  // Load cart from localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem('cart')
     if (savedCart) {
@@ -49,7 +68,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     }
   }, [])
 
-  // Listen for openCart event
   useEffect(() => {
     const handleOpenCart = () => {
       const savedCart = localStorage.getItem('cart')
@@ -73,7 +91,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     }
   }, [])
 
-  // Back to top button
   useEffect(() => {
     const handleScroll = () => {
       const backToTopBtn = document.getElementById('backToTop')
@@ -89,14 +106,12 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Calculate total pieces
   const getTotalPieces = () => {
     return cart.reduce((total, item) => {
       return total + (item.quantity || 1)
     }, 0)
   }
 
-  // Remove from cart
   const removeFromCart = (index: number) => {
     const newCart = [...cart]
     newCart.splice(index, 1)
@@ -110,74 +125,82 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
     window.dispatchEvent(event)
   }
 
-  // Send to WhatsApp - بدون أسعار
   const sendToWhatsApp = () => {
     if (cart.length === 0) {
       alert('⚠️ السلة فارغة - أضف منتجات أولاً')
       return
     }
     
-    let message = "مرحباً، أود الاستفسار عن المنتجات التالية:\n\n"
+    let message = "*حجاب فاشون مول - طلب استفسار*\n\n"
+    message += "*تفاصيل الطلب:*\n"
+    message += "━━━━━━━━━━━━━━━━━━━━\n\n"
+    
     cart.forEach((item, index) => {
       const name = item.name_ar || item.name_en || item.name || 'منتج'
-      const code = item.product_code || 'غير متوفر'
+      const code = item.product_code || item._id?.slice(-8) || 'N/A'
       const quantity = item.quantity || 1
       
-      message += `${index + 1}. ${name}\n`
-      message += `   الكود: ${code}\n`
-      message += `   الكمية: ${quantity} قطعة\n\n`
+      message += `*${index + 1}. ${name}*\n`
+      message += `📦 الرمز: \`${code}\`\n`
+      message += `🔢 الكمية: ${quantity} ${quantity > 1 ? 'قطع' : 'قطعة'}\n\n`
     })
     
     const totalPieces = getTotalPieces()
     
-    message += `━━━━━━━━━━━━━━━━━━━━\n`
-    message += `📦 إجمالي القطع: ${totalPieces}\n`
-    
-    message += `\nيرجى تأكيد الطلب أو تزويدي بمزيد من المعلومات.`
+    message += "━━━━━━━━━━━━━━━━━━━━\n"
+    message += `*📊 الملخص:*\n`
+    message += `• إجمالي العناصر: ${cart.length}\n`
+    message += `• إجمالي القطع: ${totalPieces}\n\n`
+    message += `شكراً لاهتمامك! يرجى تأكيد التوفر.`
     
     window.open(`https://wa.me/905519522448?text=${encodeURIComponent(message)}`, '_blank')
   }
 
-  // Download PDF - بدون أسعار
   const downloadPDF = () => {
     if (cart.length === 0) {
       alert('⚠️ السلة فارغة - أضف منتجات أولاً')
       return
     }
     
-    let content = "حجاب فاشون مول - سلة الاستفسار\n"
-    content += "=".repeat(50) + "\n\n"
+    let content = "═══════════════════════════════════\n"
+    content += "      حجاب فاشون مول\n"
+    content += "         سلة الاستفسار\n"
+    content += "═══════════════════════════════════\n\n"
     
     cart.forEach((item, index) => {
       const name = item.name_ar || item.name_en || item.name || 'منتج'
-      const code = item.product_code || 'غير متوفر'
+      const code = item.product_code || item._id?.slice(-8) || 'N/A'
       const quantity = item.quantity || 1
       
       content += `${index + 1}. ${name}\n`
-      content += `   الكود: ${code}\n`
-      content += `   الكمية: ${quantity} قطعة\n\n`
+      content += `   الرمز: ${code}\n`
+      content += `   الكمية: ${quantity} ${quantity > 1 ? 'قطع' : 'قطعة'}\n\n`
     })
     
     const totalPieces = getTotalPieces()
     
-    content += "-".repeat(50) + "\n"
-    content += `📦 إجمالي القطع: ${totalPieces}\n`
-    
-    content += "\nشكراً لاهتمامك! 😊"
+    content += "───────────────────────────────────\n"
+    content += `الملخص:\n`
+    content += `• إجمالي العناصر: ${cart.length}\n`
+    content += `• إجمالي القطع: ${totalPieces}\n\n`
+    content += "شكراً لاهتمامك!\n"
+    content += "═══════════════════════════════════\n"
     
     const blob = new Blob([content], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `استفسار-حجاب-فاشون-${new Date().toISOString().slice(0, 10)}.txt`
+    a.download = `hijab-inquiry-${new Date().toISOString().slice(0, 19)}.txt`
     a.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
     <>
-      {/* Global CSS to fix mobile white space */}
       <style>{`
-        /* إصلاح الفراغ الأبيض على اليمين في الجوال */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+        
+        /* Reset and base styles */
         html, body {
           overflow-x: hidden !important;
           width: 100% !important;
@@ -188,6 +211,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
         
         body {
           overflow-x: hidden !important;
+          font-family: 'Tajawal', 'Poppins', sans-serif;
         }
         
         * {
@@ -195,7 +219,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           box-sizing: border-box !important;
         }
         
-        /* منع أي عنصر من التسبب في overflow */
         .container,
         [class*="container"],
         [style*="max-width"] {
@@ -207,7 +230,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           height: auto !important;
         }
         
-        /* إخفاء أشرطة التمرير في القائمة الرئيسية */
         .desktop-nav {
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
@@ -216,74 +238,6 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
         
         .desktop-nav::-webkit-scrollbar {
           display: none !important;
-        }
-        
-        /* إصلاح الـ grid والهوامش في الجوال - إظهار شريط البحث */
-        @media (max-width: 768px) {
-          [style*="grid-template-columns"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-          
-          [style*="margin-left"],
-          [style*="margin-right"] {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-          }
-          
-          [style*="padding-left"],
-          [style*="padding-right"] {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-          
-          .container {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-          
-          /* ضمان ظهور شريط البحث في الجوال */
-          .main-header .search-bar {
-            display: block !important;
-            width: 100% !important;
-            margin: 10px 0 !important;
-          }
-        }
-        
-        @media (max-width: 992px) {
-          .desktop-nav {
-            gap: 15px !important;
-          }
-          .desktop-nav a {
-            font-size: 13px !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .main-header .container {
-            flex-wrap: wrap;
-            justify-content: center !important;
-          }
-          .main-header .logo {
-            order: 1;
-            width: auto;
-          }
-          .main-header .top-actions {
-            order: 2;
-          }
-          /* شريط البحث يظهر في الصف الثالث */
-          .main-header .search-bar {
-            order: 3;
-            max-width: 100%;
-            margin: 10px 0 !important;
-            width: 100%;
-            display: block !important;
-          }
-          .mobile-menu-btn {
-            display: block !important;
-          }
-          .desktop-nav {
-            display: none !important;
-          }
         }
         
         #backToTop.show {
@@ -313,14 +267,121 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           transform: translateY(-3px);
         }
         
-        .country-list a:hover {
-          background: #ff5a00 !important;
-          color: white !important;
-          transform: translateY(-2px);
-        }
-        
         .footer-policies a:hover {
           color: #ff5a00 !important;
+        }
+
+        /* ========== Hide hamburger button on desktop ========== */
+        @media (min-width: 769px) {
+          .main-header .mobile-menu-btn {
+            display: none !important;
+          }
+        }
+
+        /* ========== DESKTOP STYLES ========== */
+        .main-header .search-row {
+          display: none !important;
+        }
+        
+        .main-header .header-row-top .search-bar {
+          display: block !important;
+        }
+
+        /* ========== MOBILE STYLES ========== */
+        @media (max-width: 768px) {
+          .main-header .header-row-top .search-bar {
+            display: none !important;
+          }
+          
+          .main-header .top-actions .cart-icon-desktop {
+            display: none !important;
+          }
+          
+          .main-header .search-row {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 20px 15px 20px;
+            width: 100%;
+          }
+          
+          .main-header .search-row .search-bar {
+            display: block !important;
+            flex: 1;
+            margin: 0 !important;
+          }
+          
+          .main-header .search-row .mobile-cart-icon {
+            display: flex !important;
+          }
+          
+          .main-header .header-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+          }
+          
+          .main-header .mobile-menu-btn {
+            display: block !important;
+            flex-shrink: 0;
+          }
+          
+          .main-header .logo {
+            flex-shrink: 1;
+            margin-right: auto;
+            margin-left: 5px;
+          }
+          
+          .main-header .logo h1 {
+            font-size: 20px !important;
+          }
+          
+          .main-header .logo h1 span {
+            font-size: 13px !important;
+          }
+          
+          .main-header .top-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-shrink: 0;
+          }
+          
+          .main-header .lang-currency {
+            padding: 3px 6px;
+          }
+          
+          .main-header .lang-currency select {
+            font-size: 9px;
+            width: auto;
+            min-width: 45px;
+          }
+          
+          .main-header .desktop-nav {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .main-header .logo h1 {
+            font-size: 18px !important;
+          }
+          
+          .main-header .logo h1 span {
+            font-size: 11px !important;
+          }
+          
+          .main-header .lang-currency select {
+            font-size: 8px;
+            min-width: 40px;
+          }
+          
+          .main-header .top-actions {
+            gap: 4px;
+          }
         }
       `}</style>
 
@@ -338,7 +399,8 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           zIndex: 1999,
           display: isCartOpen ? 'block' : 'none'
         }}
-      ></div>
+        aria-hidden="true"
+      />
 
       {/* Cart Sidebar */}
       <div 
@@ -346,16 +408,19 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
         style={{
           position: 'fixed',
           top: 0,
-          left: isCartOpen ? '0' : '-400px',
+          right: isCartOpen ? '0' : '-400px',
           width: '380px',
           height: '100vh',
           background: 'white',
-          boxShadow: '5px 0 30px rgba(0,0,0,0.1)',
+          boxShadow: '-5px 0 30px rgba(0,0,0,0.1)',
           zIndex: 2000,
-          transition: 'left 0.3s ease',
+          transition: 'right 0.3s ease',
           display: 'flex',
           flexDirection: 'column'
         }}
+        role="dialog"
+        aria-label="سلة التسوق"
+        aria-modal="true"
       >
         <div className="cart-header" style={{
           padding: '25px',
@@ -365,11 +430,13 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           alignItems: 'center'
         }}>
           <h3 style={{ fontSize: '20px', color: '#000' }}>سلة الاستفسار</h3>
-          <span 
-            className="close-cart" 
+          <button 
             onClick={() => setIsCartOpen(false)}
-            style={{ fontSize: '24px', cursor: 'pointer', color: '#555' }}
-          >&times;</span>
+            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            aria-label="إغلاق السلة"
+          >
+            <FaTimes size={24} />
+          </button>
         </div>
         <div className="cart-items" style={{
           flex: 1,
@@ -383,9 +450,9 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           ) : (
             cart.map((item, index) => {
               const itemQuantity = item.quantity || 1
-              const packetSize = item.packetSize || 1
+              const packetSize = item.packetSize || item.pcs_per_packet || 1
               const isRSS = item.isRSS || false
-              const productCode = item.product_code || 'غير متوفر'
+              const productCode = item.product_code || item._id?.slice(-8) || 'N/A'
               
               return (
                 <div key={index} className="cart-item" style={{
@@ -407,7 +474,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                   }}>
                     <img 
                       src={item.imageUrl || '/images/default.webp'} 
-                      alt={item.name_ar || 'منتج'}
+                      alt={item.name_ar || item.name_en || 'منتج'}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/images/default.webp'
@@ -416,24 +483,21 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                   </div>
                   <div className="cart-item-details" style={{ flex: 1 }}>
                     <div className="cart-item-title" style={{ fontWeight: 600, marginBottom: '5px' }}>
-                      {item.name_ar || item.name_en || 'منتج'}
+                      {item.name_ar || item.name_en || item.name || 'منتج'}
                     </div>
-                    <div className="cart-item-code" style={{ fontSize: '12px', color: '#888', marginBottom: '5px' }}>
-                      الكود: {productCode}
+                    <div className="cart-item-code" style={{ fontSize: '12px', color: '#666', marginBottom: '5px' }}>
+                      الرمز: {productCode}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#666', marginBottom: '5px' }}>
-                      {!isRSS && packetSize > 1 && (
-                        <span>حزمة {packetSize} قطع | </span>
-                      )}
-                      <span>الكمية: {itemQuantity}</span>
+                    <div className="cart-item-quantity" style={{ fontSize: '13px', color: '#666', marginBottom: '5px' }}>
+                      الكمية: {itemQuantity} {!isRSS && packetSize > 1 ? `(كرتون - ${packetSize} قطعة)` : 'قطعة'}
                     </div>
-                    <div 
-                      className="cart-item-remove" 
+                    <button 
                       onClick={() => removeFromCart(index)}
-                      style={{ color: '#dc2626', cursor: 'pointer', fontSize: '14px' }}
+                      style={{ color: '#dc2626', cursor: 'pointer', fontSize: '14px', marginTop: '5px', background: 'none', border: 'none' }}
+                      aria-label={`إزالة ${item.name_ar || item.name_en || 'منتج'} من السلة`}
                     >
                       إزالة
-                    </div>
+                    </button>
                   </div>
                 </div>
               )
@@ -447,11 +511,20 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           <div className="cart-total" style={{
             display: 'flex',
             justifyContent: 'space-between',
+            marginBottom: '10px'
+          }}>
+            <span>إجمالي العناصر:</span>
+            <span style={{ fontWeight: 600 }}>{cart.length}</span>
+          </div>
+          <div className="cart-total-pieces" style={{
+            display: 'flex',
+            justifyContent: 'space-between',
             marginBottom: '20px',
-            fontWeight: 600
+            fontSize: '14px',
+            color: '#666'
           }}>
             <span>إجمالي القطع:</span>
-            <span>{getTotalPieces()}</span>
+            <span style={{ fontWeight: 600, color: '#ff5a00' }}>{getTotalPieces()}</span>
           </div>
           <div className="cart-actions" style={{ display: 'flex', gap: '10px' }}>
             <button 
@@ -465,10 +538,15 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                 fontWeight: 600,
                 cursor: 'pointer',
                 background: '#25d366',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
+              aria-label="إرسال الاستفسار عبر واتساب"
             >
-              <i className="fab fa-whatsapp"></i> إرسال عبر واتساب
+              <FaWhatsapp size={18} /> إرسال عبر واتساب
             </button>
             <button 
               className="cart-pdf" 
@@ -481,10 +559,15 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                 fontWeight: 600,
                 cursor: 'pointer',
                 background: '#ff5a00',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
+              aria-label="تصدير السلة كملف نصي"
             >
-              <i className="fas fa-file-pdf"></i> PDF
+              <FaFileAlt size={18} /> تصدير
             </button>
           </div>
         </div>
@@ -504,7 +587,8 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           zIndex: 1999,
           display: isMobileNavOpen ? 'block' : 'none'
         }}
-      ></div>
+        aria-hidden="true"
+      />
 
       {/* Mobile Navigation */}
       <div 
@@ -512,16 +596,19 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
         style={{
           position: 'fixed',
           top: 0,
-          right: isMobileNavOpen ? '0' : '-280px',
+          left: isMobileNavOpen ? '0' : '-280px',
           width: '280px',
           height: '100vh',
           background: 'white',
-          boxShadow: '-2px 0 20px rgba(0,0,0,0.1)',
+          boxShadow: '2px 0 20px rgba(0,0,0,0.1)',
           zIndex: 2000,
-          transition: 'right 0.3s ease',
+          transition: 'left 0.3s ease',
           padding: '30px 20px',
           overflowY: 'auto'
         }}
+        role="dialog"
+        aria-label="قائمة التنقل للجوال"
+        aria-modal="true"
       >
         <div className="mobile-nav-header" style={{
           display: 'flex',
@@ -532,11 +619,13 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           borderBottom: '1px solid #eee'
         }}>
           <h3 style={{ fontSize: '20px', color: '#000' }}>القائمة</h3>
-          <span 
-            className="close-mobile-nav" 
+          <button 
             onClick={() => setIsMobileNavOpen(false)}
-            style={{ fontSize: '24px', cursor: 'pointer', color: '#555' }}
-          >&times;</span>
+            style={{ fontSize: '24px', cursor: 'pointer', color: '#555', background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            aria-label="إغلاق القائمة"
+          >
+            <FaTimes size={24} />
+          </button>
         </div>
         <div className="mobile-nav-links" style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
           <Link href="/ar" style={{ color: '#000', textDecoration: 'none', fontSize: '16px', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #eee' }}>
@@ -555,17 +644,11 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           <Link href="/ar/category/hijabs" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             حجاب
           </Link>
-          <Link href="/ar/category/modest-skirt-sets" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            طقم تنورة محجبات
-          </Link>
           <Link href="/ar/category/modest-dresses" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             فساتين محجبات
           </Link>
-          <Link href="/ar/category/burkini" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            بوركيني ملابس سباحة محجبات
-          </Link>
-          <Link href="/ar/category/modest-sportswear" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
-            ملابس رياضية محجبات
+          <Link href="/ar/category/modest-skirt-sets" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            طقم تنورة محجبات
           </Link>
           <Link href="/ar/category/modest-evening-dresses" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             فساتين سهرة محجبات
@@ -573,8 +656,14 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           <Link href="/ar/category/modest-pants-sets" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             طقم بنطلون محجبات
           </Link>
+          <Link href="/ar/category/modest-sportswear" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            ملابس رياضية محجبات
+          </Link>
           <Link href="/ar/category/prayer-clothes" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
             ملابس صلاة
+          </Link>
+          <Link href="/ar/category/burkini" style={{ color: '#000', textDecoration: 'none', fontSize: '14px', fontWeight: 500, padding: '12px 20px', borderBottom: '1px dashed #eee' }}>
+            بوركيني
           </Link>
           
           <Link href="/ar/about-us" style={{ color: '#000', textDecoration: 'none', fontSize: '16px', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #eee' }}>
@@ -596,11 +685,11 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
         borderBottom: '1px solid #333'
       }}>
         <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <p><span style={{ color: '#ff5a00', fontWeight: 600 }}>جملة ملابس محجبات تركية</span> وشحن عالمي. أناقة تصل إلى عنوانك</p>
+          <p><span style={{ color: '#ff5a00', fontWeight: 600 }}>جملة ملابس حجاب تركية مميزة</span> وشحن عالمي. أناقة توصلك إلى باب منزلك</p>
         </div>
       </div>
 
-      {/* Main Header - صف علوي: Logo | Search Bar | Actions */}
+      {/* Main Header */}
       <header className="main-header" style={{
         background: 'white',
         boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
@@ -609,20 +698,39 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
         zIndex: 1000,
         direction: 'rtl'
       }}>
-        {/* الصف العلوي - Logo, Search Bar, Actions */}
-        <div className="container" style={{
+        {/* الصف العلوي: همبرجر + لوجو + عملات + سلة */}
+        <div className="header-row-top" style={{
           maxWidth: '1200px',
           margin: '0 auto',
           padding: '15px 20px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '20px'
+          gap: '20px',
+          direction: 'rtl'
         }}>
-          {/* Logo */}
+          {/* Hamburger Menu Button - يظهر في الجوال فقط */}
+          <button 
+            className="mobile-menu-btn" 
+            onClick={() => setIsMobileNavOpen(true)}
+            style={{
+              fontSize: '24px',
+              cursor: 'pointer',
+              color: '#000',
+              background: 'none',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            aria-label="فتح القائمة"
+          >
+            <FaBars size={24} />
+          </button>
+
+          {/* Logo - بالعربية */}
           <div className="logo" style={{ flexShrink: 0 }}>
-            <Link href="/ar" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/ar" style={{ textDecoration: 'none', color: 'inherit' }} aria-label="حجاب فاشون مول - الرئيسية">
               <h1 style={{ 
                 fontSize: '28px', 
                 color: '#000', 
@@ -644,18 +752,19 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               </h1>
             </Link>
           </div>
-          
-          {/* Search Bar */}
+
+          {/* Search Bar - يظهر في الديسك توب فقط */}
           <div className="search-bar" style={{
             flex: 1,
             maxWidth: '500px',
             margin: '0 20px'
           }}>
-            <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }}>
+            <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }} role="search" aria-label="بحث في الموقع">
               <input
+                id="searchInput"
                 ref={searchInputRef}
                 type="text"
-                placeholder="ابحث عن منتجات... (اسم، كود، لون)"
+                placeholder="ابحث عن منتجات... (الاسم، الرمز، اللون)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
@@ -665,7 +774,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                   padding: '14px 55px 14px 20px',
                   border: isSearchFocused ? '2px solid #ff5a00' : '2px solid #eaeaea',
                   borderRadius: '50px',
-                  fontFamily: 'Tajawal, sans-serif',
+                  fontFamily: 'Tajawal, Poppins, sans-serif',
                   fontSize: '15px',
                   outline: 'none',
                   transition: 'all 0.3s',
@@ -676,7 +785,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                 type="submit"
                 style={{
                   position: 'absolute',
-                  left: '8px',
+                  right: '8px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   background: '#ff5a00',
@@ -694,13 +803,14 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
                 onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
+                aria-label="بحث"
               >
-                <i className="fas fa-search"></i>
+                <FaSearch size={18} />
               </button>
             </form>
           </div>
-          
-          {/* Top Actions - اللغة والعملات بالعربية */}
+
+          {/* Top Actions (Language + Currency + Cart) */}
           <div className="top-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center', flexShrink: 0 }}>
             <div className="lang-currency" style={{
               display: 'flex',
@@ -709,20 +819,22 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               padding: '6px 10px',
               borderRadius: '40px'
             }}>
-              {/* قائمة اللغات بالعربية - تمت إضافة الإيطالية والإسبانية */}
+              <label htmlFor="languageSelect" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
+                اختر اللغة
+              </label>
               <select 
                 id="languageSelect"
                 defaultValue="ar"
                 style={{
                   border: 'none',
                   background: 'transparent',
-                  fontFamily: 'Tajawal, sans-serif',
+                  fontFamily: 'Tajawal, Poppins, sans-serif',
                   fontWeight: 500,
                   fontSize: '12px',
                   cursor: 'pointer',
                   outline: 'none',
                   color: '#222',
-                  width: '100px'
+                  width: '85px'
                 }}
                 onChange={(e) => {
                   const lang = e.target.value
@@ -743,17 +855,19 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                     window.location.href = `/es${pathWithoutLang}`
                   }
                 }}
+                aria-label="اختر اللغة"
               >
+                <option value="en">🇬🇧 English</option>
                 <option value="ar">🇸🇦 العربية</option>
-                <option value="en">🇬🇧 الإنجليزية</option>
-                <option value="fr">🇫🇷 الفرنسية</option>
-                <option value="de">🇩🇪 الألمانية</option>
-                <option value="tr">🇹🇷 التركية</option>
-                <option value="it">🇮🇹 الإيطالية</option>
-                <option value="es">🇪🇸 الإسبانية</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="tr">🇹🇷 Türkçe</option>
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="es">🇪🇸 Español</option>
               </select>
-              
-              {/* قائمة العملات بالعربية */}
+              <label htmlFor="currencySelect" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
+                اختر العملة
+              </label>
               <select 
                 id="currencySelect"
                 value={currency}
@@ -762,15 +876,16 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                 style={{
                   border: 'none',
                   background: 'transparent',
-                  fontFamily: 'Tajawal, sans-serif',
+                  fontFamily: 'Tajawal, Poppins, sans-serif',
                   fontWeight: 500,
                   fontSize: '12px',
                   cursor: currencyLoading ? 'wait' : 'pointer',
                   outline: 'none',
                   color: '#222',
-                  width: '90px',
+                  width: '65px',
                   opacity: currencyLoading ? 0.7 : 1
                 }}
+                aria-label="اختر العملة"
               >
                 <option value="USD">🇺🇸 دولار أمريكي</option>
                 <option value="EUR">🇪🇺 يورو</option>
@@ -787,40 +902,148 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                 <option value="DZD">🇩🇿 دينار جزائري</option>
               </select>
             </div>
-            <div 
-              className="cart-icon" 
+            
+            {/* السلة في الديسك توب */}
+            <button 
+              className="cart-icon-desktop" 
               onClick={() => setIsCartOpen(true)}
-              style={{ position: 'relative', cursor: 'pointer', fontSize: '22px', color: '#000' }}
+              style={{
+                position: 'relative',
+                cursor: 'pointer',
+                fontSize: '22px',
+                color: '#000',
+                background: 'none',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              aria-label={`سلة التسوق بها ${cartCount} عناصر`}
             >
-              <i className="fas fa-shopping-cart"></i>
-              <span 
-                className="cart-count" 
-                id="cartCount"
+              <FaShoppingCart size={22} />
+              <span className="cart-count" style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                background: '#ff5a00',
+                color: 'white',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                fontSize: '11px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 600
+              }}>{cartCount}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* الصف الثاني: شريط البحث + أيقونة السلة (يظهر في الجوال فقط) */}
+        <div className="search-row" style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 20px 15px 20px',
+          display: 'none',
+          direction: 'rtl'
+        }}>
+          <div className="search-bar" style={{
+            width: '100%'
+          }}>
+            <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }} role="search" aria-label="بحث في الموقع">
+              <input
+                type="text"
+                placeholder="ابحث عن منتجات... (الاسم، الرمز، اللون)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                style={{
+                  width: '100%',
+                  padding: '14px 55px 14px 20px',
+                  border: isSearchFocused ? '2px solid #ff5a00' : '2px solid #eaeaea',
+                  borderRadius: '50px',
+                  fontFamily: 'Tajawal, Poppins, sans-serif',
+                  fontSize: '15px',
+                  outline: 'none',
+                  transition: 'all 0.3s',
+                  background: '#fafafa'
+                }}
+              />
+              <button
+                type="submit"
                 style={{
                   position: 'absolute',
-                  top: '-8px',
-                  left: '-8px',
+                  right: '8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
                   background: '#ff5a00',
                   color: 'white',
+                  border: 'none',
+                  width: '40px',
+                  height: '40px',
                   borderRadius: '50%',
-                  width: '18px',
-                  height: '18px',
-                  fontSize: '11px',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontWeight: 600
+                  fontSize: '16px',
+                  transition: 'all 0.3s'
                 }}
-              >{cartCount}</span>
-            </div>
+                onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
+                aria-label="بحث"
+              >
+                <FaSearch size={18} />
+              </button>
+            </form>
           </div>
+          
+          {/* السلة في الجوال */}
+          <button 
+            className="mobile-cart-icon" 
+            onClick={() => setIsCartOpen(true)}
+            style={{
+              position: 'relative',
+              cursor: 'pointer',
+              fontSize: '22px',
+              color: '#000',
+              background: 'none',
+              border: 'none',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              marginLeft: '10px'
+            }}
+            aria-label={`سلة التسوق بها ${cartCount} عناصر`}
+          >
+            <FaShoppingCart size={22} />
+            <span className="cart-count" style={{
+              position: 'absolute',
+              top: '-8px',
+              right: '-10px',
+              background: '#ff5a00',
+              color: 'white',
+              borderRadius: '50%',
+              width: '18px',
+              height: '18px',
+              fontSize: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 600
+            }}>{cartCount}</span>
+          </button>
         </div>
-        
-        {/* الصف السفلي - القائمة الرئيسية */}
+
+        {/* Desktop Navigation - التصنيفات بالعربية مع روابط إنجليزية */}
         <div style={{
           background: '#f8f8f8',
           borderTop: '1px solid #eee',
-          borderBottom: '1px solid #eee'
+          borderBottom: '1px solid #eee',
+          direction: 'rtl'
         }}>
           <div className="container" style={{
             maxWidth: '1200px',
@@ -831,13 +1054,13 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               display: 'flex', 
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '25px',
+              gap: '20px',
               padding: '12px 0',
               flexWrap: 'nowrap',
               overflowX: 'auto',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none'
-            }}>
+            }} aria-label="القائمة الرئيسية">
               <Link href="/ar" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 الرئيسية
               </Link>
@@ -850,17 +1073,11 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               <Link href="/ar/category/hijabs" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 حجاب
               </Link>
+              <Link href="/ar/category/modest-dresses" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                فساتين محجبات
+              </Link>
               <Link href="/ar/category/modest-skirt-sets" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 طقم تنورة
-              </Link>
-              <Link href="/ar/category/modest-dresses" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
-                فساتين
-              </Link>
-              <Link href="/ar/category/burkini" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
-                بوركيني
-              </Link>
-              <Link href="/ar/category/modest-sportswear" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
-                ملابس رياضية
               </Link>
               <Link href="/ar/category/modest-evening-dresses" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 فساتين سهرة
@@ -868,8 +1085,14 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
               <Link href="/ar/category/modest-pants-sets" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 طقم بنطلون
               </Link>
+              <Link href="/ar/category/modest-sportswear" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                ملابس رياضية
+              </Link>
               <Link href="/ar/category/prayer-clothes" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 ملابس صلاة
+              </Link>
+              <Link href="/ar/category/burkini" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
+                بوركيني
               </Link>
               <Link href="/ar/about-us" style={{ color: '#333', textDecoration: 'none', fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap' }}>
                 من نحن
@@ -880,30 +1103,12 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             </nav>
           </div>
         </div>
-        
-        {/* Mobile Menu Button */}
-        <button 
-          className="mobile-menu-btn" 
-          onClick={() => setIsMobileNavOpen(true)}
-          style={{
-            display: 'none',
-            fontSize: '24px',
-            cursor: 'pointer',
-            color: '#000',
-            background: 'none',
-            border: 'none',
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            zIndex: 1001
-          }}
-        >
-          <i className="fas fa-bars"></i>
-        </button>
       </header>
 
       {/* Main Content */}
-      {children}
+      <div style={{ direction: 'rtl' }}>
+        {children}
+      </div>
 
       {/* Footer */}
       <footer className="footer" style={{
@@ -912,7 +1117,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
         padding: '60px 0 20px',
         borderTop: '4px solid #ff5a00'
       }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', direction: 'rtl' }}>
           <div className="footer-top" style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -926,7 +1131,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             <div className="footer-logo">
               <h2 style={{ fontSize: '28px', color: 'white', marginBottom: '10px' }}>حجاب فاشون مول</h2>
               <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', maxWidth: '300px' }}>
-                مصدر الجملة الموثوق لملابس المحجبات التركية
+                مصدر الجملة الموثوق به لأفضل ملابس الحجاب التركية
               </p>
             </div>
             <div className="footer-stats" style={{ display: 'flex', gap: '30px' }}>
@@ -947,7 +1152,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
 
           <div className="footer-trust" style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
             alignItems: 'center',
             flexWrap: 'wrap',
             gap: '20px',
@@ -957,105 +1162,13 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             borderRadius: '50px'
           }}>
             <div className="trust-badges" style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
-              <span><i className="fas fa-truck" style={{ color: '#ff5a00' }}></i> شحن سريع</span>
-              <span><i className="fas fa-lock" style={{ color: '#ff5a00' }}></i> دفع آمن</span>
-              <span><i className="fas fa-check-circle" style={{ color: '#ff5a00' }}></i> أصلي 100%</span>
-            </div>
-            <div className="footer-social" style={{ display: 'flex', gap: '15px' }}>
-              <a href="https://facebook.com/hijabfashionmall" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
-              <a href="https://instagram.com/hijabfashionmall" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
-              <a href="https://youtube.com/@hijabfashionmall" target="_blank" rel="noopener noreferrer"><i className="fab fa-youtube"></i></a>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaTruck style={{ color: '#ff5a00' }} /> شحن سريع</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaLock style={{ color: '#ff5a00' }} /> دفع آمن</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FaCheckCircle style={{ color: '#ff5a00' }} /> أصلي 100%</span>
             </div>
           </div>
 
-          {/* Country Guides Section */}
-          <div className="footer-country-guides" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '25px',
-            marginBottom: '40px',
-            paddingBottom: '30px',
-            borderBottom: '1px solid rgba(255,255,255,0.1)'
-          }}>
-            {/* Americas & Oceania */}
-            <div className="country-section">
-              <h4><i className="fas fa-globe-americas"></i> أمريكا وأوقيانوسيا</h4>
-              <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                <a href="/ar/wholesale-usa" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>الولايات المتحدة</a>
-                <a href="/ar/wholesale-canada" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>كندا</a>
-                <a href="/ar/wholesale-australia" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>أستراليا</a>
-                <a href="/ar/wholesale-newzealand" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>نيوزيلندا</a>
-                <a href="/ar/wholesale-brazil" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>البرازيل</a>
-                <a href="/ar/wholesale-argentina" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>الأرجنتين</a>
-                <a href="/ar/wholesale-mexico" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>المكسيك</a>
-                <a href="/ar/wholesale-chile" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>تشيلي</a>
-              </div>
-            </div>
-            
-            {/* Europe */}
-            <div className="country-section">
-              <h4><i className="fas fa-globe-europe"></i> أوروبا</h4>
-              <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                <a href="/ar/wholesale-uk" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>المملكة المتحدة</a>
-                <a href="/ar/wholesale-germany" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>ألمانيا</a>
-                <a href="/ar/wholesale-france" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>فرنسا</a>
-                <a href="/ar/wholesale-italy" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>إيطاليا</a>
-                <a href="/ar/wholesale-spain" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>إسبانيا</a>
-                <a href="/ar/wholesale-netherlands" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>هولندا</a>
-                <a href="/ar/wholesale-belgium" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>بلجيكا</a>
-                <a href="/ar/wholesale-sweden" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>السويد</a>
-                <a href="/ar/wholesale-denmark" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>الدنمارك</a>
-                <a href="/ar/wholesale-norway" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>النرويج</a>
-                <a href="/ar/wholesale-finland" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>فنلندا</a>
-                <a href="/ar/wholesale-switzerland" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>سويسرا</a>
-                <a href="/ar/wholesale-austria" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>النمسا</a>
-                <a href="/ar/wholesale-ireland" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>أيرلندا</a>
-              </div>
-            </div>
-            
-            {/* Middle East & Africa */}
-            <div className="country-section">
-              <h4><i className="fas fa-globe-asia"></i> الشرق الأوسط وأفريقيا</h4>
-              <div className="country-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                <a href="/ar/wholesale-saudiarabia" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>السعودية</a>
-                <a href="/ar/wholesale-uae" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>الإمارات</a>
-                <a href="/ar/wholesale-kuwait" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>الكويت</a>
-                <a href="/ar/wholesale-qatar" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>قطر</a>
-                <a href="/ar/wholesale-bahrain" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>البحرين</a>
-                <a href="/ar/wholesale-oman" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>عمان</a>
-                <a href="/ar/wholesale-lebanon" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>لبنان</a>
-                <a href="/ar/wholesale-syria" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>سوريا</a>
-                <a href="/ar/wholesale-iraq" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>العراق</a>
-                <a href="/ar/wholesale-jordan" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>الأردن</a>
-                <a href="/ar/wholesale-egypt" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>مصر</a>
-                <a href="/ar/wholesale-algeria" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>الجزائر</a>
-                <a href="/ar/wholesale-libya" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>ليبيا</a>
-                <a href="/ar/wholesale-morocco" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>المغرب</a>
-                <a href="/ar/wholesale-tunisia" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '13px', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>تونس</a>
-              </div>
-            </div>
-            
-            {/* Map Section */}
-            <div className="country-section map-section">
-              <h4><i className="fas fa-map-marked-alt"></i> شحن عالمي</h4>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', lineHeight: '1.6', marginBottom: '15px' }}>
-                نشحن إلى أكثر من 50 دولة حول العالم. توصيل سريع وموثوق.
-              </p>
-              <div className="shipping-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="fas fa-plane" style={{ color: '#ff5a00' }}></i> شحن سريع
-                </span>
-                <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="fas fa-box" style={{ color: '#ff5a00' }}></i> من الباب للباب
-                </span>
-                <span style={{ background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.8)', padding: '5px 12px', borderRadius: '30px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="fas fa-clock" style={{ color: '#ff5a00' }}></i> 3-7 أيام
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer Channels */}
+          {/* Footer Channels - بالعربية */}
           <div className="footer-channels-simple" style={{ margin: '30px 0 20px', padding: '20px 0', borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
               <div className="simple-channels" style={{ display: 'flex', justifyContent: 'center', gap: '30px', flexWrap: 'wrap' }}>
@@ -1070,10 +1183,10 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                   transition: 'transform 0.3s',
                   minWidth: '280px',
                   background: '#25d366'
-                }}>
-                  <i className="fab fa-whatsapp"></i>
+                }} aria-label="انضم لقناة واتساب">
+                  <FaWhatsapp size={20} />
                   <span>انضم لقناة واتساب</span>
-                  <small style={{ fontSize: '12px', opacity: 0.8, marginRight: 'auto' }}>1,500+ عضو</small>
+                  <small style={{ fontSize: '12px', opacity: 0.8, marginLeft: 'auto' }}>1,500+ عضو</small>
                 </a>
                 <a href="https://t.me/hijabfashionmall" className="simple-channel telegram-simple" target="_blank" rel="noopener noreferrer" style={{
                   display: 'flex',
@@ -1086,16 +1199,16 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
                   transition: 'transform 0.3s',
                   minWidth: '280px',
                   background: '#0088cc'
-                }}>
-                  <i className="fab fa-telegram-plane"></i>
+                }} aria-label="انضم لقناة تليجرام">
+                  <FaTelegramPlane size={20} />
                   <span>انضم لقناة تليجرام</span>
-                  <small style={{ fontSize: '12px', opacity: 0.8, marginRight: 'auto' }}>11,000+ عضو</small>
+                  <small style={{ fontSize: '12px', opacity: 0.8, marginLeft: 'auto' }}>11,000+ عضو</small>
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Policies */}
+          {/* Policies - بالعربية */}
           <div className="footer-policies" style={{
             textAlign: 'center',
             marginBottom: '15px',
@@ -1103,7 +1216,7 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             borderTop: '1px solid rgba(255,255,255,0.1)',
             fontSize: '13px'
           }}>
-            <a href="/ar/refund-policy" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', margin: '0 5px' }}>سياسة الاسترجاع</a>
+            <a href="/ar/refund-policy" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', margin: '0 5px' }}>سياسة الاسترداد</a>
             <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 2px' }}> | </span>
             <a href="/ar/terms-conditions" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none', margin: '0 5px' }}>الشروط والأحكام</a>
             <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 2px' }}> | </span>
@@ -1119,14 +1232,14 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
             marginTop: '10px',
             paddingBottom: '10px'
           }}>
-            <p>© 2026 حجاب فاشون مول. جميع الحقوق محفوظة. صمم لتجار تجزئة أزياء المحجبات حول العالم.</p>
+            <p>© 2026 حجاب فاشون مول. جميع الحقوق محفوظة. مصمم لتجار التجزئة العالميين.</p>
           </div>
         </div>
       </footer>
 
       {/* WhatsApp Float Button */}
       <a 
-        href="https://wa.me/905519522448?text=مرحباً%2C%20لدي%20سؤال%20عن%20منتجاتكم" 
+        href="https://wa.me/905519522448?text=مرحباً،%20لدي%20سؤال%20عن%20منتجاتكم" 
         className="whatsapp-float" 
         target="_blank" 
         rel="noopener noreferrer"
@@ -1148,8 +1261,9 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           transition: 'all 0.3s',
           textDecoration: 'none'
         }}
+        aria-label="اتصل بنا على واتساب"
       >
-        <i className="fab fa-whatsapp"></i>
+        <FaWhatsapp size={30} />
       </a>
 
       {/* Back to Top Button */}
@@ -1178,8 +1292,9 @@ export default function ClientLayoutAr({ children }: { children: React.ReactNode
           opacity: 0,
           visibility: 'hidden'
         }}
+        aria-label="العودة للأعلى"
       >
-        <i className="fas fa-arrow-up"></i>
+        <FaArrowUp size={24} />
       </button>
     </>
   )

@@ -1,17 +1,31 @@
 // app/ar/privacy-policy/page.tsx
-'use client'
-
 import Link from 'next/link'
 import Head from 'next/head'
+import { FaArrowLeft } from 'react-icons/fa'
 
 export default function PrivacyPolicyPageAr() {
   return (
     <>
       <Head>
-        <title>سياسة الخصوصية - حجاب فاشون مول | جملة ملابس محجبات تركية</title>
-        <meta name="description" content="تعرف على كيفية جمع واستخدام وحماية معلوماتك الشخصية في حجاب فاشون مول. سياسة الخصوصية لعملاء الجملة وزوار الموقع." />
-        <meta name="keywords" content="سياسة الخصوصية, حماية البيانات, معلومات شخصية, خصوصية الجملة" />
+        <title>سياسة الخصوصية - Hijab Fashion Mall | جملة الأزياء المحتشمة التركية</title>
+        <meta name="description" content="تعرف على كيفية جمع Hijab Fashion Mall لمعلوماتك الشخصية واستخدامها وحمايتها. سياسة الخصوصية لعملاء الجملة وزوار الموقع." />
+        <meta name="keywords" content="سياسة الخصوصية, حماية البيانات, معلومات شخصية, خصوصية الجملة, خصوصية أزياء الحجاب" />
+        <meta name="author" content="Hijab Fashion Mall" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="canonical" href="https://hijabfashionmall.com/ar/privacy-policy" />
+        <link rel="alternate" hrefLang="ar" href="https://hijabfashionmall.com/ar/privacy-policy" />
+        <link rel="alternate" hrefLang="en" href="https://hijabfashionmall.com/en/privacy-policy" />
+        <link rel="alternate" hrefLang="fr" href="https://hijabfashionmall.com/fr/privacy-policy" />
+        <link rel="alternate" hrefLang="de" href="https://hijabfashionmall.com/de/privacy-policy" />
+        <link rel="alternate" hrefLang="it" href="https://hijabfashionmall.com/it/privacy-policy" />
+        <link rel="alternate" hrefLang="es" href="https://hijabfashionmall.com/es/privacy-policy" />
+        <meta property="og:title" content="سياسة الخصوصية - Hijab Fashion Mall" />
+        <meta property="og:description" content="تعرف على كيفية جمع Hijab Fashion Mall لمعلوماتك الشخصية واستخدامها وحمايتها." />
+        <meta property="og:url" content="https://hijabfashionmall.com/ar/privacy-policy" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="سياسة الخصوصية - Hijab Fashion Mall" />
+        <meta name="twitter:description" content="تعرف على كيفية حماية Hijab Fashion Mall لمعلوماتك الشخصية." />
       </Head>
 
       <style>{`
@@ -22,9 +36,9 @@ export default function PrivacyPolicyPageAr() {
         }
 
         body {
-          font-family: 'Tajawal', sans-serif;
+          font-family: 'Poppins', 'Cairo', sans-serif;
           color: #333;
-          line-height: 1.7;
+          line-height: 1.6;
           background: #fff;
         }
 
@@ -44,6 +58,37 @@ export default function PrivacyPolicyPageAr() {
           padding: 0 20px;
         }
 
+        /* Breadcrumb Bar */
+        .breadcrumb-bar {
+          padding: 20px 0;
+          background: #f5f5f5;
+          border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb-list {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .breadcrumb-item a {
+          color: #555;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .breadcrumb-item a:hover {
+          color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+          font-size: 14px;
+          color: #000;
+          font-weight: 600;
+        }
+
+        /* Page Header */
         .page-header {
           background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
           padding: 60px 0;
@@ -65,22 +110,7 @@ export default function PrivacyPolicyPageAr() {
           margin: 0 auto;
         }
 
-        .page-header .breadcrumb {
-          font-size: 14px;
-          color: var(--medium-gray);
-          margin-bottom: 20px;
-        }
-
-        .page-header .breadcrumb a {
-          color: var(--primary);
-          text-decoration: none;
-        }
-
-        .page-header .breadcrumb span {
-          color: var(--medium-gray);
-          margin: 0 5px;
-        }
-
+        /* Privacy Content */
         .privacy-content {
           padding: 60px 0;
           background: var(--white);
@@ -94,7 +124,6 @@ export default function PrivacyPolicyPageAr() {
           padding: 40px;
           box-shadow: 0 10px 30px rgba(0,0,0,0.05);
           border: 1px solid #f0f0f0;
-          text-align: right;
         }
 
         .privacy-section {
@@ -190,23 +219,14 @@ export default function PrivacyPolicyPageAr() {
       `}</style>
 
       {/* Breadcrumb */}
-      <div style={{
-        padding: '20px 0',
-        background: '#f5f5f5',
-        borderBottom: '1px solid #eee'
-      }}>
+      <div className="breadcrumb-bar">
         <div className="container">
-          <ul style={{
-            listStyle: 'none',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px'
-          }}>
-            <li style={{ fontSize: '14px', color: '#555' }}>
-              <Link href="/ar" style={{ color: '#555', textDecoration: 'none' }}>الرئيسية</Link>
+          <ul className="breadcrumb-list">
+            <li className="breadcrumb-item">
+              <Link href="/ar">الرئيسية</Link>
             </li>
-            <li style={{ fontSize: '14px', color: '#555' }}>/</li>
-            <li style={{ fontSize: '14px', color: '#000', fontWeight: 600 }}>سياسة الخصوصية</li>
+            <li className="breadcrumb-item">/</li>
+            <li className="breadcrumb-item active">سياسة الخصوصية</li>
           </ul>
         </div>
       </div>
@@ -226,36 +246,36 @@ export default function PrivacyPolicyPageAr() {
             
             <div className="privacy-section">
               <h2>١. مقدمة</h2>
-              <p>في حجاب فاشون مول، نحن نقدر خصوصيتك وملتزمون بحماية معلوماتك الشخصية. توضح سياسة الخصوصية هذه كيفية جمع واستخدام وحماية بياناتك عند زيارتك لموقعنا الإلكتروني أو تقديم طلبات الجملة معنا. باستخدام خدماتك، فإنك توافق على الممارسات الموضحة في هذه السياسة.</p>
-              <p>نحن نعمل كمورد جملة لملابس المحجبات التركية، نخدم تجار التجزئة والمتاجر حول العالم. التزامنا بحماية البيانات يضمن بقاء معلوماتك آمنة أثناء تعاملك معنا.</p>
+              <p>في Hijab Fashion Mall، نحن نقدر خصوصيتك ونلتزم بحماية معلوماتك الشخصية. تشرح سياسة الخصوصية هذه كيفية جمع بياناتك واستخدامها وحمايتها عند زيارة موقعنا أو تقديم طلبات الجملة معنا. باستخدام خدماتك، فإنك توافق على الممارسات الموضحة في هذه السياسة.</p>
+              <p>نحن نعمل كمورد جملة للأزياء المحتشمة التركية، ونخدم تجار التجزئة والمتاجر في جميع أنحاء العالم. يضمن التزامنا بحماية البيانات بقاء معلوماتك آمنة أثناء عملك معنا.</p>
             </div>
 
             <div className="privacy-section">
               <h2>٢. المعلومات التي نجمعها</h2>
-              <p>نجمع المعلومات التي تساعدنا في معالجة طلباتك وتحسين خدماتنا. تشمل أنواع المعلومات التي قد نجمعها:</p>
+              <p>نقوم بجمع المعلومات التي تساعدنا في معالجة طلباتك وتحسين خدماتنا. تشمل أنواع المعلومات التي قد نجمعها:</p>
               <ul>
-                <li><strong>معلومات العمل:</strong> اسم الشركة، عنوان العمل، رقم التسجيل الضريبي (حسب الاقتضاء)</li>
-                <li><strong>بيانات الاتصال:</strong> الاسم، البريد الإلكتروني، رقم الهاتف، جهة اتصال واتساب</li>
+                <li><strong>معلومات العمل:</strong> اسم الشركة، عنوان العمل، رقم التعريف الضريبي (حيثما ينطبق)</li>
+                <li><strong>تفاصيل الاتصال:</strong> الاسم، البريد الإلكتروني، رقم الهاتف، جهة اتصال واتساب</li>
                 <li><strong>معلومات الطلب:</strong> اختيارات المنتج، الكميات، عنوان الشحن، سجل الطلبات</li>
-                <li><strong>بيانات التواصل:</strong> الرسائل والاستفسارات المرسلة عبر موقعنا أو واتساب</li>
-                <li><strong>البيانات التقنية:</strong> عنوان IP، نوع المتصفح، معلومات الجهاز، أنماط استخدام الموقع</li>
+                <li><strong>بيانات الاتصال:</strong> الرسائل والاستفسارات المرسلة عبر موقعنا أو واتساب</li>
+                <li><strong>البيانات التقنية:</strong> عنوان IP، نوع المتصفح، معلومات الجهاز، وأنماط استخدام الموقع</li>
               </ul>
             </div>
 
             <div className="privacy-section">
               <h2>٣. كيفية استخدام معلوماتك</h2>
-              <p>تُستخدم معلوماتك فقط للأغراض التجارية المشروعة المتعلقة بعمليات الجملة:</p>
+              <p>تُستخدم معلوماتك فقط لأغراض تجارية مشروعة تتعلق بعمليات الجملة لدينا:</p>
               <ul>
                 <li>معالجة وتنفيذ طلبات الجملة الخاصة بك</li>
-                <li>التواصل معك بشأن طلباتك واستفساراتك</li>
+                <li>التواصل معك بخصوص طلباتك واستفساراتك</li>
                 <li>تقديم الدعم والمساعدة للعملاء</li>
-                <li>إدارة ترتيبات الشحن والتوصيل</li>
+                <li>إدارة ترتيبات الشحن والتسليم</li>
                 <li>إرسال تحديثات مهمة حول حسابك أو طلباتك</li>
                 <li>تحسين موقعنا وخدماتنا</li>
                 <li>الامتثال للمتطلبات القانونية والتنظيمية</li>
               </ul>
               <div className="info-box">
-                <p><strong>🔒 ملاحظة:</strong> نحن لا نبيع أو نؤجر أو نشارك معلوماتك الشخصية مع أطراف ثالثة لأغراض تسويقية. تُستخدم بياناتك حصرياً لخدمة احتياجات الجملة الخاصة بك.</p>
+                <p><strong>🔒 ملاحظة:</strong> نحن لا نبيع أو نؤجر أو نشارك معلوماتك الشخصية مع أطراف ثالثة لأغراض تسويقية. تُستخدم بياناتك حصريًا لخدمة احتياجات الجملة الخاصة بك.</p>
               </div>
             </div>
 
@@ -263,27 +283,27 @@ export default function PrivacyPolicyPageAr() {
               <h2>٤. مشاركة معلوماتك</h2>
               <p>قد نشارك معلوماتك مع أطراف ثالثة موثوقة فقط عند الضرورة لتنفيذ طلباتك:</p>
               <ul>
-                <li><strong>شركاء الشحن:</strong> لتوصيل طلباتك إلى العنوان المحدد</li>
-                <li><strong>معالجي الدفع:</strong> لمعالجة مدفوعاتك بشكل آمن</li>
+                <li><strong>شركاء الشحن:</strong> لتوصيل طلباتك إلى عنوانك المحدد</li>
+                <li><strong>معالجي المدفوعات:</strong> لمعالجة مدفوعاتك بشكل آمن</li>
                 <li><strong>السلطات القانونية:</strong> عندما يقتضي القانون ذلك أو لحماية حقوقنا</li>
               </ul>
-              <p>جميع مقدمي الخدمات من الأطراف الثالثة ملزمون تعاقدياً بحماية معلوماتك واستخدامها فقط للأغراض المحددة.</p>
+              <p>جميع مقدمي الخدمات من الأطراف الثالثة ملزمون تعاقديًا بحماية معلوماتك واستخدامها فقط للأغراض المحددة.</p>
             </div>
 
             <div className="privacy-section">
               <h2>٥. أمان البيانات</h2>
-              <p>نحن نطبق التدابير التقنية والتنظيمية المناسبة لحماية معلوماتك الشخصية من الوصول غير المصرح به أو التعديل أو الإفصاح أو التدمير. تشمل هذه التدابير:</p>
+              <p>نحن ننفذ تدابير تقنية وتنظيمية مناسبة لحماية معلوماتك الشخصية من الوصول غير المصرح به أو التغيير أو الكشف أو التدمير. تشمل هذه التدابير:</p>
               <ul>
                 <li>تشفير SSL لنقل البيانات</li>
-                <li>تقييمات أمنية وتحديثات منتظمة</li>
-                <li>تقييد الوصول إلى المعلومات الشخصية</li>
+                <li>تقييمات وتحديثات أمنية منتظمة</li>
+                <li>الوصول المقيد إلى المعلومات الشخصية</li>
                 <li>أنظمة تخزين آمنة وبروتوكولات حماية البيانات</li>
               </ul>
             </div>
 
             <div className="privacy-section">
-              <h2>٦. ملفات تعريف الارتباط (الكوكيز)</h2>
-              <p>يستخدم موقعنا ملفات تعريف الارتباط وتقنيات التتبع المماثلة لتعزيز تجربة التصفح. تساعدنا ملفات تعريف الارتباط في فهم كيفية تفاعل الزوار مع موقعنا، مما يسمح لنا بتحسين الوظائف وتجربة المستخدم. يمكنك ضبط إعدادات المتصفح لرفض ملفات تعريف الارتباط، على الرغم من أن ذلك قد يؤثر على بعض ميزات الموقع.</p>
+              <h2>٦. ملفات تعريف الارتباط وتقنيات التتبع</h2>
+              <p>يستخدم موقعنا ملفات تعريف الارتباط وتقنيات تتبع مماثلة لتعزيز تجربة التصفح الخاصة بك. تساعدنا ملفات تعريف الارتباط في فهم كيفية تفاعل الزوار مع موقعنا، مما يسمح لنا بتحسين الوظائف وتجربة المستخدم. يمكنك ضبط إعدادات المتصفح لرفض ملفات تعريف الارتباط، على الرغم من أن هذا قد يؤثر على某些 ميزات الموقع.</p>
               <p>نستخدم ملفات تعريف الارتباط للوظائف الأساسية مثل:</p>
               <ul>
                 <li>تذكر اختيارات سلة التسوق الخاصة بك</li>
@@ -295,7 +315,7 @@ export default function PrivacyPolicyPageAr() {
 
             <div className="privacy-section">
               <h2>٧. الاحتفاظ بالبيانات</h2>
-              <p>نحتفظ بمعلوماتك الشخصية طالما كان ذلك ضرورياً لتحقيق الأغراض الموضحة في سياسة الخصوصية هذه، ما لم تتطلب أو تسمح القوانين بفترة احتفاظ أطول. عادةً ما يتم الاحتفاظ بمعلومات الطلب لحفظ سجلات الأعمال وللتعامل مع أي مشكلات محتملة تتعلق بطلباتك.</p>
+              <p>نحن نحتفظ بمعلوماتك الشخصية طالما كان ذلك ضروريًا لتحقيق الأهداف الموضحة في سياسة الخصوصية هذه، ما لم تكن فترة احتفاظ أطول مطلوبة أو مسموح بها بموجب القانون. يتم عادةً الاحتفاظ بمعلومات الطلب لحفظ السجلات التجارية ولمعالجة أي مشكلات محتملة مع طلباتك.</p>
             </div>
 
             <div className="privacy-section">
@@ -305,24 +325,24 @@ export default function PrivacyPolicyPageAr() {
                 <li><strong>الوصول:</strong> طلب نسخة من المعلومات التي نحتفظ بها عنك</li>
                 <li><strong>التصحيح:</strong> طلب تصحيح أي معلومات غير دقيقة أو غير كاملة</li>
                 <li><strong>الحذف:</strong> طلب حذف معلوماتك الشخصية، مع مراعاة الالتزامات القانونية</li>
-                <li><strong>الاعتراض:</strong> الاعتراض على بعض أنشطة المعالجة</li>
-                <li><strong>نقل البيانات:</strong> طلب نقل بياناتك إلى مزود خدمة آخر</li>
+                <li><strong>الاعتراض:</strong> الاعتراض على أنشطة معالجة معينة</li>
+                <li><strong>قابلية النقل:</strong> طلب نقل بياناتك إلى مزود خدمة آخر</li>
               </ul>
-              <p>لممارسة أي من هذه الحقوق، يرجى التواصل معنا عبر نموذج الاتصال في موقعنا.</p>
+              <p>لممارسة أي من هذه الحقوق، يرجى الاتصال بنا من خلال نموذج الاتصال في موقعنا.</p>
             </div>
 
             <div className="privacy-section">
               <h2>٩. نقل البيانات الدولي</h2>
-              <p>بصفتنا مورد جملة دولي، قد يتم نقل معلوماتك ومعالجتها في بلدان خارج بلد إقامتك. نضمن وجود ضمانات مناسبة لحماية بياناتك وفقاً لقوانين الخصوصية المعمول بها.</p>
+              <p>كمورد جملة دولي، قد يتم نقل معلوماتك إلى ومعالجتها في بلدان خارج مكان إقامتك. نضمن وجود ضمانات مناسبة لحماية بياناتك وفقًا لقوانين الخصوصية المعمول بها.</p>
             </div>
 
             <div className="privacy-section">
               <h2>١٠. خصوصية الأطفال</h2>
-              <p>خدماتنا موجهة للعملاء التجاريين ولا تستهدف الأفراد الذين تقل أعمارهم عن ١٨ عاماً. لا نجمع عن قصد معلومات شخصية من الأطفال. إذا كنت تعتقد أن طفلاً قد قدم لنا معلومات شخصية، يرجى التواصل معنا فوراً.</p>
+              <p>خدماتنا مخصصة لعملاء الأعمال وليست موجهة للأفراد دون سن 18 عامًا. نحن لا نجمع عن قصد معلومات شخصية من الأطفال. إذا كنت تعتقد أن طفلاً قد قدم لنا معلومات شخصية، يرجى الاتصال بنا على الفور.</p>
             </div>
 
             <div className="privacy-section">
-              <h2>١١. التغييرات على هذه السياسة</h2>
+              <h2>١١. تغييرات على هذه السياسة</h2>
               <p>قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر لتعكس التغييرات في ممارساتنا أو المتطلبات القانونية. سيتم نشر أي تعديلات على هذه الصفحة مع تاريخ سريان محدث. نشجعك على مراجعة هذه السياسة بشكل دوري.</p>
             </div>
 
@@ -331,13 +351,13 @@ export default function PrivacyPolicyPageAr() {
               <p>إذا كان لديك أي أسئلة حول سياسة الخصوصية هذه أو كيفية تعاملنا مع معلوماتك الشخصية، يرجى التواصل معنا:</p>
               <ul>
                 <li><strong>واتساب:</strong> +90 551 952 24 48</li>
-                <li><strong>نموذج الاتصال:</strong> متوفر على موقعنا</li>
+                <li><strong>نموذج الاتصال:</strong> متاح على موقعنا</li>
               </ul>
-              <p>فريقنا متاح لمساعدتك في أي استفسارات تتعلق بالخصوصية.</p>
+              <p>فريقنا متاح لمساعدتك في أي مخاوف متعلقة بالخصوصية.</p>
             </div>
 
             <Link href="/ar" className="btn-back">
-              <i className="fas fa-arrow-right"></i> العودة للرئيسية
+              <FaArrowLeft size={14} /> العودة إلى الرئيسية
             </Link>
           </div>
         </div>

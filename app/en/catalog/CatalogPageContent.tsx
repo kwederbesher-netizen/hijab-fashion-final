@@ -391,6 +391,40 @@ export default function CatalogPageEn() {
     }
   }, [])
 
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: '25px',
+      marginBottom: '50px'
+    }}>
+      {Array(8).fill(0).map((_, i) => (
+        <div key={i} style={{
+          background: 'white',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          boxShadow: '0 5px 20px rgba(0,0,0,0.05)',
+          border: '1px solid #f0f0f0'
+        }}>
+          <div style={{
+            height: '280px',
+            background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+            backgroundSize: '200% 100%',
+            animation: 'pulse 1.5s infinite'
+          }} />
+          <div style={{ padding: '20px', textAlign: 'center' }}>
+            <div style={{ height: '12px', background: '#f0f0f0', marginBottom: '8px', borderRadius: '6px', width: '60%', margin: '0 auto 8px' }} />
+            <div style={{ height: '16px', background: '#f0f0f0', marginBottom: '8px', borderRadius: '6px', width: '80%', margin: '0 auto 8px' }} />
+            <div style={{ height: '12px', background: '#f0f0f0', marginBottom: '12px', borderRadius: '6px', width: '50%', margin: '0 auto 12px' }} />
+            <div style={{ height: '20px', background: '#f0f0f0', marginBottom: '15px', borderRadius: '6px', width: '40%', margin: '0 auto 15px' }} />
+            <div style={{ height: '44px', background: '#f0f0f0', borderRadius: '50px', width: '100%' }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+
   if (loading && products.length === 0) return (
     <div style={{ 
       padding: '100px 20px', 
@@ -413,6 +447,10 @@ export default function CatalogPageEn() {
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
         }
       `}</style>
       <p style={{ marginTop: '20px', color: '#555', fontSize: '16px' }}>Loading products...</p>
@@ -440,7 +478,7 @@ export default function CatalogPageEn() {
         <meta property="og:image" content="https://hijabfashionmall.com/images/og-catalog.jpg" />
       </Head>
 
-      {/* Back to Top Button */}
+      {/* Back to Top Button - Fixed with SVG arrow */}
       <button
         onClick={scrollToTop}
         style={{
@@ -466,7 +504,10 @@ export default function CatalogPageEn() {
         onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
         onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
       >
-        <i className="fas fa-arrow-up"></i>
+        {/* SVG Arrow instead of Font Awesome */}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
       </button>
 
       {/* Catalog Header */}
@@ -519,15 +560,21 @@ export default function CatalogPageEn() {
             flexWrap: 'wrap'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '20px' }}></i>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+              </svg>
               <span style={{ color: '#555' }}>Worldwide Fast Shipping</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '20px' }}></i>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+              </svg>
               <span style={{ color: '#555' }}>No Minimum Order</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '20px' }}></i>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+              </svg>
               <span style={{ color: '#555' }}>100% Turkish Craftsmanship</span>
             </div>
           </div>
@@ -562,7 +609,10 @@ export default function CatalogPageEn() {
                 alignItems: 'center',
                 gap: '10px'
               }}>
-                <i className="fas fa-search" style={{ color: '#ff5a00' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none"/>
+                  <path d="M21 21l-4.35-4.35" stroke="currentColor"/>
+                </svg>
                 Search
               </h3>
               <input 
@@ -597,7 +647,9 @@ export default function CatalogPageEn() {
                 alignItems: 'center',
                 gap: '10px'
               }}>
-                <i className="fas fa-star" style={{ color: '#ff5a00' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="currentColor"/>
+                </svg>
                 Special Filters
               </h3>
               <div 
@@ -629,7 +681,9 @@ export default function CatalogPageEn() {
                     justifyContent: 'center',
                     color: 'white'
                   }}>
-                    <i className="fas fa-check-circle"></i>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                    </svg>
                   </div>
                   <div>
                     <div style={{ fontWeight: 600, color: '#000' }}>Single Piece (RSS)</div>
@@ -673,7 +727,9 @@ export default function CatalogPageEn() {
                     justifyContent: 'center',
                     color: 'white'
                   }}>
-                    <i className="fas fa-arrow-up"></i>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 5v14M5 12h14" stroke="currentColor"/>
+                    </svg>
                   </div>
                   <div>
                     <div style={{ fontWeight: 600, color: '#000' }}>Plus Sizes</div>
@@ -702,7 +758,10 @@ export default function CatalogPageEn() {
                 alignItems: 'center',
                 gap: '10px'
               }}>
-                <i className="fas fa-tags" style={{ color: '#ff5a00' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" fill="none"/>
+                  <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor"/>
+                </svg>
                 Categories
               </h3>
               <div style={{ maxHeight: '350px', overflowY: 'auto', paddingLeft: '5px' }}>
@@ -868,7 +927,10 @@ export default function CatalogPageEn() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
                 border: '1px solid #f0f0f0'
               }}>
-                <i className="fas fa-search" style={{ fontSize: '60px', color: '#ddd', marginBottom: '20px' }}></i>
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="1.5">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none"/>
+                  <path d="M21 21l-4.35-4.35" stroke="currentColor"/>
+                </svg>
                 <h3 style={{ fontSize: '24px', color: '#000', marginBottom: '10px', fontWeight: 600 }}>No products found</h3>
                 <p style={{ color: '#666', marginBottom: '25px', fontSize: '16px' }}>We couldn't find any products matching your search criteria.</p>
                 <button 
@@ -892,221 +954,236 @@ export default function CatalogPageEn() {
               </div>
             ) : (
               <>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
-                  gap: '25px',
-                  marginBottom: '50px'
-                }}>
-                  {products.map((p: any) => {
-                    const message = p['rss/not rss message_en'] || p['rss/not rss message_ar'] || ''
-                    const code = p.product_code || ''
-                    const hasRSSInCode = code.toLowerCase().includes('rss')
-                    const isRSS = message.includes('single piece') || message.includes('✅') || hasRSSInCode
-                    
-                    const plusSizes = p['plus sizes'] || p.plus_sizes || p.plusSizes || ''
-                    const hasPlus = 
-                      plusSizes === 'Yes' || 
-                      plusSizes === 'YES' || 
-                      plusSizes === 'yes' || 
-                      plusSizes === 'true' || 
-                      plusSizes === '1' ||
-                      String(plusSizes).toLowerCase() === 'yes'
+                {loading && products.length > 0 ? (
+                  <LoadingSkeleton />
+                ) : (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '25px',
+                    marginBottom: '50px'
+                  }}>
+                    {products.map((p: any) => {
+                      const message = p['rss/not rss message_en'] || p['rss/not rss message_ar'] || ''
+                      const code = p.product_code || ''
+                      const hasRSSInCode = code.toLowerCase().includes('rss')
+                      const isRSS = message.includes('single piece') || message.includes('✅') || hasRSSInCode
+                      
+                      const plusSizes = p['plus sizes'] || p.plus_sizes || p.plusSizes || ''
+                      const hasPlus = 
+                        plusSizes === 'Yes' || 
+                        plusSizes === 'YES' || 
+                        plusSizes === 'yes' || 
+                        plusSizes === 'true' || 
+                        plusSizes === '1' ||
+                        String(plusSizes).toLowerCase() === 'yes'
 
-                    const badges = []
-                    if (p.is_new === 'Yes') badges.push(
-                      <span key="new" style={{
-                        background: '#4caf50',
-                        color: 'white',
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        letterSpacing: '0.5px'
-                      }}>NEW</span>
-                    )
-                    if (p.is_bestseller === 'Yes') badges.push(
-                      <span key="bestseller" style={{
-                        background: '#ff5a00',
-                        color: 'white',
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        letterSpacing: '0.5px'
-                      }}>BESTSELLER</span>
-                    )
-                    if (hasPlus) badges.push(
-                      <span key="plus" style={{
-                        background: '#2196f3',
-                        color: 'white',
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        letterSpacing: '0.5px'
-                      }}>PLUS SIZES</span>
-                    )
+                      const badges = []
+                      if (p.is_new === 'Yes') badges.push(
+                        <span key="new" style={{
+                          background: '#4caf50',
+                          color: 'white',
+                          padding: '4px 12px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          letterSpacing: '0.5px'
+                        }}>NEW</span>
+                      )
+                      if (p.is_bestseller === 'Yes') badges.push(
+                        <span key="bestseller" style={{
+                          background: '#ff5a00',
+                          color: 'white',
+                          padding: '4px 12px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          letterSpacing: '0.5px'
+                        }}>BESTSELLER</span>
+                      )
+                      if (hasPlus) badges.push(
+                        <span key="plus" style={{
+                          background: '#2196f3',
+                          color: 'white',
+                          padding: '4px 12px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          letterSpacing: '0.5px'
+                        }}>PLUS SIZES</span>
+                      )
 
-                    return (
-                      <Link 
-                        href={getProductUrl(p)} 
-                        key={p._id}
-                        style={{
-                          background: 'white',
-                          borderRadius: '16px',
-                          overflow: 'hidden',
-                          boxShadow: '0 5px 20px rgba(0,0,0,0.05)',
-                          transition: 'all 0.3s',
-                          textDecoration: 'none',
-                          color: 'inherit',
-                          border: '1px solid #f0f0f0',
-                          display: 'block'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-8px)'
-                          e.currentTarget.style.boxShadow = '0 15px 30px rgba(255,90,0,0.15)'
-                          e.currentTarget.style.borderColor = '#ff5a00'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)'
-                          e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)'
-                          e.currentTarget.style.borderColor = '#f0f0f0'
-                        }}
-                      >
-                        <div style={{
-                          position: 'relative',
-                          height: '280px',
-                          overflow: 'hidden',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          background: 'linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%)'
-                        }}>
-                          <img 
-                            src={p.imageUrl || '/images/default.webp'} 
-                            alt={p.name_en || p.name_ar || ''}
-                            style={{ 
-                              maxWidth: '90%', 
-                              maxHeight: '90%', 
-                              objectFit: 'contain', 
-                              transition: 'transform 0.5s'
-                            }}
-                            loading="lazy"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = '/images/default.webp'
-                            }}
-                          />
-                          {badges.length > 0 && (
-                            <div style={{
-                              position: 'absolute',
-                              top: '15px',
-                              right: '15px',
-                              display: 'flex',
-                              gap: '6px',
-                              flexDirection: 'column'
-                            }}>{badges}</div>
-                          )}
-                        </div>
-                        <div style={{ padding: '20px', textAlign: 'center' }}>
-                          <div style={{ 
-                            fontSize: '12px', 
-                            color: '#ff5a00', 
-                            marginBottom: '8px',
-                            fontWeight: 500,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
-                          }}>
-                            {p.category_main_en || ''}
-                          </div>
-                          <h3 style={{ 
-                            fontSize: '15px', 
-                            fontWeight: 600, 
-                            color: '#000', 
-                            marginBottom: '8px',
-                            lineHeight: '1.4'
-                          }}>
-                            {p.name_en || p.name_ar || ''}
-                          </h3>
-                          <div style={{ 
-                            fontSize: '12px', 
-                            color: '#999', 
-                            marginBottom: '12px',
-                            fontFamily: 'monospace'
-                          }}>
-                            {p.product_code || ''}
-                          </div>
-                          
-                          {p.color_en && (
-                            <div style={{ marginBottom: '12px' }}>
-                              <div style={{ 
-                                width: '24px', 
-                                height: '24px', 
-                                borderRadius: '50%', 
-                                background: getColorCode(p.color_en),
-                                margin: '0 auto',
-                                border: '2px solid #fff',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                              }} title={p.color_en} />
-                            </div>
-                          )}
-                          
+                      return (
+                        <Link 
+                          href={getProductUrl(p)} 
+                          key={p._id}
+                          style={{
+                            background: 'white',
+                            borderRadius: '16px',
+                            overflow: 'hidden',
+                            boxShadow: '0 5px 20px rgba(0,0,0,0.05)',
+                            transition: 'all 0.3s',
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            border: '1px solid #f0f0f0',
+                            display: 'block'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-8px)'
+                            e.currentTarget.style.boxShadow = '0 15px 30px rgba(255,90,0,0.15)'
+                            e.currentTarget.style.borderColor = '#ff5a00'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)'
+                            e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)'
+                            e.currentTarget.style.borderColor = '#f0f0f0'
+                          }}
+                        >
                           <div style={{
-                            fontSize: '12px',
-                            color: isRSS ? '#4caf50' : '#2196f3',
-                            marginBottom: '15px',
+                            position: 'relative',
+                            height: '280px',
+                            overflow: 'hidden',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '5px',
-                            padding: '5px 10px',
-                            background: isRSS ? 'rgba(76,175,80,0.1)' : 'rgba(33,150,243,0.1)',
-                            borderRadius: '30px',
-                            width: 'fit-content',
-                            margin: '0 auto 15px'
+                            background: 'linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%)'
                           }}>
-                            <i className={`fas ${isRSS ? 'fa-check-circle' : 'fa-box'}`}></i>
-                            <span>{isRSS ? 'Single Piece' : 'Carton'}</span>
+                            <img 
+                              src={p.imageUrl || '/images/default.webp'} 
+                              alt={p.name_en || p.name_ar || ''}
+                              style={{ 
+                                maxWidth: '90%', 
+                                maxHeight: '90%', 
+                                objectFit: 'contain', 
+                                transition: 'transform 0.5s'
+                              }}
+                              loading="lazy"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/images/default.webp'
+                              }}
+                            />
+                            {badges.length > 0 && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '15px',
+                                right: '15px',
+                                display: 'flex',
+                                gap: '6px',
+                                flexDirection: 'column'
+                              }}>{badges}</div>
+                            )}
                           </div>
-                          
-                          <div style={{
-                            fontSize: '22px',
-                            fontWeight: 700,
-                            color: '#ff5a00',
-                            marginBottom: '15px'
-                          }}>
-                            {formatPrice(p.price_usd)}
-                          </div>
-                          
-                          <button 
-                            onClick={(e) => addToCart(p, e)}
-                            style={{
-                              width: '100%',
-                              background: '#ff5a00',
-                              color: 'white',
-                              border: 'none',
-                              padding: '12px',
-                              borderRadius: '50px',
-                              cursor: 'pointer',
-                              fontSize: '14px',
-                              fontWeight: 600,
-                              transition: 'all 0.3s',
+                          <div style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ 
+                              fontSize: '12px', 
+                              color: '#ff5a00', 
+                              marginBottom: '8px',
+                              fontWeight: 500,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px'
+                            }}>
+                              {p.category_main_en || ''}
+                            </div>
+                            <h3 style={{ 
+                              fontSize: '15px', 
+                              fontWeight: 600, 
+                              color: '#000', 
+                              marginBottom: '8px',
+                              lineHeight: '1.4'
+                            }}>
+                              {p.name_en || p.name_ar || ''}
+                            </h3>
+                            <div style={{ 
+                              fontSize: '12px', 
+                              color: '#999', 
+                              marginBottom: '12px',
+                              fontFamily: 'monospace'
+                            }}>
+                              {p.product_code || ''}
+                            </div>
+                            
+                            {p.color_en && (
+                              <div style={{ marginBottom: '12px' }}>
+                                <div style={{ 
+                                  width: '24px', 
+                                  height: '24px', 
+                                  borderRadius: '50%', 
+                                  background: getColorCode(p.color_en),
+                                  margin: '0 auto',
+                                  border: '2px solid #fff',
+                                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                                }} title={p.color_en} />
+                              </div>
+                            )}
+                            
+                            <div style={{
+                              fontSize: '12px',
+                              color: isRSS ? '#4caf50' : '#2196f3',
+                              marginBottom: '15px',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              gap: '8px'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
-                            onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
-                          >
-                            <i className="fas fa-shopping-cart"></i>
-                            Add to Inquiry
-                          </button>
-                        </div>
-                      </Link>
-                    )
-                  })}
-                </div>
+                              gap: '5px',
+                              padding: '5px 10px',
+                              background: isRSS ? 'rgba(76,175,80,0.1)' : 'rgba(33,150,243,0.1)',
+                              borderRadius: '30px',
+                              width: 'fit-content',
+                              margin: '0 auto 15px'
+                            }}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                {isRSS ? (
+                                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                                ) : (
+                                  <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" fill="none"/>
+                                )}
+                              </svg>
+                              <span>{isRSS ? 'Single Piece' : 'Carton'}</span>
+                            </div>
+                            
+                            {/* Price - Fixed font size (reduced from 22px to 18px) */}
+                            <div style={{
+                              fontSize: '18px',
+                              fontWeight: 700,
+                              color: '#ff5a00',
+                              marginBottom: '15px'
+                            }}>
+                              {formatPrice(p.price_usd)}
+                            </div>
+                            
+                            <button 
+                              onClick={(e) => addToCart(p, e)}
+                              style={{
+                                width: '100%',
+                                background: '#ff5a00',
+                                color: 'white',
+                                border: 'none',
+                                padding: '12px',
+                                borderRadius: '50px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                transition: 'all 0.3s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
+                              onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="9" cy="21" r="1" stroke="currentColor"/>
+                                <circle cx="20" cy="21" r="1" stroke="currentColor"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" fill="none"/>
+                              </svg>
+                              Add to Inquiry
+                            </button>
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
 
                 {/* Pagination */}
                 {totalPages > 1 && (
@@ -1134,7 +1211,9 @@ export default function CatalogPageEn() {
                         transition: 'all 0.3s'
                       }}
                     >
-                      <i className="fas fa-chevron-left"></i>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M15 18l-6-6 6-6" stroke="currentColor"/>
+                      </svg>
                     </button>
                     
                     {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -1191,7 +1270,9 @@ export default function CatalogPageEn() {
                         transition: 'all 0.3s'
                       }}
                     >
-                      <i className="fas fa-chevron-right"></i>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M9 18l6-6-6-6" stroke="currentColor"/>
+                      </svg>
                     </button>
                   </div>
                 )}
@@ -1251,27 +1332,39 @@ export default function CatalogPageEn() {
               padding: 0
             }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>100% Original Turkish Craftsmanship</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>Competitive Wholesale Prices</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>Fast Worldwide Shipping (3-7 days)</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>No Minimum Order Quantity</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>Daily Product Updates</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
-                <i className="fas fa-check-circle" style={{ color: '#ff5a00', fontSize: '18px' }}></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
+                </svg>
                 <span style={{ color: '#555' }}>24/7 Customer Support</span>
               </li>
             </ul>
