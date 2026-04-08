@@ -11,12 +11,32 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.hijabfashionmall.com'),
   title: {
     default: 'Hijab Fashion Mall - Wholesale Turkish Hijab Wear',
     template: '%s | Hijab Fashion Mall'
   },
-  description: 'Wholesale premium Turkish hijab fashion. Worldwide shipping, no minimum order. Shop abayas, modest dresses, hijabs, and more at factory prices.',
-  keywords: ['hijab wholesale', 'turkish hijab', 'modest fashion wholesale', 'abaya wholesale', 'hijab fashion mall'],
+  description: 'Wholesale premium Turkish hijab fashion. Worldwide shipping. Shop luxury abayas, elegant modest dresses, premium hijabs, modest sportswear, burkini swimwear, evening dresses, prayer clothes, skirt sets, and pants sets. Largest collection of Turkish modest wear.',
+  keywords: [
+    'turkish hijab wholesale',
+    'wholesale modest fashion',
+    'abaya wholesale',
+    'turkish abaya',
+    'modest dresses wholesale',
+    'hijab fashion mall',
+    'wholesale hijab',
+    'modest sportswear wholesale',
+    'burkini wholesale',
+    'evening dresses wholesale',
+    'prayer clothes wholesale',
+    'skirt sets wholesale',
+    'pants sets wholesale',
+    'turkish modest wear',
+    'islamic clothing wholesale',
+    'modest fashion supplier',
+    'wholesale islamic wear',
+    'turkish fashion wholesale'
+  ],
   authors: [{ name: 'Hijab Fashion Mall' }],
   creator: 'Hijab Fashion Mall',
   publisher: 'Hijab Fashion Mall',
@@ -36,15 +56,15 @@ export const metadata: Metadata = {
       'en': 'https://www.hijabfashionmall.com/en',
       'ar': 'https://www.hijabfashionmall.com/ar',
       'fr': 'https://www.hijabfashionmall.com/fr',
+      'es': 'https://www.hijabfashionmall.com/es',
       'de': 'https://www.hijabfashionmall.com/de',
       'it': 'https://www.hijabfashionmall.com/it',
-      'es': 'https://www.hijabfashionmall.com/es',
       'tr': 'https://www.hijabfashionmall.com/tr',
     },
   },
   openGraph: {
     title: 'Hijab Fashion Mall - Wholesale Turkish Hijab Wear',
-    description: 'Wholesale premium Turkish hijab fashion. Worldwide shipping, no minimum order.',
+    description: 'Wholesale premium Turkish hijab fashion. Worldwide shipping. Shop luxury abayas, elegant modest dresses, premium hijabs, and more.',
     url: 'https://www.hijabfashionmall.com',
     siteName: 'Hijab Fashion Mall',
     images: [
@@ -61,7 +81,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Hijab Fashion Mall - Wholesale Turkish Hijab Wear',
-    description: 'Wholesale premium Turkish hijab fashion. Worldwide shipping, no minimum order.',
+    description: 'Wholesale premium Turkish hijab fashion. Worldwide shipping. Shop luxury abayas, modest dresses, hijabs, and more.',
     images: ['https://www.hijabfashionmall.com/images/og-image.jpg'],
   },
   icons: {
@@ -91,9 +111,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         
-        {/* ✅ Font Awesome - تمت إزالته (مستبدل بـ react-icons) */}
-        
-        {/* ✅ Google Analytics - تحميل بعد تحميل المحتوى (lazyOnload) */}
+        {/* Google Analytics - تحميل بعد تحميل المحتوى (lazyOnload) */}
         <Script
           strategy="lazyOnload"
           src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}

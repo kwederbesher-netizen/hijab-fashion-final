@@ -1,23 +1,19 @@
-export const dynamic = 'force-dynamic'
+// app/fr/category/abayas/AbayasClient.tsx
+'use client'
 
-// app/es/category/abayas/page.tsx
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
 
-export default function AbayasCategoryPageEs() {
-  const searchParams = useSearchParams()
-  const initialSearch = searchParams.get('search') || ''
-  
+export default function AbayasClient({ searchParams }: { searchParams?: { search?: string; page?: string; sort?: string } }) {
+  const initialSearch = searchParams?.search || ''
+  const [currentPage, setCurrentPage] = useState(Number(searchParams?.page) || 1)
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalProducts, setTotalProducts] = useState(0)
   const [showBackToTop, setShowBackToTop] = useState(false)
-  const [showSizeChart, setShowSizeChart] = useState(false) // State for Size Chart modal
+  const [showSizeChart, setShowSizeChart] = useState(false)
   const productsPerPage = 60
 
   // Cart state
@@ -29,25 +25,38 @@ export default function AbayasCategoryPageEs() {
   // Currency hook
   const { formatPrice } = useCurrency()
 
-  // Filter state (simplified: only sort)
-  const [sortBy, setSortBy] = useState('default')
-
-  // Search input ref for debounce
+  // Filter state
+  const [sortBy, setSortBy] = useState(searchParams?.sort || 'default')
   const searchTimeout = useRef<NodeJS.Timeout | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [searchTerm, setSearchTerm] = useState(initialSearch)
 
-  // Set search input value if search exists in URL
+  // Update currentPage when URL changes
+  useEffect(() => {
+    setCurrentPage(Number(searchParams?.page) || 1)
+  }, [searchParams?.page])
+
+  // Update searchTerm when URL changes
+  useEffect(() => {
+    setSearchTerm(searchParams?.search || '')
+    if (searchInputRef.current) {
+      searchInputRef.current.value = searchParams?.search || ''
+    }
+  }, [searchParams?.search])
+
+  // Update sortBy when URL changes
+  useEffect(() => {
+    setSortBy(searchParams?.sort || 'default')
+  }, [searchParams?.sort])
+
+  // Set initial search input value
   useEffect(() => {
     if (initialSearch && searchInputRef.current) {
       searchInputRef.current.value = initialSearch
     }
-    if (initialSearch) {
-      console.log('🔍 Búsqueda de:', initialSearch)
-    }
   }, [initialSearch])
 
-  // Fetch products from API for Abayas category
+  // Fetch products from API
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true)
@@ -57,13 +66,8 @@ export default function AbayasCategoryPageEs() {
       params.append('limit', productsPerPage.toString())
       params.append('category', 'Abayas')
       
-      if (searchTerm) {
-        params.append('search', searchTerm)
-      }
-      
-      if (sortBy !== 'default') {
-        params.append('sort', sortBy)
-      }
+      if (searchTerm) params.append('search', searchTerm)
+      if (sortBy !== 'default') params.append('sort', sortBy)
       
       const res = await fetch(`/api/products?${params.toString()}`)
       const data = await res.json()
@@ -74,13 +78,13 @@ export default function AbayasCategoryPageEs() {
         setTotalProducts(data.total)
       }
     } catch (error) {
-      console.error('Error al cargar los productos:', error)
+      console.error('Erreur:', error)
     } finally {
       setLoading(false)
     }
   }, [currentPage, searchTerm, sortBy])
 
-  // Load products when page, search or sort changes
+  // Load products when dependencies change
   useEffect(() => {
     fetchProducts()
   }, [fetchProducts])
@@ -94,9 +98,7 @@ export default function AbayasCategoryPageEs() {
           const parsedCart = JSON.parse(savedCart)
           setCart(parsedCart)
           cartStringRef.current = JSON.stringify(parsedCart)
-        } catch (e) {
-          console.error('Error al cargar el carrito:', e)
-        }
+        } catch (e) {}
       }
       cartInitialized.current = true
     }
@@ -119,9 +121,7 @@ export default function AbayasCategoryPageEs() {
             setCart(parsedCart)
             cartStringRef.current = newCartString
           }
-        } catch (e) {
-          console.error('Error al cargar el carrito:', e)
-        }
+        } catch (e) {}
       }
       
       setTimeout(() => {
@@ -219,9 +219,7 @@ export default function AbayasCategoryPageEs() {
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    if (searchTimeout.current) {
-      clearTimeout(searchTimeout.current)
-    }
+    if (searchTimeout.current) clearTimeout(searchTimeout.current)
     searchTimeout.current = setTimeout(() => {
       setSearchTerm(value)
       setCurrentPage(1)
@@ -245,13 +243,9 @@ export default function AbayasCategoryPageEs() {
   }, [])
 
   const getProductUrl = useCallback((product: any) => {
-    if (product.slug_es) {
-      return `/es/product/${product.slug_es}`
-    } else if (product.slug_en) {
-      return `/es/product/${product.slug_en}`
-    } else {
-      return `/es/product/${product._id || 'product'}`
-    }
+    if (product.slug_fr) return `/fr/product/${product.slug_fr}`
+    else if (product.slug_en) return `/fr/product/${product.slug_en}`
+    else return `/fr/product/${product._id || 'product'}`
   }, [])
 
   // Loading Skeleton Component
@@ -268,7 +262,7 @@ export default function AbayasCategoryPageEs() {
           borderRadius: '16px',
           overflow: 'hidden',
           boxShadow: '0 5px 20px rgba(0,0,0,0.05)',
-          border: '1px solid #f0f0f0'
+          border: '1px solid #f0e6dc'
         }}>
           <div style={{
             height: '280px',
@@ -316,7 +310,7 @@ export default function AbayasCategoryPageEs() {
           100% { background-position: -200% 0; }
         }
       `}</style>
-      <p style={{ marginTop: '20px', color: '#555', fontSize: '16px' }}>Cargando abayas...</p>
+      <p style={{ marginTop: '20px', color: '#5a4a3a', fontSize: '16px' }}>Chargement des abayas...</p>
     </div>
   )
 
@@ -325,114 +319,6 @@ export default function AbayasCategoryPageEs() {
 
   return (
     <>
-      <Head>
-        <title>Abayas Turcas al por Mayor | Colección Premium Seda Medina, Crepe, Jersey | Hijab Fashion Mall</title>
-        <meta name="description" content={`Descubre ${totalProducts}+ abayas turcas al por mayor. Seda de Medina fluida, crepe elegante, jersey suave, encaje refinado. Cortes modernos, tallas hasta 4XL. Envío mundial para profesionales.`} />
-        <meta name="keywords" content="abayas turcas al por mayor, mayorista abayas, abaya seda medina, abaya crepe, abaya jersey, abaya encaje, abaya abierta, abaya cerrada, abaya talla grande, abaya moderna, abaya elegante, moda modesta turca, hijab turco, colección abaya 2026, abaya profesional, abaya ceremonia, abaya diaria, tela turca calidad, importar abaya turquía, abaya minorista, venta al por mayor abaya" />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://hijabfashionmall.com/es/category/abayas" />
-        <link rel="alternate" href="https://hijabfashionmall.com/ar/category/abayas" hrefLang="ar" />
-        <link rel="alternate" href="https://hijabfashionmall.com/en/category/abayas" hrefLang="en" />
-        <link rel="alternate" href="https://hijabfashionmall.com/es/category/abayas" hrefLang="es" />
-        
-        <meta property="og:title" content="Colección Abayas Turcas al por Mayor - Seda Medina & Crepe" />
-        <meta property="og:description" content={`${totalProducts}+ modelos de abayas premium. Tejidos excepcionales: seda Medina, crepe fluido, jersey. Para profesionales de la moda modesta.`} />
-        <meta property="og:url" content="https://hijabfashionmall.com/es/category/abayas" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://hijabfashionmall.com/images/og-abayas-es.jpg" />
-        <meta property="og:locale" content="es_ES" />
-      </Head>
-
-      {/* Size Chart Modal */}
-      {showSizeChart && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0,0,0,0.7)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }} onClick={() => setShowSizeChart(false)}>
-          <div style={{
-            background: 'white',
-            borderRadius: '24px',
-            maxWidth: '800px',
-            width: '100%',
-            maxHeight: '80vh',
-            overflow: 'auto',
-            padding: '30px'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '20px'
-            }}>
-              <h3 style={{
-                fontSize: '24px',
-                color: '#2c2418',
-                fontFamily: 'Playfair Display, serif',
-                margin: 0
-              }}>
-                📏 Guía de Tallas - Abayas Turcas
-              </h3>
-              <button
-                onClick={() => setShowSizeChart(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '28px',
-                  cursor: 'pointer',
-                  color: '#a08c7a'
-                }}
-              >
-                ×
-              </button>
-            </div>
-            
-            <table style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              marginBottom: '20px'
-            }}>
-              <thead>
-                <tr style={{ background: '#f5efe8' }}>
-                  <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, color: '#2c2418', border: '1px solid #e0d5c8' }}>Talla</th>
-                  <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, color: '#2c2418', border: '1px solid #e0d5c8' }}>Busto (cm)</th>
-                  <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, color: '#2c2418', border: '1px solid #e0d5c8' }}>Cintura (cm)</th>
-                  <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, color: '#2c2418', border: '1px solid #e0d5c8' }}>Cadera (cm)</th>
-                  <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, color: '#2c2418', border: '1px solid #e0d5c8' }}>Largo (cm)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00', border: '1px solid #e0d5c8' }}>S</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>84-88</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>66-70</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>90-94</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>135-140</td></tr>
-                <tr style={{ background: '#fef9f2' }}><td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00', border: '1px solid #e0d5c8' }}>M</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>88-92</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>70-74</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>94-98</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>137-142</td></tr>
-                <tr><td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00', border: '1px solid #e0d5c8' }}>L</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>92-96</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>74-78</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>98-102</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>139-144</td></tr>
-                <tr style={{ background: '#fef9f2' }}><td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00', border: '1px solid #e0d5c8' }}>XL</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>96-100</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>78-82</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>102-106</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>141-146</td></tr>
-                <tr><td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00', border: '1px solid #e0d5c8' }}>2XL</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>100-104</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>82-86</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>106-110</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>143-148</td></tr>
-                <tr style={{ background: '#fef9f2' }}><td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00', border: '1px solid #e0d5c8' }}>3XL</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>104-108</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>86-90</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>110-114</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>145-150</td></tr>
-                <tr><td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00', border: '1px solid #e0d5c8' }}>4XL</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>108-112</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>90-94</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>114-118</td><td style={{ padding: '10px', textAlign: 'center', color: '#5a4a3a', border: '1px solid #e0d5c8' }}>147-152</td></tr>
-              </tbody>
-            </table>
-            
-            <p style={{
-              fontSize: '12px',
-              color: '#a08c7a',
-              textAlign: 'center',
-              marginTop: '15px'
-            }}>
-              Las medidas son aproximadas. Recomendamos consultar la tabla de cada producto específico.
-              Las abayas turcas suelen tener un corte amplio y cómodo.
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* Back to Top Button */}
       <button
         onClick={scrollToTop}
@@ -464,6 +350,74 @@ export default function AbayasCategoryPageEs() {
         </svg>
       </button>
 
+      {/* Size Chart Modal */}
+      {showSizeChart && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.7)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }} onClick={() => setShowSizeChart(false)}>
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            maxWidth: '900px',
+            width: '100%',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            padding: '30px',
+            position: 'relative'
+          }} onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setShowSizeChart(false)} style={{
+              position: 'absolute',
+              top: '15px',
+              right: '15px',
+              background: 'none',
+              border: 'none',
+              fontSize: '24px',
+              cursor: 'pointer',
+              color: '#7a6a5a'
+            }}>✕</button>
+            <h2 style={{ fontSize: '28px', color: '#2c2418', marginBottom: '20px', textAlign: 'center', fontFamily: 'Playfair Display, serif' }}>Guide des Tailles - Abayas Turques</h2>
+            <p style={{ textAlign: 'center', color: '#5a4a3a', marginBottom: '30px' }}>Les tailles suivantes correspondent aux standards turcs.</p>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: '#ff5a00', color: 'white' }}>
+                    <th style={{ padding: '12px' }}>Taille</th>
+                    <th style={{ padding: '12px' }}>Poitrine (cm)</th>
+                    <th style={{ padding: '12px' }}>Taille (cm)</th>
+                    <th style={{ padding: '12px' }}>Hanches (cm)</th>
+                    <th style={{ padding: '12px' }}>Longueur (cm)</th>
+                   </tr>
+                </thead>
+                <tbody>
+                  {[['S','84-88','66-70','90-94','135-140'],['M','88-92','70-74','94-98','137-142'],['L','92-96','74-78','98-102','139-144'],['XL','96-100','78-82','102-106','141-146'],['2XL','100-104','82-86','106-110','143-148'],['3XL','104-108','86-90','110-114','145-150'],['4XL','108-112','90-94','114-118','147-152']].map((row,i)=>(
+                    <tr key={i} style={{ borderBottom: '1px solid #f0e6dc', background: i%2===0?'white':'#fef9f2' }}>
+                      <td style={{ padding: '10px', textAlign: 'center', fontWeight: 600, color: '#ff5a00' }}>{row[0]}</td>
+                      <td style={{ padding: '10px', textAlign: 'center' }}>{row[1]}</td>
+                      <td style={{ padding: '10px', textAlign: 'center' }}>{row[2]}</td>
+                      <td style={{ padding: '10px', textAlign: 'center' }}>{row[3]}</td>
+                      <td style={{ padding: '10px', textAlign: 'center' }}>{row[4]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ marginTop: '20px', padding: '15px', background: 'rgba(255,90,0,0.05)', borderRadius: '12px' }}>
+              <p style={{ fontSize: '13px', color: '#7a6a5a', margin: 0 }}>📏 Astuce: Si vous hésitez entre deux tailles, choisissez la taille supérieure pour plus de confort.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Category Header */}
       <section style={{
         background: 'linear-gradient(135deg, #fdf8f2 0%, #ffffff 100%)',
@@ -490,10 +444,10 @@ export default function AbayasCategoryPageEs() {
         </div>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
           <div style={{ fontSize: '14px', color: '#7a6a5a', marginBottom: '20px' }}>
-            <Link href="/es" style={{ color: '#ff5a00', textDecoration: 'none' }}>Inicio</Link>
-            <span style={{ color: '#7a6a5a', margin: '0 8px' }}>/</span>
-            <Link href="/es/catalog" style={{ color: '#ff5a00', textDecoration: 'none' }}>Catálogo</Link>
-            <span style={{ color: '#7a6a5a', margin: '0 8px' }}>/</span>
+            <Link href="/fr" style={{ color: '#ff5a00', textDecoration: 'none' }}>Accueil</Link>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <Link href="/fr/catalog" style={{ color: '#ff5a00', textDecoration: 'none' }}>Catalogue</Link>
+            <span style={{ margin: '0 8px' }}>/</span>
             <span style={{ color: '#7a6a5a' }}>Abayas</span>
           </div>
           <h1 style={{ 
@@ -504,14 +458,14 @@ export default function AbayasCategoryPageEs() {
             lineHeight: '1.2',
             fontFamily: 'Playfair Display, serif'
           }}>
-            Abayas Turcas <span style={{ color: '#ff5a00' }}>Excepcionales</span>
+            Abayas Turques <span style={{ color: '#ff5a00' }}>d'Exception</span>
           </h1>
           <p style={{ fontSize: '18px', color: '#5a4a3a', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
-            Descubre nuestra colección de abayas turcas al por mayor. Piezas refinadas en seda de Medina, 
-            crepe fluido, jersey suave y encaje delicado para enriquecer tu oferta profesional.
+            Découvrez notre collection d'abayas turques en gros. Pièces raffinées en soie de Médine, 
+            crêpe fluide, jersey doux et dentelle délicate pour enrichir votre offre professionnelle.
           </p>
           
-          {/* Features with icons - warm terracotta/orange tones */}
+          {/* Features with icons */}
           <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -520,15 +474,7 @@ export default function AbayasCategoryPageEs() {
             flexWrap: 'wrap'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                background: 'rgba(255,90,0,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,90,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="1.8">
                   <path d="M3 6h18v12H3z" stroke="currentColor" fill="none"/>
                   <path d="M8 10h8" stroke="currentColor"/>
@@ -536,53 +482,29 @@ export default function AbayasCategoryPageEs() {
                   <circle cx="16" cy="14" r="2" stroke="currentColor" fill="none"/>
                 </svg>
               </div>
-              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Seda de Medina</span>
+              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Soie de Médine</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                background: 'rgba(255,90,0,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,90,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="1.8">
                   <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" fill="none"/>
                   <path d="M2 17l10 5 10-5" stroke="currentColor" fill="none"/>
                   <path d="M2 12l10 5 10-5" stroke="currentColor" fill="none"/>
                 </svg>
               </div>
-              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Crepe & Jersey</span>
+              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Crêpe & Jersey</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                background: 'rgba(255,90,0,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,90,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="1.8">
                   <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor"/>
                   <circle cx="12" cy="12" r="3" stroke="currentColor" fill="none"/>
                 </svg>
               </div>
-              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Encaje & Bordado</span>
+              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Dentelle & Broderie</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                background: 'rgba(255,90,0,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(255,90,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="1.8">
                   <rect x="4" y="8" width="16" height="12" rx="1" stroke="currentColor" fill="none"/>
                   <path d="M8 6V4h8v2" stroke="currentColor"/>
@@ -590,55 +512,31 @@ export default function AbayasCategoryPageEs() {
                   <path d="M10 14h4" stroke="currentColor"/>
                 </svg>
               </div>
-              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Tallas hasta 4XL</span>
+              <span style={{ color: '#4a3a2a', fontSize: '15px' }}>Tailles jusqu'au 4XL</span>
             </div>
           </div>
           
           {/* Size Chart Button */}
-          <button
-            onClick={() => setShowSizeChart(true)}
-            style={{
-              marginTop: '30px',
-              background: 'transparent',
-              border: '2px solid #ff5a00',
-              color: '#ff5a00',
-              padding: '10px 25px',
-              borderRadius: '40px',
-              fontSize: '14px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#ff5a00';
-              e.currentTarget.style.color = 'white';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = '#ff5a00';
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" fill="none"/>
-              <path d="M3 9h18" stroke="currentColor"/>
-              <path d="M9 21V9" stroke="currentColor"/>
-            </svg>
-            📏 Guía de Tallas
+          <button onClick={() => setShowSizeChart(true)} style={{
+            marginTop: '30px',
+            background: 'transparent',
+            border: '2px solid #ff5a00',
+            color: '#ff5a00',
+            padding: '10px 25px',
+            borderRadius: '50px',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'all 0.3s'
+          }} onMouseEnter={(e) => { e.currentTarget.style.background = '#ff5a00'; e.currentTarget.style.color = 'white' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#ff5a00' }}>
+            📏 Guide des Tailles
           </button>
         </div>
       </section>
 
       {/* Catalog Layout */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '30px'
-        }}>
-          {/* Main Content */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '30px' }}>
           <main>
             {/* Toolbar with search and sort */}
             <div style={{
@@ -660,7 +558,7 @@ export default function AbayasCategoryPageEs() {
                   <path d="M3 9h18" stroke="currentColor"/>
                   <path d="M9 21V9" stroke="currentColor"/>
                 </svg>
-                <span><span style={{ fontWeight: 600, color: '#ff5a00' }}>{totalProducts}</span> abayas referenciadas</span>
+                <span><span style={{ fontWeight: 600, color: '#ff5a00' }}>{totalProducts}</span> abayas référencées</span>
                 {totalProducts > 0 && (
                   <span style={{ marginLeft: '10px', color: '#a08c7a', fontSize: '13px' }}>
                     ({startIndex}-{endIndex})
@@ -674,7 +572,7 @@ export default function AbayasCategoryPageEs() {
                   <input 
                     ref={searchInputRef}
                     type="text" 
-                    placeholder="Buscar por nombre, código, tela..."
+                    placeholder="Rechercher par nom, code, tissu..."
                     defaultValue={initialSearch}
                     onChange={handleSearchChange}
                     style={{
@@ -717,12 +615,12 @@ export default function AbayasCategoryPageEs() {
                     color: '#2c2418'
                   }}
                 >
-                  <option value="default">Ordenar por: Relevancia</option>
-                  <option value="price-asc">Precio: Menor a Mayor</option>
-                  <option value="price-desc">Precio: Mayor a Menor</option>
-                  <option value="name-asc">Nombre: A a Z</option>
-                  <option value="name-desc">Nombre: Z a A</option>
-                  <option value="newest">Novedades</option>
+                  <option value="default">Trier par : Pertinence</option>
+                  <option value="price-asc">Prix : Croissant</option>
+                  <option value="price-desc">Prix : Décroissant</option>
+                  <option value="name-asc">Nom : A à Z</option>
+                  <option value="name-desc">Nom : Z à A</option>
+                  <option value="newest">Nouveautés</option>
                 </select>
               </div>
             </div>
@@ -741,8 +639,8 @@ export default function AbayasCategoryPageEs() {
                   <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none"/>
                   <path d="M21 21l-4.35-4.35" stroke="currentColor"/>
                 </svg>
-                <h3 style={{ fontSize: '24px', color: '#2c2418', marginBottom: '10px', fontWeight: 600 }}>No se encontraron abayas</h3>
-                <p style={{ color: '#7a6a5a', marginBottom: '25px', fontSize: '16px' }}>Intenta modificar tu búsqueda o consulta nuestro catálogo completo.</p>
+                <h3 style={{ fontSize: '24px', color: '#2c2418', marginBottom: '10px', fontWeight: 600 }}>Aucune abaya trouvée</h3>
+                <p style={{ color: '#7a6a5a', marginBottom: '25px', fontSize: '16px' }}>Essayez de modifier votre recherche ou consultez notre catalogue complet.</p>
                 <button 
                   onClick={() => {
                     setSearchTerm('')
@@ -764,7 +662,7 @@ export default function AbayasCategoryPageEs() {
                   onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
                 >
-                  Restablecer búsqueda
+                  Réinitialiser la recherche
                 </button>
               </div>
             ) : (
@@ -803,7 +701,7 @@ export default function AbayasCategoryPageEs() {
                           fontSize: '11px',
                           fontWeight: 600,
                           letterSpacing: '0.5px'
-                        }}>NUEVO</span>
+                        }}>NOUVEAU</span>
                       )
                       if (p.is_bestseller === 'Yes') badges.push(
                         <span key="bestseller" style={{
@@ -814,7 +712,7 @@ export default function AbayasCategoryPageEs() {
                           fontSize: '11px',
                           fontWeight: 600,
                           letterSpacing: '0.5px'
-                        }}>TENDENCIA</span>
+                        }}>TREND</span>
                       )
                       if (hasPlus) badges.push(
                         <span key="plus" style={{
@@ -825,10 +723,9 @@ export default function AbayasCategoryPageEs() {
                           fontSize: '11px',
                           fontWeight: 600,
                           letterSpacing: '0.5px'
-                        }}>TALLAS GRANDES</span>
+                        }}>GRANDES TAILLES</span>
                       )
 
-                      // Determine fabric type for badge - harmonious colors matching brand (orange/terracotta/brown tones)
                       const fabric = (p.name_en || '').toLowerCase()
                       let fabricBadge = null
                       if (fabric.includes('silk') || fabric.includes('medina')) {
@@ -840,7 +737,7 @@ export default function AbayasCategoryPageEs() {
                           fontSize: '11px',
                           fontWeight: 600,
                           letterSpacing: '0.5px'
-                        }}>SEDA MEDINA</span>
+                        }}>SOIE MÉDINA</span>
                       } else if (fabric.includes('crepe')) {
                         fabricBadge = <span style={{
                           background: '#d48c54',
@@ -850,7 +747,7 @@ export default function AbayasCategoryPageEs() {
                           fontSize: '11px',
                           fontWeight: 600,
                           letterSpacing: '0.5px'
-                        }}>CREPE</span>
+                        }}>CRÊPE</span>
                       } else if (fabric.includes('jersey')) {
                         fabricBadge = <span style={{
                           background: '#a06e42',
@@ -870,7 +767,7 @@ export default function AbayasCategoryPageEs() {
                           fontSize: '11px',
                           fontWeight: 600,
                           letterSpacing: '0.5px'
-                        }}>ENCaje</span>
+                        }}>DENTELLE</span>
                       }
 
                       return (
@@ -910,7 +807,7 @@ export default function AbayasCategoryPageEs() {
                           }}>
                             <img 
                               src={p.imageUrl || '/images/default.webp'} 
-                              alt={p.name_es || p.name_en || p.name_ar || 'Abaya turca'}
+                              alt={p.name_fr || p.name_en || p.name_ar || 'Abaya turque'}
                               style={{ 
                                 maxWidth: '90%', 
                                 maxHeight: '90%', 
@@ -960,7 +857,7 @@ export default function AbayasCategoryPageEs() {
                               marginBottom: '8px',
                               lineHeight: '1.4'
                             }}>
-                              {p.name_es || p.name_en || p.name_ar || ''}
+                              {p.name_fr || p.name_en || p.name_ar || ''}
                             </h3>
                             <div style={{ 
                               fontSize: '11px', 
@@ -971,17 +868,17 @@ export default function AbayasCategoryPageEs() {
                               {p.product_code || ''}
                             </div>
                             
-                            {p.color_es || p.color_en ? (
+                            {p.color_fr || p.color_en ? (
                               <div style={{ marginBottom: '12px' }}>
                                 <div style={{ 
                                   width: '24px', 
                                   height: '24px', 
                                   borderRadius: '50%', 
-                                  background: getColorCode(p.color_en || p.color_es || ''),
+                                  background: getColorCode(p.color_en || p.color_fr || ''),
                                   margin: '0 auto',
                                   border: '2px solid #fff',
                                   boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                                }} title={p.color_es || p.color_en} />
+                                }} title={p.color_fr || p.color_en} />
                               </div>
                             ) : null}
                             
@@ -1006,7 +903,7 @@ export default function AbayasCategoryPageEs() {
                                   <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" fill="none"/>
                                 )}
                               </svg>
-                              <span>{isRSS ? 'Pieza individual' : 'Empaquetado'}</span>
+                              <span>{isRSS ? 'Pièce à l\'unité' : 'Conditionnement'}</span>
                             </div>
                             
                             <div style={{
@@ -1044,7 +941,7 @@ export default function AbayasCategoryPageEs() {
                                 <circle cx="20" cy="21" r="1" stroke="currentColor"/>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" fill="none"/>
                               </svg>
-                              Solicitar cotización
+                              Demander un devis
                             </button>
                           </div>
                         </Link>
@@ -1150,12 +1047,11 @@ export default function AbayasCategoryPageEs() {
         </div>
       </div>
 
-      {/* SEO Content Section - Rich keywords and detailed information */}
+      {/* SEO Content Section */}
       <section style={{
         background: '#fef9f2',
         padding: '60px 0',
-        borderTop: '1px solid #f0e6dc',
-        marginTop: '40px'
+        borderTop: '1px solid #f0e6dc'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ maxWidth: '900px', margin: '0 auto' }}>
@@ -1167,7 +1063,7 @@ export default function AbayasCategoryPageEs() {
               textAlign: 'center',
               fontFamily: 'Playfair Display, serif'
             }}>
-              Colección Completa de Abayas Turcas al por Mayor
+              Collection Complète d'Abayas Turques en Gros
             </h2>
             <p style={{
               fontSize: '16px',
@@ -1176,11 +1072,11 @@ export default function AbayasCategoryPageEs() {
               marginBottom: '25px',
               textAlign: 'justify'
             }}>
-              Bienvenido a Hijab Fashion Mall, su <strong>mayorista de confianza para abayas turcas</strong> desde 2019. 
-              Nuestra colección al por mayor ofrece más de <strong>{totalProducts} modelos de abayas</strong> adaptados a las necesidades 
-              de minoristas, tiendas online y profesionales de la moda modesta. Seleccionamos cuidadosamente tejidos 
-              excepcionales: <strong>seda de Medina fluida, crepe elegante, jersey suave y encaje refinado</strong>. Cada pieza 
-              está confeccionada en talleres turcos especializados, combinando tradición y modernidad.
+              Bienvenue sur Hijab Fashion Mall, votre <strong>grossiste de confiance pour les abayas turques</strong> depuis 2019. 
+              Notre collection en gros propose plus de <strong>{totalProducts} modèles d'abayas</strong> adaptés aux besoins des 
+              détaillants, boutiques en ligne et professionnels de la mode modeste. Nous sélectionnons avec soin des tissus 
+              d'exception : <strong>soie de Médine fluide, crêpe élégant, jersey doux et dentelle raffinée</strong>. Chaque pièce 
+              est confectionnée dans des ateliers turcs spécialisés, alliant tradition et modernité.
             </p>
             
             <h3 style={{
@@ -1189,7 +1085,7 @@ export default function AbayasCategoryPageEs() {
               margin: '35px 0 20px',
               fontWeight: 600
             }}>
-              Tipos de Abayas Disponibles para Compra al por Mayor
+              Types d'Abayas Disponibles à l'Achat en Gros
             </h3>
             
             <div style={{
@@ -1202,143 +1098,49 @@ export default function AbayasCategoryPageEs() {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Seda de Medina</strong> – Tejido lujoso, caída fluida, ideal para ocasiones especiales</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Soie de Médine</strong> – Tissu luxueux, tombé fluide, idéal pour les occasions spéciales</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', border: '1px solid #f0e6dc' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Crepe</strong> – Tejido resistente, antiarrugas, perfecto para uso diario</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Crêpe</strong> – Tissu résistant, infroissable, parfait pour un usage quotidien</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', border: '1px solid #f0e6dc' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Jersey</strong> – Tejido elástico, confortable, corte ajustado</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Jersey</strong> – Tissu extensible, confortable, coupe ajustée</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', border: '1px solid #f0e6dc' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Encaje</strong> – Detalles delicados, ideal para bodas y ceremonias</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Dentelle</strong> – Détails délicats, idéale pour les mariages et cérémonies</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', border: '1px solid #f0e6dc' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Abierta (Kimono)</strong> – Superposición elegante, para llevar sobre otra prenda</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Ouverte (Kimono)</strong> – Superposition élégante, à porter sur une tenue</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', border: '1px solid #f0e6dc' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Cerrada</strong> – Modelo clásico, cobertura completa</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Fermée</strong> – Modèle classique, couverture complète</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', border: '1px solid #f0e6dc' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Mariposa</strong> – Mangas acampanadas, silueta fluida</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Papillon</strong> – Manches évasées, silhouette fluide</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', border: '1px solid #f0e6dc' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#4a3a2a' }}><strong>Abaya Talla Grande</strong> – Tallas hasta 4XL (plus sizes)</span>
-              </div>
-            </div>
-            
-            <h3 style={{
-              fontSize: '24px',
-              color: '#2c2418',
-              margin: '35px 0 20px',
-              fontWeight: 600
-            }}>
-              Características Técnicas de las Abayas Turcas
-            </h3>
-            
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '15px',
-              marginBottom: '35px'
-            }}>
-              <div style={{ padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <span style={{ fontWeight: 700, color: '#ff5a00' }}>Composición tejidos:</span>
-                <p style={{ color: '#4a3a2a', marginTop: '5px', fontSize: '14px' }}>Seda de Medina 100% poliéster de alta gama, crepe georgette, jersey viscosa, encaje francés</p>
-              </div>
-              <div style={{ padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <span style={{ fontWeight: 700, color: '#ff5a00' }}>Tallas disponibles:</span>
-                <p style={{ color: '#4a3a2a', marginTop: '5px', fontSize: '14px' }}>S, M, L, XL, 2XL, 3XL, 4XL (según modelos)</p>
-              </div>
-              <div style={{ padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <span style={{ fontWeight: 700, color: '#ff5a00' }}>Colores:</span>
-                <p style={{ color: '#4a3a2a', marginTop: '5px', fontSize: '14px' }}>Negro, blanco, beige, marino, burdeos, verde oliva, gris, taupe, rosa polvo, azul cielo</p>
-              </div>
-              <div style={{ padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <span style={{ fontWeight: 700, color: '#ff5a00' }}>Largo:</span>
-                <p style={{ color: '#4a3a2a', marginTop: '5px', fontSize: '14px' }}>135 cm a 155 cm según modelos (talla estándar)</p>
-              </div>
-              <div style={{ padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <span style={{ fontWeight: 700, color: '#ff5a00' }}>Cuidado:</span>
-                <p style={{ color: '#4a3a2a', marginTop: '5px', fontSize: '14px' }}>Lavar a máquina 30°C, secar a la sombra, planchar temperatura media</p>
-              </div>
-              <div style={{ padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <span style={{ fontWeight: 700, color: '#ff5a00' }}>Empaquetado:</span>
-                <p style={{ color: '#4a3a2a', marginTop: '5px', fontSize: '14px' }}>Pieza individual (RSS) o caja de 6/12 piezas según modelos</p>
-              </div>
-            </div>
-            
-            <h3 style={{
-              fontSize: '24px',
-              color: '#2c2418',
-              margin: '35px 0 20px',
-              fontWeight: 600
-            }}>
-              Ventajas de las Abayas Turcas para Profesionales
-            </h3>
-            
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '15px',
-              marginBottom: '35px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
-                </svg>
-                <span style={{ color: '#4a3a2a' }}>Tejidos de calidad superior (certificados OEKO-TEX)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
-                </svg>
-                <span style={{ color: '#4a3a2a' }}>Diseños modernos y tendencias actuales</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
-                </svg>
-                <span style={{ color: '#4a3a2a' }}>Precios competitivos para revendedores</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
-                </svg>
-                <span style={{ color: '#4a3a2a' }}>Amplia selección de colores neutros y tendencia</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
-                </svg>
-                <span style={{ color: '#4a3a2a' }}>Posibilidad de personalización (marca privada)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'white', borderRadius: '12px', border: '1px solid #f0e6dc' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
-                  <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
-                </svg>
-                <span style={{ color: '#4a3a2a' }}>Envío rápido a más de 50 países</span>
+                <span style={{ color: '#4a3a2a' }}><strong>Abaya Grande Taille</strong> – Tailles jusqu'au 4XL (plus sizes)</span>
               </div>
             </div>
             
@@ -1349,13 +1151,11 @@ export default function AbayasCategoryPageEs() {
               textAlign: 'justify',
               marginTop: '20px'
             }}>
-              Las <strong>abayas turcas</strong> son reconocidas internacionalmente por su calidad de ejecución, la riqueza de sus materiales 
-              y la actualidad de sus cortes. Ya sea que busques modelos clásicos negros, abayas coloridas para primavera-verano, 
-              o piezas bordadas para ocasiones especiales (bodas, Ramadán, Eid), nuestra colección al por mayor satisface las necesidades 
-              de comerciantes exigentes. También ofrecemos <strong>abayas talla grande (plus sizes)</strong> hasta 4XL, 
-              permitiéndote ampliar tu clientela. Explora nuestra selección y enriquece tu oferta de moda modesta con abayas 
-              turcas excepcionales. Para cualquier pedido al por mayor o consulta, contacta a nuestro equipo vía WhatsApp o 
-              Telegram. Envío mundial garantizado con seguimiento de paquete.
+              Les <strong>abayas turques</strong> sont reconnues internationalement pour leur qualité d'exécution, la richesse de leurs matières 
+              et l'actualité de leurs coupes. Que vous recherchiez des modèles classiques noirs, des abayas colorées pour le printemps-été, 
+              ou des pièces brodées pour les occasions spéciales, notre collection en gros répond aux besoins des commerçants exigeants. 
+              Pour toute commande en gros ou demande de renseignements, contactez notre équipe via WhatsApp ou Telegram. 
+              Livraison mondiale assurée avec suivi de colis.
             </p>
           </div>
         </div>
@@ -1366,12 +1166,7 @@ export default function AbayasCategoryPageEs() {
           div[style*="grid-template-columns: repeat(4, 1fr)"] {
             grid-template-columns: repeat(3, 1fr) !important;
           }
-          
-          div[style*="grid-template-columns: repeat(2, 1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-          
-          input[type="text"][placeholder*="Buscar"] {
+          input[type="text"][placeholder*="Rechercher"] {
             width: 200px !important;
           }
         }
@@ -1380,16 +1175,13 @@ export default function AbayasCategoryPageEs() {
           div[style*="grid-template-columns: repeat(4, 1fr)"] {
             grid-template-columns: repeat(2, 1fr) !important;
           }
-          
           .toolbar {
             flex-direction: column;
             align-items: stretch !important;
           }
-          
-          input[type="text"][placeholder*="Buscar"] {
+          input[type="text"][placeholder*="Rechercher"] {
             width: 100% !important;
           }
-          
           select {
             width: 100% !important;
           }
@@ -1409,4 +1201,3 @@ export default function AbayasCategoryPageEs() {
     </>
   )
 }
-
