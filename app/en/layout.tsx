@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import ClientLayout from '@/app/components/ClientLayout'
 import { CurrencyProvider } from '@/app/contexts/CurrencyContext'
+import HreflangTags from '@/app/components/HreflangTags'
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +30,6 @@ export const metadata: Metadata = {
       'de': 'https://www.hijabfashionmall.com/de',
       'it': 'https://www.hijabfashionmall.com/it',
       'es': 'https://www.hijabfashionmall.com/es',
-      'tr': 'https://www.hijabfashionmall.com/tr',
     },
   },
   openGraph: {
@@ -60,17 +60,20 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   verification: {
-    google: 'your-google-verification-code', // استبدل بالكود الخاص بك
+    google: 'your-google-verification-code',
   },
   category: 'fashion',
 }
 
 export default function EnglishLayout({ children }: { children: React.ReactNode }) {
   return (
-    <CurrencyProvider>
-      <ClientLayout>
-        {children}
-      </ClientLayout>
-    </CurrencyProvider>
+    <>
+      <HreflangTags />
+      <CurrencyProvider>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
+      </CurrencyProvider>
+    </>
   )
 }

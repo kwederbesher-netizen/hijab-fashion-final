@@ -9,7 +9,10 @@ export const metadata = {
     languages: {
       ar: 'https://hijabfashionmall.com/ar/category/hijabs',
       en: 'https://hijabfashionmall.com/en/category/hijabs',
+      fr: 'https://hijabfashionmall.com/fr/category/hijabs',
       es: 'https://hijabfashionmall.com/es/category/hijabs',
+      de: 'https://hijabfashionmall.com/de/category/hijabs',
+      it: 'https://hijabfashionmall.com/it/category/hijabs',
     },
   },
 }

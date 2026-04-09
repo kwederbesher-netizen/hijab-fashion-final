@@ -1,18 +1,15 @@
 import { Metadata } from 'next'
 import { CurrencyProvider } from '@/app/contexts/CurrencyContext'
 import ClientLayoutEs from './components/ClientLayoutEs'
-import Script from 'next/script'
+import HreflangTags from '@/app/components/HreflangTags'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Hijab Fashion Mall | Mayoreo Hijab Turco Premium',
+    default: 'Hijab Fashion Mall | Mayorista Hijab Turco & Moda Modesta',
     template: '%s | Hijab Fashion Mall'
   },
-  description: 'Mayoreo hijab turco premium desde 2019. 5000+ productos: abayas, vestidos para hijabis, conjuntos, ropa deportiva. Sin pedido mínimo, envío mundial, soporte 24/7.',
-  keywords: 'mayoreo hijab turco, moda hijab al por mayor, ropa para hijabis al por mayor, abayas al por mayor, hijab turco',
-  authors: [{ name: 'Hijab Fashion Mall' }],
-  creator: 'Hijab Fashion Mall',
-  publisher: 'Hijab Fashion Mall',
+  description: 'Mayorista hijab turco premium desde 2019. Más de 5000+ productos: abayas, hijabs, vestidos, ropa deportiva. Sin pedido mínimo. Envío mundial.',
+  keywords: 'mayorista hijab turco, moda modesta mayorista, abaya turca mayorista, proveedor hijab turquía',
   robots: {
     index: true,
     follow: true,
@@ -33,12 +30,11 @@ export const metadata: Metadata = {
       'de': 'https://www.hijabfashionmall.com/de',
       'it': 'https://www.hijabfashionmall.com/it',
       'es': 'https://www.hijabfashionmall.com/es',
-      'tr': 'https://www.hijabfashionmall.com/tr',
     },
   },
   openGraph: {
-    title: 'Hijab Fashion Mall | Mayoreo Hijab Turco Premium',
-    description: 'Mayoreo hijab turco premium desde 2019. 5000+ productos. Sin pedido mínimo, envío mundial.',
+    title: 'Hijab Fashion Mall | Mayorista Hijab Turco & Moda Modesta',
+    description: 'Mayorista hijab turco premium. Más de 5000+ productos. Envío mundial.',
     url: 'https://www.hijabfashionmall.com/es',
     siteName: 'Hijab Fashion Mall',
     locale: 'es_ES',
@@ -48,98 +44,31 @@ export const metadata: Metadata = {
         url: 'https://www.hijabfashionmall.com/images/og-image-es.jpg',
         width: 1200,
         height: 630,
-        alt: 'Hijab Fashion Mall - Colección de moda hijab turca',
+        alt: 'Hijab Fashion Mall - Colección Moda Modesta Turca',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hijab Fashion Mall | Mayoreo Hijab Turco Premium',
-    description: 'Mayoreo hijab turco premium. 5000+ productos. ¡Ordena ahora!',
+    title: 'Hijab Fashion Mall | Mayorista Hijab Turco',
+    description: 'Mayorista hijab turco premium. 5000+ productos. ¡Compra ahora!',
     images: ['https://www.hijabfashionmall.com/images/og-image-es.jpg'],
   },
   icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
+    icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
-  viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
   verification: {
     google: 'your-google-verification-code',
   },
   category: 'fashion',
 }
 
-export default function SpanishLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-G2DPGVT9BY'
-  
+export default function SpanishLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* Google Analytics */}
-      <Script
-        strategy="lazyOnload"
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-      />
-      <Script
-        id="google-analytics-es"
-        strategy="lazyOnload"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${measurementId}', {
-              page_path: window.location.pathname,
-              send_page_view: true
-            });
-          `,
-        }}
-      />
-      
-      {/* JSON-LD Structured Data for SEO */}
-      <Script
-        id="structured-data-es"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Hijab Fashion Mall",
-            "alternateName": "Hijab Fashion Mall España",
-            "url": "https://www.hijabfashionmall.com/es",
-            "logo": "https://www.hijabfashionmall.com/logo.png",
-            "sameAs": [
-              "https://www.facebook.com/hijabfashionmall",
-              "https://www.instagram.com/hijabfashionmall",
-              "https://www.pinterest.com/hijabfashionmall"
-            ],
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "contactType": "customer service",
-              "availableLanguage": ["Spanish", "English", "Arabic", "French", "German", "Italian"]
-            },
-            "description": "Mayoreo hijab turco premium. Más de 5000+ productos con envío mundial.",
-            "address": {
-              "@type": "PostalAddress",
-              "addressCountry": "TR"
-            }
-          })
-        }}
-      />
-      
-      {/* Google Fonts - Poppins */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-      
+      <HreflangTags />
       <CurrencyProvider>
         <ClientLayoutEs>
           {children}

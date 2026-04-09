@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { CurrencyProvider } from '@/app/contexts/CurrencyContext'
 import ClientLayoutAr from './components/ClientLayoutAr'
 import Script from 'next/script'
+import HreflangTags from '@/app/components/HreflangTags'  // ✅ التعديل 1: إضافة HreflangTags
 
 export const metadata: Metadata = {
   title: {
@@ -34,7 +35,8 @@ export const metadata: Metadata = {
       'de': 'https://www.hijabfashionmall.com/de',
       'it': 'https://www.hijabfashionmall.com/it',
       'es': 'https://www.hijabfashionmall.com/es',
-      'tr': 'https://www.hijabfashionmall.com/tr',
+      // ✅ التعديل 2: إزالة 'tr' من alternates (لأنها ليست لغة كاملة)
+      // سيتم إضافتها ديناميكياً فقط في الصفحة الرئيسية عبر HreflangTags
     },
   },
   openGraph: {
@@ -84,6 +86,15 @@ export default function ArabicLayout({
   
   return (
     <>
+      {/* ✅ التعديل 3: إضافة HreflangTags - لإنشاء روابط hreflang ديناميكية لجميع الصفحات */}
+      <HreflangTags />
+      
+      {/* Font Awesome - للأيقونات */}
+      <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
+      />
+      
       {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
