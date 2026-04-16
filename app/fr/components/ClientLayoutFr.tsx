@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';
 import { 
   FaWhatsapp, 
   FaTelegramPlane, 
@@ -489,7 +490,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src={item.imageUrl || '/images/default.webp'} 
+                      src={getProductImage(item.mainImage, item.imageUrl, { width: 80 }, item.images)} 
                       alt={item.name_fr || 'Produit'}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       onError={(e) => {

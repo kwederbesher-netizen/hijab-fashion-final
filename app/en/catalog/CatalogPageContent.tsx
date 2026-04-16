@@ -1,4 +1,3 @@
-// app/en/catalog/page.tsx
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -6,8 +5,11 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';
 
-export default function CatalogPageEn() {
+const CATALOG_LANG = 'en'; // ✅ ثابت اللغة
+
+export default function CatalogPage() {
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   
@@ -19,16 +21,13 @@ export default function CatalogPageEn() {
   const [showBackToTop, setShowBackToTop] = useState(false)
   const productsPerPage = 60
 
-  // Cart state
   const [cart, setCart] = useState<any[]>([])
   const cartInitialized = useRef(false)
   const processingEvent = useRef(false)
   const cartStringRef = useRef('')
   
-  // Currency hook
   const { formatPrice } = useCurrency()
 
-  // Filter state
   const [activeFilters, setActiveFilters] = useState({
     search: initialSearch,
     categories: [] as string[],
@@ -39,7 +38,6 @@ export default function CatalogPageEn() {
     maxPrice: 10000
   })
 
-  // Filter counts state
   const [filterCounts, setFilterCounts] = useState({
     categories: {} as Record<string, number>,
     rss: 0,
@@ -47,11 +45,9 @@ export default function CatalogPageEn() {
     total: 0
   })
 
-  // Search input ref for debounce
   const searchTimeout = useRef<NodeJS.Timeout | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  // Set search input value if search exists in URL
   useEffect(() => {
     if (initialSearch && searchInputRef.current) {
       searchInputRef.current.value = initialSearch
@@ -61,20 +57,17 @@ export default function CatalogPageEn() {
     }
   }, [initialSearch])
 
-  // Get category name for display
   const getCategoryDisplayName = useCallback((categoryEn: string): string => {
     return categoryEn
   }, [])
 
-  // Get English category name from display name
   const getCategoryEn = useCallback((categoryDisplay: string): string => {
     return categoryDisplay
   }, [])
 
-  // Fetch filter counts from API
   const fetchFilterCounts = useCallback(async () => {
     try {
-      const res = await fetch('/api/products/counts')
+      const res = await fetch(`/api/products/counts?lang=${CATALOG_LANG}`) // ✅ أضفنا lang
       const data = await res.json()
       if (data) {
         setFilterCounts({
@@ -89,12 +82,12 @@ export default function CatalogPageEn() {
     }
   }, [])
 
-  // Fetch products from API
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true)
       
       const params = new URLSearchParams()
+      params.append('lang', CATALOG_LANG) // ✅ أضفنا lang
       params.append('page', currentPage.toString())
       params.append('limit', productsPerPage.toString())
       
@@ -144,17 +137,14 @@ export default function CatalogPageEn() {
     }
   }, [currentPage, activeFilters, getCategoryEn])
 
-  // Load products when page or filters change
   useEffect(() => {
     fetchProducts()
   }, [fetchProducts])
 
-  // Load filter counts on initial load
   useEffect(() => {
     fetchFilterCounts()
   }, [fetchFilterCounts])
 
-  // Load cart from localStorage
   useEffect(() => {
     if (!cartInitialized.current) {
       const savedCart = localStorage.getItem('cart')
@@ -171,7 +161,6 @@ export default function CatalogPageEn() {
     }
   }, [])
 
-  // Handle cart updates from events
   useEffect(() => {
     const handleCartUpdate = () => {
       if (processingEvent.current) return
@@ -205,7 +194,6 @@ export default function CatalogPageEn() {
     }
   }, [])
 
-  // Save cart to localStorage
   useEffect(() => {
     if (cartInitialized.current) {
       const newCartString = JSON.stringify(cart)
@@ -222,54 +210,30 @@ export default function CatalogPageEn() {
     }
   }, [cart])
 
-  // Categories list
   const categories = useMemo(() => {
     return [
       'Abayas',
       'Hijabs',
-      'Modest Skirt Sets',
       'Modest Dresses',
-      'Burkini Modest Swimwear',
-      'Modest Sportswear',
+      'Modest Skirt Sets',
       'Modest Evening Dresses',
       'Modest Pants Sets',
+      'Modest Sportswear',
+      'Prayer Clothes',
+      'Burkini',
       'Tunics',
-      'Modest Coats',
       'Modest Jackets',
+      'Modest Coats',
       'Trenchcoats',
       'Modest Wool',
-      'Kaftan',
-      'Prayer Clothes'
+      'Kaftan'
     ]
   }, [])
 
-  // Get category count
   const getCategoryCount = useCallback((categoryDisplay: string): number => {
-    // Special handling for Prayer Clothes (multiple terms)
-    if (categoryDisplay === 'Prayer Clothes') {
-      const prayerTerms = ['Prayer Clothes', 'Prayer Outfits', 'Jilbab', 'Islamic Prayer Wear', 'Prayer Dress', 'Pray Clothes', 'Pray clothes', 'pray clothes']
-      let total = 0
-      for (const term of prayerTerms) {
-        total += filterCounts.categories[term] || 0
-      }
-      return total
-    }
-    
-    // Special handling for Modest Pants Sets (includes Modest Sets)
-    if (categoryDisplay === 'Modest Pants Sets') {
-      const pantsTerms = ['Modest Pants Sets', 'Modest Sets', 'Modest Set']
-      let total = 0
-      for (const term of pantsTerms) {
-        total += filterCounts.categories[term] || 0
-      }
-      return total
-    }
-    
-    // Direct match
-    return filterCounts.categories[categoryDisplay] || 0
+    return filterCounts.categories[categoryDisplay] || 0;
   }, [filterCounts.categories])
 
-  // Back to top button visibility
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500)
@@ -282,7 +246,6 @@ export default function CatalogPageEn() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -299,7 +262,9 @@ export default function CatalogPageEn() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -391,7 +356,6 @@ export default function CatalogPageEn() {
     }
   }, [])
 
-  // Loading Skeleton Component
   const LoadingSkeleton = () => (
     <div style={{
       display: 'grid',
@@ -463,22 +427,21 @@ export default function CatalogPageEn() {
   return (
     <>
       <Head>
-        <title>Catalog - {totalProducts}+ Turkish Modest Fashion Products | Hijab Fashion Mall</title>
-        <meta name="description" content={`Browse our extensive catalog of ${totalProducts}+ Turkish modest fashion products wholesale. Abayas, Hijabs, Dresses, Sets, Prayer clothes, Burkini. Worldwide shipping.`} />
-        <meta name="keywords" content="modest fashion catalog, turkish hijab wholesale, abaya catalog, modest dresses wholesale, hijab catalog, modest sportswear, prayer clothes wholesale" />
+        <title>Catalog - {totalProducts}+ Turkish Modest Clothing Products | Hijab Fashion Mall</title>
+        <meta name="description" content={`Browse our comprehensive catalog of ${totalProducts}+ Turkish modest fashion wholesale products. Abayas, Hijabs, Dresses, Skirt Sets, Prayer Clothes, Burkini. Worldwide shipping.`} />
+        <meta name="keywords" content="modest fashion catalog, Turkish hijab wholesale, abayas catalog, modest dresses wholesale, hijab catalog, modest sportswear, prayer clothes wholesale" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://hijabfashionmall.com/en/catalog" />
-        <link rel="alternate" href="https://hijabfashionmall.com/ar/catalog" hrefLang="ar" />
         <link rel="alternate" href="https://hijabfashionmall.com/en/catalog" hrefLang="en" />
+        <link rel="alternate" href="https://hijabfashionmall.com/ar/catalog" hrefLang="ar" />
         
-        <meta property="og:title" content="Catalog - Turkish Modest Fashion Wholesale | Hijab Fashion Mall" />
-        <meta property="og:description" content={`${totalProducts}+ products of premium Turkish modest fashion. Abayas, Dresses, Hijabs, Sets, Prayer clothes, Burkini.`} />
+        <meta property="og:title" content="Catalog - Turkish Modest Clothing Wholesale | Hijab Fashion Mall" />
+        <meta property="og:description" content={`${totalProducts}+ premium Turkish modest fashion products. Abayas, Dresses, Hijabs, Skirt Sets, Prayer Clothes, Burkini.`} />
         <meta property="og:url" content="https://hijabfashionmall.com/en/catalog" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://hijabfashionmall.com/images/og-catalog.jpg" />
+        <meta property="og:image" content="https://hijabfashionmall.com/images/og-catalog-en.jpg" />
       </Head>
 
-      {/* Back to Top Button - Fixed with SVG arrow */}
       <button
         onClick={scrollToTop}
         style={{
@@ -504,13 +467,11 @@ export default function CatalogPageEn() {
         onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
         onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
       >
-        {/* SVG Arrow instead of Font Awesome */}
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 19V5M5 12l7-7 7 7"/>
         </svg>
       </button>
 
-      {/* Catalog Header */}
       <section style={{
         background: 'linear-gradient(135deg, #fff0e6 0%, #ffffff 100%)',
         padding: '60px 0 40px',
@@ -550,7 +511,7 @@ export default function CatalogPageEn() {
           </h1>
           <p style={{ fontSize: '18px', color: '#555', maxWidth: '800px', margin: '0 auto' }}>
             Discover our extensive collection of <strong>{totalProducts || '5000+'} products</strong> of premium Turkish modest fashion.
-            Abayas, Dresses, Sets, Hijabs, Prayer clothes, Burkini and more at wholesale prices.
+            Abayas, Dresses, Skirt Sets, Hijabs, Prayer Clothes, Burkini and more at wholesale prices.
           </p>
           <div style={{
             display: 'flex',
@@ -563,7 +524,7 @@ export default function CatalogPageEn() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                 <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
               </svg>
-              <span style={{ color: '#555' }}>Worldwide Fast Shipping</span>
+              <span style={{ color: '#555' }}>Fast Worldwide Shipping</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
@@ -575,20 +536,18 @@ export default function CatalogPageEn() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                 <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
               </svg>
-              <span style={{ color: '#555' }}>100% Turkish Craftsmanship</span>
+              <span style={{ color: '#555' }}>100% Turkish Made</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Catalog Layout */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '300px 1fr',
           gap: '30px'
         }}>
-          {/* Sidebar Filters */}
           <aside style={{
             background: 'white',
             borderRadius: '20px',
@@ -636,7 +595,6 @@ export default function CatalogPageEn() {
               />
             </div>
             
-            {/* Special Filters */}
             <div style={{ marginBottom: '25px' }}>
               <h3 style={{ 
                 fontSize: '18px', 
@@ -747,7 +705,6 @@ export default function CatalogPageEn() {
               </div>
             </div>
             
-            {/* Categories */}
             <div style={{ marginBottom: '25px' }}>
               <h3 style={{ 
                 fontSize: '18px', 
@@ -817,7 +774,6 @@ export default function CatalogPageEn() {
               </div>
             </div>
 
-            {/* Filter Actions */}
             <div style={{ display: 'flex', gap: '12px', marginTop: '25px' }}>
               <button 
                 onClick={applyFilters}
@@ -866,9 +822,7 @@ export default function CatalogPageEn() {
             </div>
           </aside>
 
-          {/* Main Content - 4 columns */}
           <main>
-            {/* Toolbar */}
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -886,7 +840,7 @@ export default function CatalogPageEn() {
                 <span style={{ fontWeight: 600, color: '#ff5a00' }}>{totalProducts}</span> products available
                 {totalProducts > 0 && (
                   <span style={{ marginLeft: '10px', color: '#999' }}>
-                    (showing {startIndex}-{endIndex})
+                    (Showing {startIndex}-{endIndex})
                   </span>
                 )}
               </div>
@@ -917,7 +871,6 @@ export default function CatalogPageEn() {
               </select>
             </div>
 
-            {/* Products Grid - 4 columns */}
             {products.length === 0 ? (
               <div style={{
                 textAlign: 'center',
@@ -931,7 +884,7 @@ export default function CatalogPageEn() {
                   <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none"/>
                   <path d="M21 21l-4.35-4.35" stroke="currentColor"/>
                 </svg>
-                <h3 style={{ fontSize: '24px', color: '#000', marginBottom: '10px', fontWeight: 600 }}>No products found</h3>
+                <h3 style={{ fontSize: '24px', color: '#000', marginBottom: '10px', fontWeight: 600 }}>No Products Found</h3>
                 <p style={{ color: '#666', marginBottom: '25px', fontSize: '16px' }}>We couldn't find any products matching your search criteria.</p>
                 <button 
                   onClick={resetFilters}
@@ -967,7 +920,7 @@ export default function CatalogPageEn() {
                       const message = p['rss/not rss message_en'] || p['rss/not rss message_ar'] || ''
                       const code = p.product_code || ''
                       const hasRSSInCode = code.toLowerCase().includes('rss')
-                      const isRSS = message.includes('single piece') || message.includes('✅') || hasRSSInCode
+                      const isRSS = message.includes('single piece') || message.includes('قطعة واحدة') || message.includes('✅') || hasRSSInCode
                       
                       const plusSizes = p['plus sizes'] || p.plus_sizes || p.plusSizes || ''
                       const hasPlus = 
@@ -1049,7 +1002,7 @@ export default function CatalogPageEn() {
                             background: 'linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%)'
                           }}>
                             <img 
-                              src={p.imageUrl || '/images/default.webp'} 
+                              src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)}
                               alt={p.name_en || p.name_ar || ''}
                               style={{ 
                                 maxWidth: '90%', 
@@ -1082,7 +1035,7 @@ export default function CatalogPageEn() {
                               textTransform: 'uppercase',
                               letterSpacing: '0.5px'
                             }}>
-                              {p.category_main_en || ''}
+                              {p.category_main_en || p.category_main_ar || ''}
                             </div>
                             <h3 style={{ 
                               fontSize: '15px', 
@@ -1137,10 +1090,9 @@ export default function CatalogPageEn() {
                                   <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" fill="none"/>
                                 )}
                               </svg>
-                              <span>{isRSS ? 'Single Piece' : 'Carton'}</span>
+                              <span>{isRSS ? 'Single Piece' : 'Packet'}</span>
                             </div>
                             
-                            {/* Price - Fixed font size (reduced from 22px to 18px) */}
                             <div style={{
                               fontSize: '18px',
                               fontWeight: 700,
@@ -1176,7 +1128,7 @@ export default function CatalogPageEn() {
                                 <circle cx="20" cy="21" r="1" stroke="currentColor"/>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" fill="none"/>
                               </svg>
-                              Add to Inquiry
+                              Add to Order
                             </button>
                           </div>
                         </Link>
@@ -1185,7 +1137,6 @@ export default function CatalogPageEn() {
                   </div>
                 )}
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                   <div style={{
                     display: 'flex',
@@ -1282,7 +1233,6 @@ export default function CatalogPageEn() {
         </div>
       </div>
 
-      {/* SEO Content Section */}
       <section style={{
         background: '#f9f9f9',
         padding: '60px 0',
@@ -1307,11 +1257,11 @@ export default function CatalogPageEn() {
               marginBottom: '25px',
               textAlign: 'justify'
             }}>
-              Welcome to the <strong>Hijab Fashion Mall</strong> catalog, your premier destination for <strong>Turkish modest fashion wholesale</strong>. 
-              We offer a wide selection of <strong>{totalProducts || '5000+'} products</strong> featuring the finest and highest quality <strong>Turkish abayas</strong>, 
-              <strong>modest dresses</strong>, <strong>skirt sets</strong>, <strong>pants sets</strong>, 
-              <strong>Turkish hijabs</strong> in premium fabrics (chiffon, silk, cotton), comfortable <strong>prayer clothes</strong>, 
-              stylish <strong>burkini and modest swimwear</strong>, and high-quality <strong>modest sportswear</strong>.
+              Welcome to the <strong>Hijab Fashion Mall</strong> catalog, your premier destination for Turkish modest clothing wholesale.
+              We offer an extensive collection of <strong>{totalProducts || '5000+'} products</strong> featuring the finest quality <strong>Turkish abayas</strong>,
+              <strong>modest dresses</strong>, <strong>skirt sets</strong>, <strong>pants sets</strong>,
+              <strong>Turkish hijabs</strong> in luxurious fabrics (Chiffon, Silk, Cotton), comfortable <strong>prayer clothes</strong>,
+              elegant <strong>burkini</strong>, and high-quality <strong>modest sportswear</strong>.
             </p>
             
             <h3 style={{
@@ -1335,7 +1285,7 @@ export default function CatalogPageEn() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#555' }}>100% Original Turkish Craftsmanship</span>
+                <span style={{ color: '#555' }}>100% Authentic Turkish Made</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
@@ -1347,19 +1297,19 @@ export default function CatalogPageEn() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#555' }}>Fast Worldwide Shipping (3-7 days)</span>
+                <span style={{ color: '#555' }}>Fast Worldwide Shipping (3-7 Days)</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#555' }}>No Minimum Order Quantity</span>
+                <span style={{ color: '#555' }}>No Minimum Order</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#555' }}>Daily Product Updates</span>
+                <span style={{ color: '#555' }}>New Products Constantly</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
@@ -1375,9 +1325,9 @@ export default function CatalogPageEn() {
               lineHeight: '1.8',
               textAlign: 'justify'
             }}>
-              Whether you're looking for <strong>premium Turkish abayas</strong> for special occasions, <strong>modest dresses</strong> for work or daily wear, 
-              stylish <strong>skirt sets</strong>, or <strong>Turkish hijabs</strong> in premium fabrics, our catalog meets all your needs. 
-              We serve thousands of retailers worldwide in <strong>USA, Canada, UK, Europe, GCC, and Australia</strong>. 
+              Whether you're looking for <strong>luxury Turkish abayas</strong> for special occasions, <strong>modest dresses</strong> for work or daily wear,
+              elegant <strong>skirt sets</strong>, or <strong>Turkish hijabs</strong> in premium fabrics, our catalog meets all your needs.
+              We serve thousands of retailers worldwide in the <strong>USA, Canada, UK, Europe, Gulf Countries, and Australia</strong>.
               Browse our collection now and start your journey in the world of modest fashion.
             </p>
           </div>

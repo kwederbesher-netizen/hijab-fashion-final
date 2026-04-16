@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';
 import { 
   FaUsers, FaWhatsapp, FaTelegramPlane, FaShoppingCart, FaArrowUp, 
   FaImage, FaVideo, FaCheckCircle, FaNewspaper, FaStore, FaGlobe, 
@@ -87,7 +88,9 @@ export default function HomePageIt() {
     const packetSize = product.pcs_per_packet ? parseInt(product.pcs_per_packet) : 1
     const productToAdd = {
       _id: product._id, name_ar: product.name_ar, name_en: product.name_en, price_usd: product.price_usd,
-      product_code: product.product_code, imageUrl: product.imageUrl, slug_ar: product.slug_ar, slug_en: product.slug_en,
+      product_code: product.product_code,   imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا slug_ar: product.slug_ar, slug_en: product.slug_en,
       category_main_en: product.category_main_en, quantity: 1, packetSize: packetSize, isRSS: isRSS, unitPrice: product.price_usd
     }
     const existingIndex = currentCart.findIndex((item: any) => item._id === product._id)
@@ -362,7 +365,14 @@ export default function HomePageIt() {
                     const productUrl = getProductUrl(product);
                     return (
                       <Link href={productUrl} key={product._id} className="product-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <div className="product-image"><img src={product.imageUrl || '/images/default.webp'} alt={productName} width={400} height={400} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }} /></div>
+                        <div className="product-image"><img   src={getProductImage(product.mainImage, product.imageUrl, { width: 400 }, product.images)} 
+                  alt={productName}
+                  width={400} 
+                  height={400} 
+                  loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/images/default.webp'
+                  }} /></div>
                         <div className="product-info"><h3>{productName}</h3><div className="product-price">{formatPrice(productPrice)}</div><button className="add-to-cart" onClick={(e) => addToCart(product, e)}><FaShoppingCart /> Aggiungi</button></div>
                       </Link>
                     );

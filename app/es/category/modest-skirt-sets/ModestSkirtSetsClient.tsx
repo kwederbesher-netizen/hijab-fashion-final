@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image'; 
 
 export default function ModestSkirtSetsClient({ searchParams }: { searchParams?: { search?: string; page?: string; sort?: string } }) {
   const initialSearch = searchParams?.search || ''
@@ -149,7 +150,9 @@ export default function ModestSkirtSetsClient({ searchParams }: { searchParams?:
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -320,7 +323,7 @@ export default function ModestSkirtSetsClient({ searchParams }: { searchParams?:
                   return (
                     <Link href={getProductUrl(p)} key={p._id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', textDecoration: 'none', color: 'inherit', border: '1px solid #f0e6dc', transition: '0.3s' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.borderColor = '#ff5a00'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = '#f0e6dc'; }}>
                       <div style={{ position: 'relative', height: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fef9f2' }}>
-                        <img src={p.imageUrl || '/images/default.webp'} alt={p.name_es || p.name_en} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} loading="lazy" />
+                        <img src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)} alt={p.name_es || p.name_en} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} loading="lazy" />
                         {badges.length > 0 && <div style={{ position: 'absolute', top: '15px', right: '15px' }}>{badges}</div>}
                       </div>
                       <div style={{ padding: '20px', textAlign: 'center' }}>

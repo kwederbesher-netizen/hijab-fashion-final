@@ -3,8 +3,8 @@ import { createClient } from 'next-sanity'
 import { createImageUrlBuilder } from '@sanity/image-url'  // ✅ تغيير هنا
 
 export const client = createClient({
-  projectId: 'ruyb1c3n',
-  dataset: 'production',
+  projectId: '3k0vx7ep',
+  dataset: 'production-final',
   apiVersion: '2024-01-01',
   useCdn: true, // استخدام CDN للحصول على أداء أفضل
   withCredentials: false, // تعطيل إرسال بيانات الاعتماد لتجنب مشاكل CORS

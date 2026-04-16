@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import { createClient } from 'next-sanity'
 
 const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'ruyb1c3n',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '3k0vx7ep',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production-final',
   apiVersion: '2024-01-01',
   useCdn: process.env.NODE_ENV === 'production',
 })
@@ -21,6 +21,7 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '60')
     const category = searchParams.get('category')
+    const lang = searchParams.get('lang') || 'en' // ✅ جلب اللغة من الـ URL
     const search = searchParams.get('search')
     const slug = searchParams.get('slug')
     const id = searchParams.get('id')
@@ -40,22 +41,25 @@ export async function GET(request: Request) {
     params.minPrice = minPrice
     params.maxPrice = maxPrice
     
+    // ✅ تحديد اسم حقل التصنيف بناءً على اللغة
+    const categoryField = `category_main_${lang}`;
+    
     // معالجة التصنيف مع دعم المجموعات
     if (category && category !== 'all') {
       if (categoryGroups[category]) {
         const orConditions = categoryGroups[category].map(term => `category_main_en == "${term}"`).join(' || ')
         conditions.push(`(${orConditions})`)
       } else {
-        conditions.push(`category_main_en == $category`)
+        // ✅ استخدام الحقل الديناميكي الصحيح حسب اللغة
+        conditions.push(`${categoryField} == $category`)
         params.category = category
       }
     }
     
-    // ✅ فلتر RSS - يبحث في الرسائل التي تحتوي على "single piece" أو "قطعة واحدة" (وليس "✅")
     if (rss === 'true') {
-      conditions.push(`(rss_not_rss_message_en match "*single piece*" || rss_not_rss_message_ar match "*قطعة واحدة*")`)
+      conditions.push(`(rss == "single" || rss_not_rss_message_en match "*single piece*" || rss_not_rss_message_ar match "*قطعة واحدة*")`)
     }
-    
+        
     // ✅ فلتر Plus Sizes
     if (plusSizes === 'true') {
       conditions.push(`(plus_sizes == "Yes" || plus_sizes == "YES" || plus_sizes == "yes" || has_plus_sizes == true)`)
@@ -117,9 +121,11 @@ export async function GET(request: Request) {
       price_usd,
       description_ar,
       description_en,
-      "imageUrl": image.asset->url,
-      "mainImage": image.asset->url,
+      mainImage,
+      "imageUrl": imageUrl,
+      images,
       category_main_en,
+      category_main_ar,
       product_code,
       "rss/not rss message_en": rss_not_rss_message_en,
       "rss/not rss message_ar": rss_not_rss_message_ar,
@@ -129,7 +135,8 @@ export async function GET(request: Request) {
       has_plus_sizes,
       is_new,
       is_bestseller,
-      colors,
+      color_en,
+      color_ar,
       sizes
     }`
     

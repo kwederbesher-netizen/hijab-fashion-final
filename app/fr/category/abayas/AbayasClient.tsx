@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';
 
 export default function AbayasClient({ searchParams }: { searchParams?: { search?: string; page?: string; sort?: string } }) {
   const initialSearch = searchParams?.search || ''
@@ -183,7 +184,9 @@ export default function AbayasClient({ searchParams }: { searchParams?: { search
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -806,7 +809,7 @@ export default function AbayasClient({ searchParams }: { searchParams?: { search
                             background: 'linear-gradient(135deg, #fef9f2 0%, #faf5ed 100%)'
                           }}>
                             <img 
-                              src={p.imageUrl || '/images/default.webp'} 
+                              src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)} 
                               alt={p.name_fr || p.name_en || p.name_ar || 'Abaya turque'}
                               style={{ 
                                 maxWidth: '90%', 

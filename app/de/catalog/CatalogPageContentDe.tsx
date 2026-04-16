@@ -1,4 +1,3 @@
-// app/de/catalog/page.tsx
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -6,8 +5,11 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';
 
-export default function CatalogPageContentDe() {
+const CATALOG_LANG = 'de'; // ✅ ثابت اللغة
+
+export default function CatalogPageDe() {
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   
@@ -19,16 +21,13 @@ export default function CatalogPageContentDe() {
   const [showBackToTop, setShowBackToTop] = useState(false)
   const productsPerPage = 60
 
-  // Cart state
   const [cart, setCart] = useState<any[]>([])
   const cartInitialized = useRef(false)
   const processingEvent = useRef(false)
   const cartStringRef = useRef('')
   
-  // Currency hook
   const { formatPrice } = useCurrency()
 
-  // Filter state
   const [activeFilters, setActiveFilters] = useState({
     search: initialSearch,
     categories: [] as string[],
@@ -39,7 +38,6 @@ export default function CatalogPageContentDe() {
     maxPrice: 10000
   })
 
-  // Filter counts state
   const [filterCounts, setFilterCounts] = useState({
     categories: {} as Record<string, number>,
     rss: 0,
@@ -47,34 +45,26 @@ export default function CatalogPageContentDe() {
     total: 0
   })
 
-  // Search input ref for debounce
   const searchTimeout = useRef<NodeJS.Timeout | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  // Set search input value if search exists in URL
   useEffect(() => {
     if (initialSearch && searchInputRef.current) {
       searchInputRef.current.value = initialSearch
     }
-    if (initialSearch) {
-      console.log('🔍 Searching for:', initialSearch)
-    }
   }, [initialSearch])
 
-  // Get category name for display (German)
   const getCategoryDisplayName = useCallback((categoryDe: string): string => {
     return categoryDe
   }, [])
 
-  // Get German category name from display name
   const getCategoryDe = useCallback((categoryDisplay: string): string => {
     return categoryDisplay
   }, [])
 
-  // Fetch filter counts from API
   const fetchFilterCounts = useCallback(async () => {
     try {
-      const res = await fetch('/api/products/counts')
+      const res = await fetch(`/api/products/counts?lang=${CATALOG_LANG}`)
       const data = await res.json()
       if (data) {
         setFilterCounts({
@@ -89,18 +79,17 @@ export default function CatalogPageContentDe() {
     }
   }, [])
 
-  // Fetch products from API
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true)
       
       const params = new URLSearchParams()
+      params.append('lang', CATALOG_LANG)
       params.append('page', currentPage.toString())
       params.append('limit', productsPerPage.toString())
       
       if (activeFilters.search) {
         params.append('search', activeFilters.search)
-        console.log('🔍 Searching for:', activeFilters.search)
       }
       
       if (activeFilters.categories.length > 0) {
@@ -135,7 +124,6 @@ export default function CatalogPageContentDe() {
         setProducts(data.result)
         setTotalPages(data.totalPages)
         setTotalProducts(data.total)
-        console.log('✅ Products loaded:', data.result.length, 'of', data.total)
       }
     } catch (error) {
       console.error('Error loading products:', error)
@@ -144,17 +132,14 @@ export default function CatalogPageContentDe() {
     }
   }, [currentPage, activeFilters, getCategoryDe])
 
-  // Load products when page or filters change
   useEffect(() => {
     fetchProducts()
   }, [fetchProducts])
 
-  // Load filter counts on initial load
   useEffect(() => {
     fetchFilterCounts()
   }, [fetchFilterCounts])
 
-  // Load cart from localStorage
   useEffect(() => {
     if (!cartInitialized.current) {
       const savedCart = localStorage.getItem('cart')
@@ -171,7 +156,6 @@ export default function CatalogPageContentDe() {
     }
   }, [])
 
-  // Handle cart updates from events
   useEffect(() => {
     const handleCartUpdate = () => {
       if (processingEvent.current) return
@@ -205,7 +189,6 @@ export default function CatalogPageContentDe() {
     }
   }, [])
 
-  // Save cart to localStorage
   useEffect(() => {
     if (cartInitialized.current) {
       const newCartString = JSON.stringify(cart)
@@ -222,7 +205,6 @@ export default function CatalogPageContentDe() {
     }
   }, [cart])
 
-  // Categories list in German
   const categories = useMemo(() => {
     return [
       'Abayas',
@@ -243,33 +225,10 @@ export default function CatalogPageContentDe() {
     ]
   }, [])
 
-  // Get category count
   const getCategoryCount = useCallback((categoryDisplay: string): number => {
-    // Special handling for Prayer Clothes (Gebetskleidung)
-    if (categoryDisplay === 'Gebetskleidung') {
-      const prayerTerms = ['Prayer Clothes', 'Prayer Outfits', 'Jilbab', 'Islamic Prayer Wear', 'Prayer Dress', 'Pray Clothes', 'Pray clothes', 'pray clothes', 'Gebetskleidung', 'ملابس صلاة']
-      let total = 0
-      for (const term of prayerTerms) {
-        total += filterCounts.categories[term] || 0
-      }
-      return total
-    }
-    
-    // Special handling for Modest Pants Sets (Bescheidene Hosen-Sets)
-    if (categoryDisplay === 'Bescheidene Hosen-Sets') {
-      const pantsTerms = ['Modest Pants Sets', 'Modest Sets', 'Modest Set', 'Bescheidene Hosen-Sets', 'طقم بنطلون محجبات']
-      let total = 0
-      for (const term of pantsTerms) {
-        total += filterCounts.categories[term] || 0
-      }
-      return total
-    }
-    
-    // Direct match
-    return filterCounts.categories[categoryDisplay] || 0
+    return filterCounts.categories[categoryDisplay] || 0;
   }, [filterCounts.categories])
 
-  // Back to top button visibility
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500)
@@ -282,7 +241,6 @@ export default function CatalogPageContentDe() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Add to cart function
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -299,7 +257,9 @@ export default function CatalogPageContentDe() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -378,25 +338,22 @@ export default function CatalogPageContentDe() {
       'Sky Blue': '#87CEEB', 'Light Brown': '#C4A484', 'Yellow': '#FFFF00',
       'Dark Beige': '#C9A87C', 'Rose': '#FF007F',
       'Schwarz': '#000000', 'Weiß': '#FFFFFF', 'Marineblau': '#000080',
-      'Grau': '#808080', 'Burgunderrot': '#800020', 'Rot': '#FF0000',
-      'Grün': '#008000', 'Blau': '#0000FF', 'Braun': '#8B4513',
-      'Beigey': '#F5F5DC', 'Olivgrün': '#808000', 'Lila': '#800080',
-      'Rosa': '#FFC0CB', 'Orangey': '#FFA500', 'Hellgrau': '#D3D3D3'
+      'Grau': '#808080', 'Burgund': '#800020', 'Rot': '#FF0000',
+      'Grün': '#008000', 'Blau': '#0000FF', 'Braun': '#8B4513'
     }
     return colors[color] || '#CCCCCC'
   }, [])
 
   const getProductUrl = useCallback((product: any) => {
-    if (product.slug_de) {
-      return `/de/product/${product.slug_de}`
-    } else if (product.slug_en) {
+    if (product.slug_en) {
       return `/de/product/${product.slug_en}`
+    } else if (product.slug_ar) {
+      return `/de/product/${product.slug_ar}`
     } else {
       return `/de/product/${product._id || 'product'}`
     }
   }, [])
 
-  // Loading Skeleton Component
   const LoadingSkeleton = () => (
     <div style={{
       display: 'grid',
@@ -468,24 +425,21 @@ export default function CatalogPageContentDe() {
   return (
     <>
       <Head>
-        <title>Katalog - {totalProducts}+ Türkische Modest Mode Produkte | Hijab Fashion Mall</title>
-        <meta name="description" content={`Durchstöbern Sie unseren umfangreichen Katalog mit ${totalProducts}+ türkischen Modest Mode Produkten im Großhandel. Abayas, Hijabs, Kleider, Sets, Gebetskleidung, Burkini. Weltweiter Versand.`} />
-        <meta name="keywords" content="Modest Mode Katalog, Türkischer Hijab Großhandel, Abaya Katalog, Bescheidene Kleider Großhandel, Hijab Katalog, Bescheidene Sportbekleidung, Gebetskleidung Großhandel" />
+        <title>Katalog - {totalProducts}+ Türkische Bescheidene Mode | Hijab Fashion Mall</title>
+        <meta name="description" content={`Durchsuchen Sie unseren umfassenden Katalog mit ${totalProducts}+ türkischen bescheidenen Modeprodukten im Großhandel. Abayas, Hijabs, Kleider, Rock-Sets, Gebetskleidung, Burkini. Weltweiter Versand.`} />
+        <meta name="keywords" content="bescheidener mode katalog, türkischer hijab großhandel, abayas katalog, bescheidene kleider großhandel, hijab katalog, bescheidene sportbekleidung, gebetskleidung großhandel" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://hijabfashionmall.com/de/catalog" />
-        <link rel="alternate" href="https://hijabfashionmall.com/ar/catalog" hrefLang="ar" />
-        <link rel="alternate" href="https://hijabfashionmall.com/en/catalog" hrefLang="en" />
-        <link rel="alternate" href="https://hijabfashionmall.com/fr/catalog" hrefLang="fr" />
         <link rel="alternate" href="https://hijabfashionmall.com/de/catalog" hrefLang="de" />
+        <link rel="alternate" href="https://hijabfashionmall.com/en/catalog" hrefLang="en" />
         
-        <meta property="og:title" content="Katalog - Türkische Modest Mode Großhandel | Hijab Fashion Mall" />
-        <meta property="og:description" content={`${totalProducts}+ Produkte premium türkischer Modest Mode. Abayas, Kleider, Hijabs, Sets, Gebetskleidung, Burkini.`} />
+        <meta property="og:title" content="Katalog - Türkische Bescheidene Mode Großhandel | Hijab Fashion Mall" />
+        <meta property="og:description" content={`${totalProducts}+ hochwertige türkische bescheidene Modeprodukte. Abayas, Kleider, Hijabs, Rock-Sets, Gebetskleidung, Burkini.`} />
         <meta property="og:url" content="https://hijabfashionmall.com/de/catalog" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://hijabfashionmall.com/images/og-catalog-de.jpg" />
       </Head>
 
-      {/* Back to Top Button - Fixed with SVG arrow */}
       <button
         onClick={scrollToTop}
         style={{
@@ -511,13 +465,11 @@ export default function CatalogPageContentDe() {
         onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
         onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
       >
-        {/* SVG Arrow instead of Font Awesome */}
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 19V5M5 12l7-7 7 7"/>
         </svg>
       </button>
 
-      {/* Catalog Header */}
       <section style={{
         background: 'linear-gradient(135deg, #fff0e6 0%, #ffffff 100%)',
         padding: '60px 0 40px',
@@ -553,11 +505,11 @@ export default function CatalogPageContentDe() {
             fontWeight: 800,
             lineHeight: '1.2'
           }}>
-            Modest Mode <span style={{ color: '#ff5a00' }}>Katalog</span>
+            Bescheidener Mode <span style={{ color: '#ff5a00' }}>Katalog</span>
           </h1>
           <p style={{ fontSize: '18px', color: '#555', maxWidth: '800px', margin: '0 auto' }}>
-            Entdecken Sie unsere umfangreiche Kollektion von <strong>{totalProducts || '5000+'} Produkten</strong> premium türkischer Modest Mode.
-            Abayas, Kleider, Sets, Hijabs, Gebetskleidung, Burkini und mehr zu Großhandelspreisen.
+            Entdecken Sie unsere umfangreiche Kollektion von <strong>{totalProducts || '5000+'} Produkten</strong> hochwertiger türkischer bescheidener Mode.
+            Abayas, Kleider, Rock-Sets, Hijabs, Gebetskleidung, Burkini und mehr zu Großhandelspreisen.
           </p>
           <div style={{
             display: 'flex',
@@ -570,7 +522,7 @@ export default function CatalogPageContentDe() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                 <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
               </svg>
-              <span style={{ color: '#555' }}>Weltweiter Schnellversand</span>
+              <span style={{ color: '#555' }}>Schneller Weltweiter Versand</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
@@ -582,20 +534,18 @@ export default function CatalogPageContentDe() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                 <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
               </svg>
-              <span style={{ color: '#555' }}>100% Türkische Handwerkskunst</span>
+              <span style={{ color: '#555' }}>100% Türkische Herstellung</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Catalog Layout */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '300px 1fr',
           gap: '30px'
         }}>
-          {/* Sidebar Filters */}
           <aside style={{
             background: 'white',
             borderRadius: '20px',
@@ -643,7 +593,6 @@ export default function CatalogPageContentDe() {
               />
             </div>
             
-            {/* Special Filters */}
             <div style={{ marginBottom: '25px' }}>
               <h3 style={{ 
                 fontSize: '18px', 
@@ -657,7 +606,7 @@ export default function CatalogPageContentDe() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="currentColor"/>
                 </svg>
-                Spezialfilter
+                Spezielle Filter
               </h3>
               <div 
                 onClick={() => {
@@ -739,7 +688,7 @@ export default function CatalogPageContentDe() {
                     </svg>
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, color: '#000' }}>Plus Größen</div>
+                    <div style={{ fontWeight: 600, color: '#000' }}>Große Größen</div>
                     <div style={{ fontSize: '12px', color: '#666' }}>Größen (XL - 4XL)</div>
                   </div>
                 </div>
@@ -754,7 +703,6 @@ export default function CatalogPageContentDe() {
               </div>
             </div>
             
-            {/* Categories */}
             <div style={{ marginBottom: '25px' }}>
               <h3 style={{ 
                 fontSize: '18px', 
@@ -824,7 +772,6 @@ export default function CatalogPageContentDe() {
               </div>
             </div>
 
-            {/* Filter Actions */}
             <div style={{ display: 'flex', gap: '12px', marginTop: '25px' }}>
               <button 
                 onClick={applyFilters}
@@ -868,14 +815,12 @@ export default function CatalogPageContentDe() {
                   e.currentTarget.style.borderColor = '#f0f0f0'
                 }}
               >
-                Alles Zurücksetzen
+                Zurücksetzen
               </button>
             </div>
           </aside>
 
-          {/* Main Content - 4 columns */}
           <main>
-            {/* Toolbar */}
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -893,7 +838,7 @@ export default function CatalogPageContentDe() {
                 <span style={{ fontWeight: 600, color: '#ff5a00' }}>{totalProducts}</span> Produkte verfügbar
                 {totalProducts > 0 && (
                   <span style={{ marginLeft: '10px', color: '#999' }}>
-                    (Anzeige {startIndex}-{endIndex})
+                    (Zeige {startIndex}-{endIndex})
                   </span>
                 )}
               </div>
@@ -924,7 +869,6 @@ export default function CatalogPageContentDe() {
               </select>
             </div>
 
-            {/* Products Grid - 4 columns */}
             {products.length === 0 ? (
               <div style={{
                 textAlign: 'center',
@@ -938,8 +882,8 @@ export default function CatalogPageContentDe() {
                   <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none"/>
                   <path d="M21 21l-4.35-4.35" stroke="currentColor"/>
                 </svg>
-                <h3 style={{ fontSize: '24px', color: '#000', marginBottom: '10px', fontWeight: 600 }}>Keine Produkte gefunden</h3>
-                <p style={{ color: '#666', marginBottom: '25px', fontSize: '16px' }}>Wir konnten keine Produkte finden, die Ihren Suchkriterien entsprechen.</p>
+                <h3 style={{ fontSize: '24px', color: '#000', marginBottom: '10px', fontWeight: 600 }}>Keine Produkte Gefunden</h3>
+                <p style={{ color: '#666', marginBottom: '25px', fontSize: '16px' }}>Keine Produkte entsprechen Ihren Suchkriterien.</p>
                 <button 
                   onClick={resetFilters}
                   style={{
@@ -1017,7 +961,7 @@ export default function CatalogPageContentDe() {
                           fontSize: '11px',
                           fontWeight: 600,
                           letterSpacing: '0.5px'
-                        }}>PLUS GRÖSSEN</span>
+                        }}>GROSSE GRÖßEN</span>
                       )
 
                       return (
@@ -1056,8 +1000,8 @@ export default function CatalogPageContentDe() {
                             background: 'linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%)'
                           }}>
                             <img 
-                              src={p.imageUrl || '/images/default.webp'} 
-                              alt={p.name_de || p.name_en || p.name_ar || ''}
+                              src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)}
+                              alt={p.name_en || p.name_ar || ''}
                               style={{ 
                                 maxWidth: '90%', 
                                 maxHeight: '90%', 
@@ -1089,7 +1033,7 @@ export default function CatalogPageContentDe() {
                               textTransform: 'uppercase',
                               letterSpacing: '0.5px'
                             }}>
-                              {p.category_main_de || p.category_main_en || ''}
+                              {p.category_main_en || p.category_main_ar || ''}
                             </div>
                             <h3 style={{ 
                               fontSize: '15px', 
@@ -1098,7 +1042,7 @@ export default function CatalogPageContentDe() {
                               marginBottom: '8px',
                               lineHeight: '1.4'
                             }}>
-                              {p.name_de || p.name_en || p.name_ar || ''}
+                              {p.name_en || p.name_ar || ''}
                             </h3>
                             <div style={{ 
                               fontSize: '12px', 
@@ -1109,17 +1053,17 @@ export default function CatalogPageContentDe() {
                               {p.product_code || ''}
                             </div>
                             
-                            {p.color_de && (
+                            {p.color_en && (
                               <div style={{ marginBottom: '12px' }}>
                                 <div style={{ 
                                   width: '24px', 
                                   height: '24px', 
                                   borderRadius: '50%', 
-                                  background: getColorCode(p.color_de),
+                                  background: getColorCode(p.color_en),
                                   margin: '0 auto',
                                   border: '2px solid #fff',
                                   boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                                }} title={p.color_de} />
+                                }} title={p.color_en} />
                               </div>
                             )}
                             
@@ -1144,10 +1088,9 @@ export default function CatalogPageContentDe() {
                                   <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" fill="none"/>
                                 )}
                               </svg>
-                              <span>{isRSS ? 'Einzelstück' : 'Karton'}</span>
+                              <span>{isRSS ? 'Einzelstück' : 'Paket'}</span>
                             </div>
                             
-                            {/* Price - Fixed font size (reduced from 22px to 18px) */}
                             <div style={{
                               fontSize: '18px',
                               fontWeight: 700,
@@ -1183,7 +1126,7 @@ export default function CatalogPageContentDe() {
                                 <circle cx="20" cy="21" r="1" stroke="currentColor"/>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" fill="none"/>
                               </svg>
-                              Zur Anfrage Hinzufügen
+                              Zur Bestellung Hinzufügen
                             </button>
                           </div>
                         </Link>
@@ -1192,7 +1135,6 @@ export default function CatalogPageContentDe() {
                   </div>
                 )}
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                   <div style={{
                     display: 'flex',
@@ -1289,7 +1231,6 @@ export default function CatalogPageContentDe() {
         </div>
       </div>
 
-      {/* SEO Content Section */}
       <section style={{
         background: '#f9f9f9',
         padding: '60px 0',
@@ -1305,7 +1246,7 @@ export default function CatalogPageContentDe() {
               fontWeight: 700,
               textAlign: 'center'
             }}>
-              Türkische Modest Mode Großhandel Katalog
+              Türkische Bescheidene Mode Großhandel Katalog
             </h2>
             <p style={{
               fontSize: '16px',
@@ -1314,11 +1255,11 @@ export default function CatalogPageContentDe() {
               marginBottom: '25px',
               textAlign: 'justify'
             }}>
-              Willkommen im Katalog von <strong>Hijab Fashion Mall</strong>, Ihrer ersten Adresse für <strong>türkische Modest Mode im Großhandel</strong>.
-              Wir bieten eine große Auswahl an <strong>{totalProducts || '5000+'} Produkten</strong> mit den feinsten und hochwertigsten <strong>türkischen Abayas</strong>,
+              Willkommen im <strong>Hijab Fashion Mall</strong> Katalog, Ihrer ersten Adresse für türkische bescheidene Kleidung im Großhandel.
+              Wir bieten eine umfangreiche Kollektion von <strong>{totalProducts || '5000+'} Produkten</strong> mit feinsten <strong>türkischen Abayas</strong>,
               <strong>bescheidenen Kleidern</strong>, <strong>Rock-Sets</strong>, <strong>Hosen-Sets</strong>,
-              <strong>türkischen Hijabs</strong> in Premium-Stoffen (Chiffon, Seide, Baumwolle), bequemer <strong>Gebetskleidung</strong>,
-              stilvollem <strong>Burkini und bescheidener Bademode</strong> und hochwertiger <strong>bescheidener Sportbekleidung</strong>.
+              <strong>türkischen Hijabs</strong> in luxuriösen Stoffen (Chiffon, Seide, Baumwolle), bequemer <strong>Gebetskleidung</strong>,
+              eleganten <strong>Burkini und bescheidenen Bademoden</strong> und hochwertiger <strong>bescheidener Sportbekleidung</strong>.
             </p>
             
             <h3 style={{
@@ -1327,7 +1268,7 @@ export default function CatalogPageContentDe() {
               margin: '30px 0 15px',
               fontWeight: 600
             }}>
-              Warum Sie in Unserem Katalog Einkaufen Sollten
+              Warum in Unserem Katalog Einkaufen
             </h3>
             
             <ul style={{
@@ -1342,7 +1283,7 @@ export default function CatalogPageContentDe() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#555' }}>100% Authentische Türkische Handwerkskunst</span>
+                <span style={{ color: '#555' }}>100% Authentische Türkische Herstellung</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
@@ -1366,7 +1307,7 @@ export default function CatalogPageContentDe() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#555' }}>Tägliche Produktaktualisierungen</span>
+                <span style={{ color: '#555' }}>Ständig Neue Produkte</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
@@ -1382,10 +1323,10 @@ export default function CatalogPageContentDe() {
               lineHeight: '1.8',
               textAlign: 'justify'
             }}>
-              Egal, ob Sie auf der Suche nach <strong>premium türkischen Abayas</strong> für besondere Anlässe, <strong>bescheidenen Kleidern</strong> für die Arbeit oder den täglichen Gebrauch,
-              stilvollen <strong>Rock-Sets</strong> oder <strong>türkischen Hijabs</strong> in Premium-Stoffen sind, unser Katalog erfüllt alle Ihre Bedürfnisse.
-              Wir bedienen Tausende von Einzelhändlern weltweit in den <strong>USA, Kanada, Großbritannien, Europa, GCC und Australien</strong>.
-              Durchstöbern Sie jetzt unsere Kollektion und beginnen Sie Ihre Reise in die Welt der Modest Mode.
+              Ob Sie <strong>luxuriöse türkische Abayas</strong> für besondere Anlässe, <strong>bescheidene Kleider</strong> für Arbeit oder Alltag,
+              elegante <strong>Rock-Sets</strong> oder <strong>türkische Hijabs</strong> in Premium-Stoffen suchen - unser Katalog erfüllt alle Ihre Bedürfnisse.
+              Wir bedienen Tausende von Einzelhändlern weltweit in den <strong>USA, Kanada, Großbritannien, Europa, Golfstaaten und Australien</strong>.
+              Durchstöbern Sie jetzt unsere Kollektion und beginnen Sie Ihre Reise in die Welt der bescheidenen Mode.
             </p>
           </div>
         </div>

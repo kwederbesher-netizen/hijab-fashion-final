@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';
 import { 
   FaUsers, 
   FaWhatsapp, 
@@ -130,7 +131,9 @@ export default function HomePageEn() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -1493,7 +1496,7 @@ export default function HomePageEn() {
                       >
                         <div className="product-image">
                           <img 
-                            src={product.imageUrl || '/images/default.webp'} 
+                            src={getProductImage(product.mainImage, product.imageUrl, { width: 400 }, product.images)} 
                             alt={productName}
                             width={400} 
                             height={400} 

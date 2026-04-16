@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';  // ✅ تمت الإضافة
 import { 
   FaWhatsapp, 
   FaTelegramPlane, 
@@ -253,7 +254,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           height: 40px;
           border-radius: 50%;
           display: inline-flex;
-          align-items: center;
+          alignItems: center;
           justify-content: center;
           transition: all 0.3s;
           text-decoration: none;
@@ -469,8 +470,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
+                    {/* ✅ تم تعديل هذا السطر - استخدام getProductImage */}
                     <img 
-                      src={item.imageUrl || '/images/default.webp'} 
+                      src={getProductImage(item.mainImage, item.imageUrl, { width: 80 }, item.images)} 
                       alt={item.name_en || 'Product'}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       onError={(e) => {

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage, getProductGallery } from '@/lib/product-image';
 import { 
   FaBox, FaRuler, FaShoppingCart, FaBarcode, 
   FaCheckCircle, FaTruck, FaArrowUp, FaInfoCircle,
@@ -51,7 +52,7 @@ export default function ProductPageEn() {
         if (data.result && data.result.length > 0) {
           const foundProduct = data.result[0]
           setProduct(foundProduct)
-          setSelectedImage(foundProduct.imageUrl || foundProduct.mainImage || '/images/default.webp')
+          setSelectedImage(getProductImage(foundProduct.mainImage, foundProduct.imageUrl, { width: 800 }, foundProduct.images))
           
           if (foundProduct.category_main_en) {
             const relatedRes = await fetch(`/api/products?category=${foundProduct.category_main_en}&limit=4`, {
@@ -115,7 +116,9 @@ export default function ProductPageEn() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -257,7 +260,7 @@ export default function ProductPageEn() {
         <meta property="og:description" content={product.description_en || product.description_ar} />
         <meta property="og:url" content={`https://hijabfashionmall.com/en/product/${product.slug_en || product.slug_ar || product._id}`} />
         <meta property="og:type" content="product" />
-        <meta property="og:image" content={product.imageUrl || '/images/default.webp'} />
+        <meta property="og:image" content={getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images)} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -266,7 +269,7 @@ export default function ProductPageEn() {
               "@type": "Product",
               "name": productName,
               "description": product.description_en || product.description_ar,
-              "image": product.imageUrl,
+              "image": getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images),
               "sku": product.product_code,
               "brand": { "@type": "Brand", "name": "Hijab Fashion Mall" },
               "offers": {
@@ -341,7 +344,7 @@ export default function ProductPageEn() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
               }}>
                 <img 
-                  src={selectedImage || product.imageUrl || '/images/default.webp'} 
+                  src={selectedImage || getProductImage(product.mainImage, product.imageUrl, { width: 800 }, product.images)} 
                   alt={productName}
                   style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '20px' }}
                   onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }}
@@ -622,7 +625,7 @@ export default function ProductPageEn() {
                     background: '#f5f5f5'
                   }}>
                     <img 
-                      src={p.imageUrl || '/images/default.webp'} 
+                      src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)} 
                       alt={p.name_en || p.name_ar || ''}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       loading="lazy"

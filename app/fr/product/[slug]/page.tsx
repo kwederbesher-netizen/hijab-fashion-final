@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage, getProductGallery } from '@/lib/product-image';
 import { 
   FaBox, FaRuler, FaShoppingCart, FaBarcode, 
   FaCheckCircle, FaTruck, FaArrowUp, FaInfoCircle,
@@ -27,22 +28,10 @@ export default function ProductPageFr() {
   const isMounted = useRef(true)
   const abortController = useRef<AbortController | null>(null)
 
-  const getCategoryDisplay = useCallback((categoryEn: string) => {
-    const categories: Record<string, string> = {
-      'Abayas': 'Abayas',
-      'Hijabs': 'Hijabs',
-      'Modest Dresses': 'Robes Pudeur',
-      'Modest Skirt Sets': 'Ensembles Jupes',
-      'Modest Evening Dresses': 'Robes de Soirée',
-      'Modest Pants Sets': 'Ensembles Pantalons',
-      'Modest Sportswear': 'Tenues Sportives',
-      'Prayer Clothes': 'Tenues de Prière',
-      'Burkini': 'Burkini'
-    }
-    return categories[categoryEn] || categoryEn
+  const getCategoryDisplay = useCallback((categoryFr: string) => {
+    return categoryFr
   }, [])
 
-  // Load product
   useEffect(() => {
     isMounted.current = true
     setLoading(true)
@@ -62,7 +51,7 @@ export default function ProductPageFr() {
         if (data.result && data.result.length > 0) {
           const foundProduct = data.result[0]
           setProduct(foundProduct)
-          setSelectedImage(foundProduct.imageUrl || foundProduct.mainImage || '/images/default.webp')
+          setSelectedImage(getProductImage(foundProduct.mainImage, foundProduct.imageUrl, { width: 800 }, foundProduct.images))
           
           if (foundProduct.category_main_en) {
             const relatedRes = await fetch(`/api/products?category=${foundProduct.category_main_en}&limit=4`, {
@@ -78,7 +67,7 @@ export default function ProductPageFr() {
         }
       } catch (error: any) {
         if (error.name !== 'AbortError' && isMounted.current) {
-          console.error('Error loading product:', error)
+          console.error('Erreur lors du chargement du produit:', error)
           setError(true)
           setLoading(false)
         }
@@ -95,7 +84,6 @@ export default function ProductPageFr() {
     }
   }, [slug])
 
-  // Back to top
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500)
@@ -108,7 +96,6 @@ export default function ProductPageFr() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Add to cart
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -126,7 +113,9 @@ export default function ProductPageFr() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -165,7 +154,6 @@ export default function ProductPageFr() {
     return sizes.split(' ').filter(s => s.trim())
   }, [])
 
-  // Set default quantity
   useEffect(() => {
     if (product) {
       const isRSSProduct = product['rss/not rss message_en']?.includes('single piece') || 
@@ -246,8 +234,8 @@ export default function ProductPageFr() {
     </div>
   )
 
-  const productName = product.name_fr || product.name_en || product.name_ar || ''
-  const productCategory = product.category_main_en || ''
+  const productName = product.name_fr || product.name_en || ''
+  const productCategory = product.category_main_fr || product.category_main_en || ''
   const productCategoryDisplay = getCategoryDisplay(productCategory)
   const productPrice = product.price_usd || 0
   const sizes = product.sizes ? parseSizes(product.sizes) : []
@@ -260,15 +248,15 @@ export default function ProductPageFr() {
     <>
       <Head>
         <title>{productName} - Hijab Fashion Mall | Mode Modeste Turque en Gros</title>
-        <meta name="description" content={product.description_fr || product.description_en || `${productName} de la mode modeste turque.`} />
+        <meta name="description" content={product.description_fr || product.description_en || `${productName} de la mode modeste turque premium.`} />
         <meta name="keywords" content={`${productName}, hijab turc en gros, ${productCategory}, mode modeste en gros`} />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={`https://hijabfashionmall.com/fr/product/${product.slug_fr || product.slug_en || product.slug_ar || product._id}`} />
+        <link rel="canonical" href={`https://hijabfashionmall.com/fr/product/${product.slug_fr || product.slug_en || product._id}`} />
         <meta property="og:title" content={`${productName} - Hijab Fashion Mall`} />
         <meta property="og:description" content={product.description_fr || product.description_en} />
-        <meta property="og:url" content={`https://hijabfashionmall.com/fr/product/${product.slug_fr || product.slug_en || product.slug_ar || product._id}`} />
+        <meta property="og:url" content={`https://hijabfashionmall.com/fr/product/${product.slug_fr || product.slug_en || product._id}`} />
         <meta property="og:type" content="product" />
-        <meta property="og:image" content={product.imageUrl || '/images/default.webp'} />
+        <meta property="og:image" content={getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images)} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -277,7 +265,7 @@ export default function ProductPageFr() {
               "@type": "Product",
               "name": productName,
               "description": product.description_fr || product.description_en,
-              "image": product.imageUrl,
+              "image": getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images),
               "sku": product.product_code,
               "brand": { "@type": "Brand", "name": "Hijab Fashion Mall" },
               "offers": {
@@ -291,7 +279,6 @@ export default function ProductPageFr() {
         />
       </Head>
 
-      {/* Back to Top Button */}
       <button
         onClick={scrollToTop}
         style={{
@@ -317,7 +304,6 @@ export default function ProductPageFr() {
         <FaArrowUp />
       </button>
 
-      {/* Breadcrumb */}
       <div style={{ padding: '20px 0', background: '#f5f5f5', borderBottom: '1px solid #eee' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '14px', color: '#555' }}>
@@ -334,11 +320,9 @@ export default function ProductPageFr() {
         </div>
       </div>
 
-      {/* Product Section */}
       <div style={{ padding: '60px 0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px' }}>
-            {/* Product Image */}
             <div>
               <div style={{
                 width: '100%',
@@ -352,7 +336,7 @@ export default function ProductPageFr() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
               }}>
                 <img 
-                  src={selectedImage || product.imageUrl || '/images/default.webp'} 
+                  src={selectedImage || getProductImage(product.mainImage, product.imageUrl, { width: 800 }, product.images)} 
                   alt={productName}
                   style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '20px' }}
                   onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }}
@@ -360,7 +344,6 @@ export default function ProductPageFr() {
               </div>
             </div>
 
-            {/* Product Info */}
             <div>
               <span style={{
                 display: 'inline-block',
@@ -404,7 +387,6 @@ export default function ProductPageFr() {
                 </div>
               </div>
 
-              {/* RSS/Packet Message */}
               {(product['rss/not rss message_en'] || product['rss/not rss message_ar'] || product.pcs_per_packet) && (
                 <div style={{
                   marginBottom: '25px',
@@ -423,23 +405,21 @@ export default function ProductPageFr() {
                         return product['rss/not rss message_en']
                       }
                       if (product.pcs_per_packet && product.pcs_per_packet !== '') {
-                        return `Vendu par carton de ${product.pcs_per_packet} pièces`
+                        return `Vendu en paquets de ${product.pcs_per_packet} pièces`
                       }
-                      return product['rss/not rss message_ar'] || 'Information d\'emballage non disponible'
+                      return product['rss/not rss message_ar'] || 'Informations sur l\'emballage non disponibles'
                     })()}
                   </span>
                 </div>
               )}
 
-              {/* Description */}
               <div style={{ marginBottom: '30px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#000', marginBottom: '10px' }}>Description du produit</h3>
                 <p style={{ color: '#555', lineHeight: '1.8' }}>
-                  {product.description_fr || product.description_en || 'Produit turc de qualité premium.'}
+                  {product.description_fr || product.description_en || 'Produit turc de qualité supérieure.'}
                 </p>
               </div>
 
-              {/* Size Information */}
               <div style={{
                 marginBottom: '30px',
                 padding: '25px',
@@ -481,7 +461,6 @@ export default function ProductPageFr() {
                 </div>
               </div>
 
-              {/* Quantity */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
                 <label style={{ fontWeight: '600', color: '#000' }}>Quantité:</label>
                 <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #eee', borderRadius: '50px', overflow: 'hidden' }}>
@@ -502,14 +481,12 @@ export default function ProductPageFr() {
                 </div>
               </div>
 
-              {/* Minimum order info */}
               {!isRSS && packetSize > 1 && (
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <FaInfoCircle /> Quantité minimale: {packetSize} pièces (carton complet)
+                  <FaInfoCircle /> Commande minimum: {packetSize} pièces (carton complet)
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div style={{ display: 'flex', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
                 <button 
                   style={{
@@ -538,7 +515,7 @@ export default function ProductPageFr() {
                 
                 <a 
                   href={`https://wa.me/905519522448?text=${encodeURIComponent(
-                    `Bonjour, je souhaite commander:\n\n*${productName}*\nPrix: ${formatPrice(productPrice)}\nCode: ${product.product_code || 'N/A'}\nQuantité: ${quantity}\n\nVeuillez me fournir plus d'informations.`
+                    `Bonjour, je suis intéressé par:\n\n*${productName}*\nPrix: ${formatPrice(productPrice)}\nCode: ${product.product_code || 'N/A'}\nQuantité: ${quantity}\n\nVeuillez me fournir plus d'informations.`
                   )}`}
                   style={{
                     flex: '1',
@@ -566,7 +543,6 @@ export default function ProductPageFr() {
                 </a>
               </div>
 
-              {/* Product Meta */}
               <div style={{ paddingTop: '20px', borderTop: '1px solid #eee' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                   <FaBarcode style={{ width: '20px', color: '#ff5a00' }} />
@@ -575,7 +551,7 @@ export default function ProductPageFr() {
                 {product.pcs_per_packet && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                     <FaBox style={{ width: '20px', color: '#ff5a00' }} />
-                    <span><strong>Carton:</strong> {product.pcs_per_packet} pièces</span>
+                    <span><strong>Paquet:</strong> {product.pcs_per_packet} pièces</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
@@ -584,7 +560,7 @@ export default function ProductPageFr() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                   <FaTruck style={{ width: '20px', color: '#ff5a00' }} />
-                  <span><strong>Expédition:</strong> Mondiale (3-7 jours ouvrables)</span>
+                  <span><strong>Livraison:</strong> Mondiale (3-7 jours ouvrés)</span>
                 </div>
               </div>
             </div>
@@ -592,12 +568,11 @@ export default function ProductPageFr() {
         </div>
       </div>
 
-      {/* Related Products Section */}
       {relatedProducts.length > 0 && (
         <div style={{ padding: '60px 0', background: '#f5f5f5' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
             <h2 style={{ textAlign: 'center', fontSize: '36px', color: '#000', marginBottom: '15px', fontWeight: '700' }}>
-              Vous aimerez aussi
+              Vous pourriez aussi aimer
             </h2>
             <p style={{ textAlign: 'center', color: '#555', marginBottom: '40px', fontSize: '18px' }}>
               Produits similaires qui pourraient vous intéresser
@@ -610,7 +585,7 @@ export default function ProductPageFr() {
             }}>
               {relatedProducts.map((p: any) => (
                 <Link 
-                  href={`/fr/product/${p.slug_fr || p.slug_en || p.slug_ar || p._id}`} 
+                  href={`/fr/product/${p.slug_fr || p.slug_en || p._id}`} 
                   key={p._id} 
                   style={{
                     background: 'white',
@@ -633,7 +608,7 @@ export default function ProductPageFr() {
                     background: '#f5f5f5'
                   }}>
                     <img 
-                      src={p.imageUrl || '/images/default.webp'} 
+                      src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)} 
                       alt={p.name_fr || p.name_en || ''}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       loading="lazy"

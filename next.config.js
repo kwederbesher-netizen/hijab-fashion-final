@@ -10,14 +10,17 @@ const nextConfig = {
     ],
   },
   
-  // إعدادات الـ redirects
+  // إزالة السمات غير القياسية (لإصلاح خطأ hydration)
+  compiler: {
+    reactRemoveProperties: { properties: ['^fdprocessedid$'] },
+  },
+  
   async redirects() {
     return [
-      // الصفحات العربية (301 redirect)
       {
         source: '/ar/main-page',
         destination: '/ar',
-        permanent: true, // 301 redirect
+        permanent: true,
       },
       {
         source: '/ar/page',
@@ -29,7 +32,6 @@ const nextConfig = {
         destination: '/ar/catalog',
         permanent: true,
       },
-      // الصفحات الإنجليزية
       {
         source: '/access-hijab-clothes-prices-catalogues',
         destination: '/en/catalog',

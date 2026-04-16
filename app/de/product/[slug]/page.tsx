@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage, getProductGallery } from '@/lib/product-image';
 import { 
   FaBox, FaRuler, FaShoppingCart, FaBarcode, 
   FaCheckCircle, FaTruck, FaArrowUp, FaInfoCircle,
@@ -27,22 +28,10 @@ export default function ProductPageDe() {
   const isMounted = useRef(true)
   const abortController = useRef<AbortController | null>(null)
 
-  const getCategoryDisplay = useCallback((categoryEn: string) => {
-    const categories: Record<string, string> = {
-      'Abayas': 'Abayas',
-      'Hijabs': 'Hijabs',
-      'Modest Dresses': 'Modest Kleider',
-      'Modest Skirt Sets': 'Modest Röcke Sets',
-      'Modest Evening Dresses': 'Modest Abendkleider',
-      'Modest Pants Sets': 'Modest Hosen Sets',
-      'Modest Sportswear': 'Modest Sportbekleidung',
-      'Prayer Clothes': 'Gebetskleidung',
-      'Burkini': 'Burkini'
-    }
-    return categories[categoryEn] || categoryEn
+  const getCategoryDisplay = useCallback((categoryDe: string) => {
+    return categoryDe
   }, [])
 
-  // Load product
   useEffect(() => {
     isMounted.current = true
     setLoading(true)
@@ -62,7 +51,7 @@ export default function ProductPageDe() {
         if (data.result && data.result.length > 0) {
           const foundProduct = data.result[0]
           setProduct(foundProduct)
-          setSelectedImage(foundProduct.imageUrl || foundProduct.mainImage || '/images/default.webp')
+          setSelectedImage(getProductImage(foundProduct.mainImage, foundProduct.imageUrl, { width: 800 }, foundProduct.images))
           
           if (foundProduct.category_main_en) {
             const relatedRes = await fetch(`/api/products?category=${foundProduct.category_main_en}&limit=4`, {
@@ -78,7 +67,7 @@ export default function ProductPageDe() {
         }
       } catch (error: any) {
         if (error.name !== 'AbortError' && isMounted.current) {
-          console.error('Error loading product:', error)
+          console.error('Fehler beim Laden des Produkts:', error)
           setError(true)
           setLoading(false)
         }
@@ -95,7 +84,6 @@ export default function ProductPageDe() {
     }
   }, [slug])
 
-  // Back to top
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500)
@@ -108,7 +96,6 @@ export default function ProductPageDe() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Add to cart
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -126,7 +113,9 @@ export default function ProductPageDe() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -165,7 +154,6 @@ export default function ProductPageDe() {
     return sizes.split(' ').filter(s => s.trim())
   }, [])
 
-  // Set default quantity
   useEffect(() => {
     if (product) {
       const isRSSProduct = product['rss/not rss message_en']?.includes('single piece') || 
@@ -246,8 +234,8 @@ export default function ProductPageDe() {
     </div>
   )
 
-  const productName = product.name_de || product.name_en || product.name_ar || ''
-  const productCategory = product.category_main_en || ''
+  const productName = product.name_de || product.name_en || ''
+  const productCategory = product.category_main_de || product.category_main_en || ''
   const productCategoryDisplay = getCategoryDisplay(productCategory)
   const productPrice = product.price_usd || 0
   const sizes = product.sizes ? parseSizes(product.sizes) : []
@@ -259,16 +247,16 @@ export default function ProductPageDe() {
   return (
     <>
       <Head>
-        <title>{productName} - Hijab Fashion Mall | Türkische Modest Mode im Großhandel</title>
-        <meta name="description" content={product.description_de || product.description_en || `Premium ${productName} aus türkischer Modest Mode.`} />
-        <meta name="keywords" content={`${productName}, türkischer hijab großhandel, ${productCategory}, modest mode großhandel`} />
+        <title>{productName} - Hijab Fashion Mall | Türkische Großhandelsmode</title>
+        <meta name="description" content={product.description_de || product.description_en || `Premium ${productName} aus türkischer Mode.`} />
+        <meta name="keywords" content={`${productName}, türkischer hijab großhandel, ${productCategory}, bescheidene mode großhandel`} />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={`https://hijabfashionmall.com/de/product/${product.slug_de || product.slug_en || product.slug_ar || product._id}`} />
+        <link rel="canonical" href={`https://hijabfashionmall.com/de/product/${product.slug_de || product.slug_en || product._id}`} />
         <meta property="og:title" content={`${productName} - Hijab Fashion Mall`} />
         <meta property="og:description" content={product.description_de || product.description_en} />
-        <meta property="og:url" content={`https://hijabfashionmall.com/de/product/${product.slug_de || product.slug_en || product.slug_ar || product._id}`} />
+        <meta property="og:url" content={`https://hijabfashionmall.com/de/product/${product.slug_de || product.slug_en || product._id}`} />
         <meta property="og:type" content="product" />
-        <meta property="og:image" content={product.imageUrl || '/images/default.webp'} />
+        <meta property="og:image" content={getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images)} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -277,7 +265,7 @@ export default function ProductPageDe() {
               "@type": "Product",
               "name": productName,
               "description": product.description_de || product.description_en,
-              "image": product.imageUrl,
+              "image": getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images),
               "sku": product.product_code,
               "brand": { "@type": "Brand", "name": "Hijab Fashion Mall" },
               "offers": {
@@ -291,7 +279,6 @@ export default function ProductPageDe() {
         />
       </Head>
 
-      {/* Back to Top Button */}
       <button
         onClick={scrollToTop}
         style={{
@@ -317,7 +304,6 @@ export default function ProductPageDe() {
         <FaArrowUp />
       </button>
 
-      {/* Breadcrumb */}
       <div style={{ padding: '20px 0', background: '#f5f5f5', borderBottom: '1px solid #eee' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '14px', color: '#555' }}>
@@ -334,11 +320,9 @@ export default function ProductPageDe() {
         </div>
       </div>
 
-      {/* Product Section */}
       <div style={{ padding: '60px 0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px' }}>
-            {/* Product Image */}
             <div>
               <div style={{
                 width: '100%',
@@ -352,7 +336,7 @@ export default function ProductPageDe() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
               }}>
                 <img 
-                  src={selectedImage || product.imageUrl || '/images/default.webp'} 
+                  src={selectedImage || getProductImage(product.mainImage, product.imageUrl, { width: 800 }, product.images)} 
                   alt={productName}
                   style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '20px' }}
                   onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }}
@@ -360,7 +344,6 @@ export default function ProductPageDe() {
               </div>
             </div>
 
-            {/* Product Info */}
             <div>
               <span style={{
                 display: 'inline-block',
@@ -398,13 +381,12 @@ export default function ProductPageDe() {
                   )}
                   {hasPlus && (
                     <span style={{ padding: '6px 15px', borderRadius: '30px', fontSize: '13px', fontWeight: '600', background: '#000', color: 'white' }}>
-                      Plus Größen
+                      Plus Size
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* RSS/Packet Message */}
               {(product['rss/not rss message_en'] || product['rss/not rss message_ar'] || product.pcs_per_packet) && (
                 <div style={{
                   marginBottom: '25px',
@@ -423,7 +405,7 @@ export default function ProductPageDe() {
                         return product['rss/not rss message_en']
                       }
                       if (product.pcs_per_packet && product.pcs_per_packet !== '') {
-                        return `Verkauft in Packungen mit ${product.pcs_per_packet} Stücken`
+                        return `Verkauft in Packungen mit ${product.pcs_per_packet} Stück`
                       }
                       return product['rss/not rss message_ar'] || 'Verpackungsinformationen nicht verfügbar'
                     })()}
@@ -431,15 +413,13 @@ export default function ProductPageDe() {
                 </div>
               )}
 
-              {/* Description */}
               <div style={{ marginBottom: '30px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#000', marginBottom: '10px' }}>Produktbeschreibung</h3>
                 <p style={{ color: '#555', lineHeight: '1.8' }}>
-                  {product.description_de || product.description_en || 'Premium türkisches Produkt.'}
+                  {product.description_de || product.description_en || 'Hochwertiges türkisches Produkt.'}
                 </p>
               </div>
 
-              {/* Size Information */}
               <div style={{
                 marginBottom: '30px',
                 padding: '25px',
@@ -481,7 +461,6 @@ export default function ProductPageDe() {
                 </div>
               </div>
 
-              {/* Quantity */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
                 <label style={{ fontWeight: '600', color: '#000' }}>Menge:</label>
                 <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #eee', borderRadius: '50px', overflow: 'hidden' }}>
@@ -502,14 +481,12 @@ export default function ProductPageDe() {
                 </div>
               </div>
 
-              {/* Minimum order info */}
               {!isRSS && packetSize > 1 && (
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <FaInfoCircle /> Mindestbestellung: {packetSize} Stücke (vollständiger Karton)
+                  <FaInfoCircle /> Mindestbestellmenge: {packetSize} Stück (voller Karton)
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div style={{ display: 'flex', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
                 <button 
                   style={{
@@ -538,7 +515,7 @@ export default function ProductPageDe() {
                 
                 <a 
                   href={`https://wa.me/905519522448?text=${encodeURIComponent(
-                    `Hallo, ich möchte bestellen:\n\n*${productName}*\nPreis: ${formatPrice(productPrice)}\nCode: ${product.product_code || 'N/A'}\nMenge: ${quantity}\n\nBitte geben Sie mir weitere Informationen.`
+                    `Hallo, ich bin interessiert an:\n\n*${productName}*\nPreis: ${formatPrice(productPrice)}\nCode: ${product.product_code || 'N/A'}\nMenge: ${quantity}\n\nBitte geben Sie mir weitere Informationen.`
                   )}`}
                   style={{
                     flex: '1',
@@ -562,11 +539,10 @@ export default function ProductPageDe() {
                   onMouseEnter={(e) => e.currentTarget.style.background = '#128C7E'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#25d366'}
                 >
-                  Über WhatsApp bestellen
+                  Bestellung über WhatsApp
                 </a>
               </div>
 
-              {/* Product Meta */}
               <div style={{ paddingTop: '20px', borderTop: '1px solid #eee' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                   <FaBarcode style={{ width: '20px', color: '#ff5a00' }} />
@@ -575,7 +551,7 @@ export default function ProductPageDe() {
                 {product.pcs_per_packet && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                     <FaBox style={{ width: '20px', color: '#ff5a00' }} />
-                    <span><strong>Packung:</strong> {product.pcs_per_packet} Stücke</span>
+                    <span><strong>Packung:</strong> {product.pcs_per_packet} Stück</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
@@ -592,7 +568,6 @@ export default function ProductPageDe() {
         </div>
       </div>
 
-      {/* Related Products Section */}
       {relatedProducts.length > 0 && (
         <div style={{ padding: '60px 0', background: '#f5f5f5' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
@@ -610,7 +585,7 @@ export default function ProductPageDe() {
             }}>
               {relatedProducts.map((p: any) => (
                 <Link 
-                  href={`/de/product/${p.slug_de || p.slug_en || p.slug_ar || p._id}`} 
+                  href={`/de/product/${p.slug_de || p.slug_en || p._id}`} 
                   key={p._id} 
                   style={{
                     background: 'white',
@@ -633,7 +608,7 @@ export default function ProductPageDe() {
                     background: '#f5f5f5'
                   }}>
                     <img 
-                      src={p.imageUrl || '/images/default.webp'} 
+                      src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)} 
                       alt={p.name_de || p.name_en || ''}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       loading="lazy"

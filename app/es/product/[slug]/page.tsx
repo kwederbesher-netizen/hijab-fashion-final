@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage, getProductGallery } from '@/lib/product-image';
 import { 
   FaBox, FaRuler, FaShoppingCart, FaBarcode, 
   FaCheckCircle, FaTruck, FaArrowUp, FaInfoCircle,
@@ -27,22 +28,10 @@ export default function ProductPageEs() {
   const isMounted = useRef(true)
   const abortController = useRef<AbortController | null>(null)
 
-  const getCategoryDisplay = useCallback((categoryEn: string) => {
-    const categories: Record<string, string> = {
-      'Abayas': 'Abayas',
-      'Hijabs': 'Hijabs',
-      'Modest Dresses': 'Vestidos Modestos',
-      'Modest Skirt Sets': 'Conjuntos de Falda Modestos',
-      'Modest Evening Dresses': 'Vestidos de Noche Modestos',
-      'Modest Pants Sets': 'Conjuntos de Pantalón Modestos',
-      'Modest Sportswear': 'Ropa Deportiva Modesta',
-      'Prayer Clothes': 'Ropa de Oración',
-      'Burkini': 'Burkini'
-    }
-    return categories[categoryEn] || categoryEn
+  const getCategoryDisplay = useCallback((categoryEs: string) => {
+    return categoryEs
   }, [])
 
-  // Load product
   useEffect(() => {
     isMounted.current = true
     setLoading(true)
@@ -62,7 +51,7 @@ export default function ProductPageEs() {
         if (data.result && data.result.length > 0) {
           const foundProduct = data.result[0]
           setProduct(foundProduct)
-          setSelectedImage(foundProduct.imageUrl || foundProduct.mainImage || '/images/default.webp')
+          setSelectedImage(getProductImage(foundProduct.mainImage, foundProduct.imageUrl, { width: 800 }, foundProduct.images))
           
           if (foundProduct.category_main_en) {
             const relatedRes = await fetch(`/api/products?category=${foundProduct.category_main_en}&limit=4`, {
@@ -78,7 +67,7 @@ export default function ProductPageEs() {
         }
       } catch (error: any) {
         if (error.name !== 'AbortError' && isMounted.current) {
-          console.error('Error loading product:', error)
+          console.error('Error al cargar el producto:', error)
           setError(true)
           setLoading(false)
         }
@@ -95,7 +84,6 @@ export default function ProductPageEs() {
     }
   }, [slug])
 
-  // Back to top
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500)
@@ -108,7 +96,6 @@ export default function ProductPageEs() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Add to cart
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -126,7 +113,9 @@ export default function ProductPageEs() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -165,7 +154,6 @@ export default function ProductPageEs() {
     return sizes.split(' ').filter(s => s.trim())
   }, [])
 
-  // Set default quantity
   useEffect(() => {
     if (product) {
       const isRSSProduct = product['rss/not rss message_en']?.includes('single piece') || 
@@ -226,7 +214,7 @@ export default function ProductPageEs() {
     }}>
       <div style={{ fontSize: '70px', color: '#ff5a00', marginBottom: '20px' }}>⚠️</div>
       <h1 style={{ fontSize: '36px', marginBottom: '15px', fontWeight: 700 }}>Producto no encontrado</h1>
-      <p style={{ marginBottom: '30px', color: '#555', fontSize: '18px' }}>Por favor seleccione un producto de nuestro catálogo.</p>
+      <p style={{ marginBottom: '30px', color: '#555', fontSize: '18px' }}>Por favor, seleccione un producto de nuestro catálogo.</p>
       <Link 
         href="/es/catalog" 
         style={{ 
@@ -246,8 +234,8 @@ export default function ProductPageEs() {
     </div>
   )
 
-  const productName = product.name_es || product.name_en || product.name_ar || ''
-  const productCategory = product.category_main_en || ''
+  const productName = product.name_es || product.name_en || ''
+  const productCategory = product.category_main_es || product.category_main_en || ''
   const productCategoryDisplay = getCategoryDisplay(productCategory)
   const productPrice = product.price_usd || 0
   const sizes = product.sizes ? parseSizes(product.sizes) : []
@@ -260,15 +248,15 @@ export default function ProductPageEs() {
     <>
       <Head>
         <title>{productName} - Hijab Fashion Mall | Moda Modesta Turca al por Mayor</title>
-        <meta name="description" content={product.description_es || product.description_en || `${productName} de moda modesta turca.`} />
+        <meta name="description" content={product.description_es || product.description_en || `${productName} de moda modesta turca premium.`} />
         <meta name="keywords" content={`${productName}, hijab turco al por mayor, ${productCategory}, moda modesta al por mayor`} />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={`https://hijabfashionmall.com/es/product/${product.slug_es || product.slug_en || product.slug_ar || product._id}`} />
+        <link rel="canonical" href={`https://hijabfashionmall.com/es/product/${product.slug_es || product.slug_en || product._id}`} />
         <meta property="og:title" content={`${productName} - Hijab Fashion Mall`} />
         <meta property="og:description" content={product.description_es || product.description_en} />
-        <meta property="og:url" content={`https://hijabfashionmall.com/es/product/${product.slug_es || product.slug_en || product.slug_ar || product._id}`} />
+        <meta property="og:url" content={`https://hijabfashionmall.com/es/product/${product.slug_es || product.slug_en || product._id}`} />
         <meta property="og:type" content="product" />
-        <meta property="og:image" content={product.imageUrl || '/images/default.webp'} />
+        <meta property="og:image" content={getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images)} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -277,7 +265,7 @@ export default function ProductPageEs() {
               "@type": "Product",
               "name": productName,
               "description": product.description_es || product.description_en,
-              "image": product.imageUrl,
+              "image": getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images),
               "sku": product.product_code,
               "brand": { "@type": "Brand", "name": "Hijab Fashion Mall" },
               "offers": {
@@ -291,7 +279,6 @@ export default function ProductPageEs() {
         />
       </Head>
 
-      {/* Back to Top Button */}
       <button
         onClick={scrollToTop}
         style={{
@@ -317,7 +304,6 @@ export default function ProductPageEs() {
         <FaArrowUp />
       </button>
 
-      {/* Breadcrumb */}
       <div style={{ padding: '20px 0', background: '#f5f5f5', borderBottom: '1px solid #eee' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '14px', color: '#555' }}>
@@ -334,11 +320,9 @@ export default function ProductPageEs() {
         </div>
       </div>
 
-      {/* Product Section */}
       <div style={{ padding: '60px 0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px' }}>
-            {/* Product Image */}
             <div>
               <div style={{
                 width: '100%',
@@ -352,7 +336,7 @@ export default function ProductPageEs() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
               }}>
                 <img 
-                  src={selectedImage || product.imageUrl || '/images/default.webp'} 
+                  src={selectedImage || getProductImage(product.mainImage, product.imageUrl, { width: 800 }, product.images)} 
                   alt={productName}
                   style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '20px' }}
                   onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }}
@@ -360,7 +344,6 @@ export default function ProductPageEs() {
               </div>
             </div>
 
-            {/* Product Info */}
             <div>
               <span style={{
                 display: 'inline-block',
@@ -404,7 +387,6 @@ export default function ProductPageEs() {
                 </div>
               </div>
 
-              {/* RSS/Packet Message */}
               {(product['rss/not rss message_en'] || product['rss/not rss message_ar'] || product.pcs_per_packet) && (
                 <div style={{
                   marginBottom: '25px',
@@ -423,23 +405,21 @@ export default function ProductPageEs() {
                         return product['rss/not rss message_en']
                       }
                       if (product.pcs_per_packet && product.pcs_per_packet !== '') {
-                        return `Vendido en paquetes de ${product.pcs_per_packet} piezas`
+                        return `Se vende en paquetes de ${product.pcs_per_packet} piezas`
                       }
-                      return product['rss/not rss message_ar'] || 'Información de empaque no disponible'
+                      return product['rss/not rss message_ar'] || 'Información de embalaje no disponible'
                     })()}
                   </span>
                 </div>
               )}
 
-              {/* Description */}
               <div style={{ marginBottom: '30px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#000', marginBottom: '10px' }}>Descripción del producto</h3>
                 <p style={{ color: '#555', lineHeight: '1.8' }}>
-                  {product.description_es || product.description_en || 'Producto turco de calidad premium.'}
+                  {product.description_es || product.description_en || 'Producto turco de alta calidad.'}
                 </p>
               </div>
 
-              {/* Size Information */}
               <div style={{
                 marginBottom: '30px',
                 padding: '25px',
@@ -481,7 +461,6 @@ export default function ProductPageEs() {
                 </div>
               </div>
 
-              {/* Quantity */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
                 <label style={{ fontWeight: '600', color: '#000' }}>Cantidad:</label>
                 <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #eee', borderRadius: '50px', overflow: 'hidden' }}>
@@ -502,14 +481,12 @@ export default function ProductPageEs() {
                 </div>
               </div>
 
-              {/* Minimum order info */}
               {!isRSS && packetSize > 1 && (
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <FaInfoCircle /> Cantidad mínima: {packetSize} piezas (cartón completo)
+                  <FaInfoCircle /> Pedido mínimo: {packetSize} piezas (caja completa)
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div style={{ display: 'flex', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
                 <button 
                   style={{
@@ -533,12 +510,12 @@ export default function ProductPageEs() {
                   onMouseEnter={(e) => e.currentTarget.style.background = '#e04e00'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#ff5a00'}
                 >
-                  <FaShoppingCart size={14} /> Agregar a consulta
+                  <FaShoppingCart size={14} /> Añadir a la solicitud
                 </button>
                 
                 <a 
                   href={`https://wa.me/905519522448?text=${encodeURIComponent(
-                    `Hola, estoy interesado en pedir:\n\n*${productName}*\nPrecio: ${formatPrice(productPrice)}\nCódigo: ${product.product_code || 'N/A'}\nCantidad: ${quantity}\n\nPor favor, proporcione más información.`
+                    `Hola, estoy interesado en:\n\n*${productName}*\nPrecio: ${formatPrice(productPrice)}\nCódigo: ${product.product_code || 'N/D'}\nCantidad: ${quantity}\n\nPor favor, proporcióneme más información.`
                   )}`}
                   style={{
                     flex: '1',
@@ -566,11 +543,10 @@ export default function ProductPageEs() {
                 </a>
               </div>
 
-              {/* Product Meta */}
               <div style={{ paddingTop: '20px', borderTop: '1px solid #eee' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                   <FaBarcode style={{ width: '20px', color: '#ff5a00' }} />
-                  <span><strong>Código:</strong> {product.product_code || 'N/A'}</span>
+                  <span><strong>Código:</strong> {product.product_code || 'N/D'}</span>
                 </div>
                 {product.pcs_per_packet && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
@@ -584,7 +560,7 @@ export default function ProductPageEs() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                   <FaTruck style={{ width: '20px', color: '#ff5a00' }} />
-                  <span><strong>Envío:</strong> Mundial (3-7 días hábiles)</span>
+                  <span><strong>Envío:</strong> Mundial (3-7 días laborables)</span>
                 </div>
               </div>
             </div>
@@ -592,7 +568,6 @@ export default function ProductPageEs() {
         </div>
       </div>
 
-      {/* Related Products Section */}
       {relatedProducts.length > 0 && (
         <div style={{ padding: '60px 0', background: '#f5f5f5' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
@@ -610,7 +585,7 @@ export default function ProductPageEs() {
             }}>
               {relatedProducts.map((p: any) => (
                 <Link 
-                  href={`/es/product/${p.slug_es || p.slug_en || p.slug_ar || p._id}`} 
+                  href={`/es/product/${p.slug_es || p.slug_en || p._id}`} 
                   key={p._id} 
                   style={{
                     background: 'white',
@@ -633,7 +608,7 @@ export default function ProductPageEs() {
                     background: '#f5f5f5'
                   }}>
                     <img 
-                      src={p.imageUrl || '/images/default.webp'} 
+                      src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)} 
                       alt={p.name_es || p.name_en || ''}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       loading="lazy"

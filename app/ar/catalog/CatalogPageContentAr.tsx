@@ -1,4 +1,3 @@
-// app/ar/catalog/page.tsx
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -6,6 +5,9 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage } from '@/lib/product-image';
+
+const CATALOG_LANG = 'ar'; // ✅ ثابت اللغة
 
 export default function CatalogPageAr() {
   const searchParams = useSearchParams()
@@ -74,7 +76,7 @@ export default function CatalogPageAr() {
   // Fetch filter counts from API
   const fetchFilterCounts = useCallback(async () => {
     try {
-      const res = await fetch('/api/products/counts')
+      const res = await fetch(`/api/products/counts?lang=${CATALOG_LANG}`) // ✅ أضفنا lang
       const data = await res.json()
       if (data) {
         setFilterCounts({
@@ -95,6 +97,7 @@ export default function CatalogPageAr() {
       setLoading(true)
       
       const params = new URLSearchParams()
+      params.append('lang', CATALOG_LANG) // ✅ أضفنا lang
       params.append('page', currentPage.toString())
       params.append('limit', productsPerPage.toString())
       
@@ -243,60 +246,9 @@ export default function CatalogPageAr() {
     ]
   }, [])
 
-  // Get category count with Arabic to English mapping
+  // Get category count - نسخة مبسطة لأن API الآن يعيد الأسماء بالعربية
   const getCategoryCount = useCallback((categoryDisplay: string): number => {
-    // خريطة تحويل الأسماء العربية إلى الإنجليزية (مطابقة لـ API)
-    const nameMapping: Record<string, string> = {
-      'عبايات': 'Abayas',
-      'حجاب': 'Hijabs',
-      'فساتين محجبات': 'Modest Dresses',
-      'طقم تنورة محجبات': 'Modest Skirt Sets',
-      'فساتين سهرة محجبات': 'Modest Evening Dresses',
-      'طقم بنطلون محجبات': 'Modest Pants Sets',
-      'ملابس رياضية محجبات': 'Modest Sportswear',
-      'ملابس صلاة': 'Prayer Clothes',
-      'بوركيني': 'Burkini Modest Swimwear',
-      'تونيك': 'Tunics',
-      'سترات محجبات': 'Modest Jackets',
-      'معاطف محجبات': 'Modest Coats',
-      'معاطف طويلة': 'Trenchcoats',
-      'ملابس صوف محجبات': 'Modest Wool',
-      'قفطان': 'Kaftan'
-    }
-    
-    // 1. محاولة الترجمة من العربي إلى الإنجليزي
-    const englishName = nameMapping[categoryDisplay]
-    if (englishName && filterCounts.categories[englishName] !== undefined) {
-      return filterCounts.categories[englishName]
-    }
-    
-    // 2. محاولة المطابقة المباشرة (إذا كان الاسم إنجليزياً)
-    if (filterCounts.categories[categoryDisplay] !== undefined) {
-      return filterCounts.categories[categoryDisplay]
-    }
-    
-    // 3. معالجة خاصة لملابس الصلاة (تجميع مصطلحات متعددة)
-    if (categoryDisplay === 'ملابس صلاة') {
-      const prayerTerms = ['Prayer Clothes', 'Prayer Outfits', 'Jilbab', 'Islamic Prayer Wear', 'Prayer Dress', 'Pray Clothes', 'Pray clothes', 'pray clothes']
-      let total = 0
-      for (const term of prayerTerms) {
-        total += filterCounts.categories[term] || 0
-      }
-      return total
-    }
-    
-    // 4. معالجة خاصة لأطقم البنطلون
-    if (categoryDisplay === 'طقم بنطلون محجبات') {
-      const pantsTerms = ['Modest Pants Sets', 'Modest Sets', 'Modest Set']
-      let total = 0
-      for (const term of pantsTerms) {
-        total += filterCounts.categories[term] || 0
-      }
-      return total
-    }
-    
-    // 5. إذا لم يتم العثور على شيء
-    return 0
+    return filterCounts.categories[categoryDisplay] || 0;
   }, [filterCounts.categories])
 
   // Back to top button visibility
@@ -329,7 +281,9 @@ export default function CatalogPageAr() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -1084,7 +1038,7 @@ export default function CatalogPageAr() {
                             background: 'linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%)'
                           }}>
                             <img 
-                              src={p.imageUrl || '/images/default.webp'} 
+                              src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)}
                               alt={p.name_ar || p.name_en || ''}
                               style={{ 
                                 maxWidth: '90%', 
@@ -1394,7 +1348,7 @@ export default function CatalogPageAr() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" stroke="currentColor" fill="none"/>
                 </svg>
-                <span style={{ color: '#555' }}>تحديث يومي للمنتجات</span>
+                <span style={{ color: '#555' }}>منتجات جديدة باستمرار</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'white', borderRadius: '10px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff5a00" strokeWidth="2">

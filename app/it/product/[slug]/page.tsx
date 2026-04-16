@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Head from 'next/head'
 import { useCurrency } from '@/app/contexts/CurrencyContext'
+import { getProductImage, getProductGallery } from '@/lib/product-image';
 import { 
   FaBox, FaRuler, FaShoppingCart, FaBarcode, 
   FaCheckCircle, FaTruck, FaArrowUp, FaInfoCircle,
@@ -27,22 +28,10 @@ export default function ProductPageIt() {
   const isMounted = useRef(true)
   const abortController = useRef<AbortController | null>(null)
 
-  const getCategoryDisplay = useCallback((categoryEn: string) => {
-    const categories: Record<string, string> = {
-      'Abayas': 'Abaya',
-      'Hijabs': 'Hijab',
-      'Modest Dresses': 'Abiti Modesti',
-      'Modest Skirt Sets': 'Set Gonna Modesto',
-      'Modest Evening Dresses': 'Abiti da Sera Modesti',
-      'Modest Pants Sets': 'Set Pantaloni Modesti',
-      'Modest Sportswear': 'Abbigliamento Sportivo Modesto',
-      'Prayer Clothes': 'Abiti da Preghiera',
-      'Burkini': 'Burkini'
-    }
-    return categories[categoryEn] || categoryEn
+  const getCategoryDisplay = useCallback((categoryIt: string) => {
+    return categoryIt
   }, [])
 
-  // Load product
   useEffect(() => {
     isMounted.current = true
     setLoading(true)
@@ -62,7 +51,7 @@ export default function ProductPageIt() {
         if (data.result && data.result.length > 0) {
           const foundProduct = data.result[0]
           setProduct(foundProduct)
-          setSelectedImage(foundProduct.imageUrl || foundProduct.mainImage || '/images/default.webp')
+          setSelectedImage(getProductImage(foundProduct.mainImage, foundProduct.imageUrl, { width: 800 }, foundProduct.images))
           
           if (foundProduct.category_main_en) {
             const relatedRes = await fetch(`/api/products?category=${foundProduct.category_main_en}&limit=4`, {
@@ -78,7 +67,7 @@ export default function ProductPageIt() {
         }
       } catch (error: any) {
         if (error.name !== 'AbortError' && isMounted.current) {
-          console.error('Error loading product:', error)
+          console.error('Errore durante il caricamento del prodotto:', error)
           setError(true)
           setLoading(false)
         }
@@ -95,7 +84,6 @@ export default function ProductPageIt() {
     }
   }, [slug])
 
-  // Back to top
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500)
@@ -108,7 +96,6 @@ export default function ProductPageIt() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Add to cart
   const addToCart = useCallback((product: any, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -126,7 +113,9 @@ export default function ProductPageIt() {
       name_en: product.name_en,
       price_usd: product.price_usd,
       product_code: product.product_code,
-      imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl,      // ⬅️ للتوافق القديم
+  mainImage: product.mainImage,    // ✅ أضف هذا
+  images: product.images,          // ✅ أضف هذا
       slug_ar: product.slug_ar,
       slug_en: product.slug_en,
       category_main_en: product.category_main_en,
@@ -165,7 +154,6 @@ export default function ProductPageIt() {
     return sizes.split(' ').filter(s => s.trim())
   }, [])
 
-  // Set default quantity
   useEffect(() => {
     if (product) {
       const isRSSProduct = product['rss/not rss message_en']?.includes('single piece') || 
@@ -246,8 +234,8 @@ export default function ProductPageIt() {
     </div>
   )
 
-  const productName = product.name_it || product.name_en || product.name_ar || ''
-  const productCategory = product.category_main_en || ''
+  const productName = product.name_it || product.name_en || ''
+  const productCategory = product.category_main_it || product.category_main_en || ''
   const productCategoryDisplay = getCategoryDisplay(productCategory)
   const productPrice = product.price_usd || 0
   const sizes = product.sizes ? parseSizes(product.sizes) : []
@@ -260,15 +248,15 @@ export default function ProductPageIt() {
     <>
       <Head>
         <title>{productName} - Hijab Fashion Mall | Moda Modesta Turca all'Ingrosso</title>
-        <meta name="description" content={product.description_it || product.description_en || `${productName} dalla moda modesta turca.`} />
+        <meta name="description" content={product.description_it || product.description_en || `${productName} di moda modesta turca premium.`} />
         <meta name="keywords" content={`${productName}, hijab turco all'ingrosso, ${productCategory}, moda modesta all'ingrosso`} />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={`https://hijabfashionmall.com/it/product/${product.slug_it || product.slug_en || product.slug_ar || product._id}`} />
+        <link rel="canonical" href={`https://hijabfashionmall.com/it/product/${product.slug_it || product.slug_en || product._id}`} />
         <meta property="og:title" content={`${productName} - Hijab Fashion Mall`} />
         <meta property="og:description" content={product.description_it || product.description_en} />
-        <meta property="og:url" content={`https://hijabfashionmall.com/it/product/${product.slug_it || product.slug_en || product.slug_ar || product._id}`} />
+        <meta property="og:url" content={`https://hijabfashionmall.com/it/product/${product.slug_it || product.slug_en || product._id}`} />
         <meta property="og:type" content="product" />
-        <meta property="og:image" content={product.imageUrl || '/images/default.webp'} />
+        <meta property="og:image" content={getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images)} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -277,7 +265,7 @@ export default function ProductPageIt() {
               "@type": "Product",
               "name": productName,
               "description": product.description_it || product.description_en,
-              "image": product.imageUrl,
+              "image": getProductImage(product.mainImage, product.imageUrl, { width: 1200 }, product.images),
               "sku": product.product_code,
               "brand": { "@type": "Brand", "name": "Hijab Fashion Mall" },
               "offers": {
@@ -291,7 +279,6 @@ export default function ProductPageIt() {
         />
       </Head>
 
-      {/* Back to Top Button */}
       <button
         onClick={scrollToTop}
         style={{
@@ -317,7 +304,6 @@ export default function ProductPageIt() {
         <FaArrowUp />
       </button>
 
-      {/* Breadcrumb */}
       <div style={{ padding: '20px 0', background: '#f5f5f5', borderBottom: '1px solid #eee' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '14px', color: '#555' }}>
@@ -334,11 +320,9 @@ export default function ProductPageIt() {
         </div>
       </div>
 
-      {/* Product Section */}
       <div style={{ padding: '60px 0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px' }}>
-            {/* Product Image */}
             <div>
               <div style={{
                 width: '100%',
@@ -352,7 +336,7 @@ export default function ProductPageIt() {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
               }}>
                 <img 
-                  src={selectedImage || product.imageUrl || '/images/default.webp'} 
+                  src={selectedImage || getProductImage(product.mainImage, product.imageUrl, { width: 800 }, product.images)} 
                   alt={productName}
                   style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '20px' }}
                   onError={(e) => { (e.target as HTMLImageElement).src = '/images/default.webp' }}
@@ -360,7 +344,6 @@ export default function ProductPageIt() {
               </div>
             </div>
 
-            {/* Product Info */}
             <div>
               <span style={{
                 display: 'inline-block',
@@ -398,13 +381,12 @@ export default function ProductPageIt() {
                   )}
                   {hasPlus && (
                     <span style={{ padding: '6px 15px', borderRadius: '30px', fontSize: '13px', fontWeight: '600', background: '#000', color: 'white' }}>
-                      Taglie Plus
+                      Taglie forti
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* RSS/Packet Message */}
               {(product['rss/not rss message_en'] || product['rss/not rss message_ar'] || product.pcs_per_packet) && (
                 <div style={{
                   marginBottom: '25px',
@@ -425,21 +407,19 @@ export default function ProductPageIt() {
                       if (product.pcs_per_packet && product.pcs_per_packet !== '') {
                         return `Venduto in confezioni da ${product.pcs_per_packet} pezzi`
                       }
-                      return product['rss/not rss message_ar'] || 'Informazioni sulla confezione non disponibili'
+                      return product['rss/not rss message_ar'] || 'Informazioni sull\'imballaggio non disponibili'
                     })()}
                   </span>
                 </div>
               )}
 
-              {/* Description */}
               <div style={{ marginBottom: '30px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#000', marginBottom: '10px' }}>Descrizione del prodotto</h3>
                 <p style={{ color: '#555', lineHeight: '1.8' }}>
-                  {product.description_it || product.description_en || 'Prodotto turco di qualità premium.'}
+                  {product.description_it || product.description_en || 'Prodotto turco di alta qualità.'}
                 </p>
               </div>
 
-              {/* Size Information */}
               <div style={{
                 marginBottom: '30px',
                 padding: '25px',
@@ -481,7 +461,6 @@ export default function ProductPageIt() {
                 </div>
               </div>
 
-              {/* Quantity */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
                 <label style={{ fontWeight: '600', color: '#000' }}>Quantità:</label>
                 <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #eee', borderRadius: '50px', overflow: 'hidden' }}>
@@ -502,14 +481,12 @@ export default function ProductPageIt() {
                 </div>
               </div>
 
-              {/* Minimum order info */}
               {!isRSS && packetSize > 1 && (
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <FaInfoCircle /> Quantità minima: {packetSize} pezzi (cartone intero)
+                  <FaInfoCircle /> Ordine minimo: {packetSize} pezzi (cartone completo)
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div style={{ display: 'flex', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
                 <button 
                   style={{
@@ -538,7 +515,7 @@ export default function ProductPageIt() {
                 
                 <a 
                   href={`https://wa.me/905519522448?text=${encodeURIComponent(
-                    `Ciao, sono interessato ad ordinare:\n\n*${productName}*\nPrezzo: ${formatPrice(productPrice)}\nCodice: ${product.product_code || 'N/A'}\nQuantità: ${quantity}\n\nPer favore forniscimi maggiori informazioni.`
+                    `Ciao, sono interessato a:\n\n*${productName}*\nPrezzo: ${formatPrice(productPrice)}\nCodice: ${product.product_code || 'N/D'}\nQuantità: ${quantity}\n\nPer favore, forniscimi maggiori informazioni.`
                   )}`}
                   style={{
                     flex: '1',
@@ -566,11 +543,10 @@ export default function ProductPageIt() {
                 </a>
               </div>
 
-              {/* Product Meta */}
               <div style={{ paddingTop: '20px', borderTop: '1px solid #eee' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
                   <FaBarcode style={{ width: '20px', color: '#ff5a00' }} />
-                  <span><strong>Codice:</strong> {product.product_code || 'N/A'}</span>
+                  <span><strong>Codice:</strong> {product.product_code || 'N/D'}</span>
                 </div>
                 {product.pcs_per_packet && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '14px', color: '#555' }}>
@@ -592,7 +568,6 @@ export default function ProductPageIt() {
         </div>
       </div>
 
-      {/* Related Products Section */}
       {relatedProducts.length > 0 && (
         <div style={{ padding: '60px 0', background: '#f5f5f5' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
@@ -610,7 +585,7 @@ export default function ProductPageIt() {
             }}>
               {relatedProducts.map((p: any) => (
                 <Link 
-                  href={`/it/product/${p.slug_it || p.slug_en || p.slug_ar || p._id}`} 
+                  href={`/it/product/${p.slug_it || p.slug_en || p._id}`} 
                   key={p._id} 
                   style={{
                     background: 'white',
@@ -633,7 +608,7 @@ export default function ProductPageIt() {
                     background: '#f5f5f5'
                   }}>
                     <img 
-                      src={p.imageUrl || '/images/default.webp'} 
+                      src={getProductImage(p.mainImage, p.imageUrl, { width: 400 }, p.images)} 
                       alt={p.name_it || p.name_en || ''}
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       loading="lazy"
