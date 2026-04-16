@@ -1,6 +1,6 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
-// import {visionTool} from '@sanity/vision'  // ✅ علق
+// import {visionTool} from '@sanity/vision'  // ✅ تم التعليق
 import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
@@ -10,7 +10,7 @@ export default defineConfig({
   dataset: 'production-final',
   plugins: [
     structureTool(),
-    // visionTool(),  // ✅ علق
+    // visionTool(),  // ✅ تم التعليق
   ],
   schema: {
     types: schemaTypes,
